@@ -3,7 +3,9 @@ using UnityEngine;
 
 public class PlayerManager : MonoBehaviour
 {
+    public KeyCode attackKey = KeyCode.Mouse0;
     public KeyCode recordKey = KeyCode.Mouse1;
+    public UIController uiController;
 
     private string spellText;
     private Spell spell;
@@ -16,14 +18,21 @@ public class PlayerManager : MonoBehaviour
 
     private void Update()
     {
+        if (Input.GetKeyDown(attackKey))
+        {
+            // 기본공격
+        }
+
         if (Input.GetKeyDown(recordKey))
         {
             voiceRecorder.StartRecord();
+            uiController.ShowRecordIcon();
             Debug.Log("녹음 시작");
         }
-        else if (Input.GetKeyUp(recordKey))
+        if (Input.GetKeyUp(recordKey))
         {
             voiceRecorder.StopRecord();
+            uiController.HideRecordIcon();
             Debug.Log("녹음 종료. Whisper API 호출...");
             StartCoroutine(UseSpell());
         }
