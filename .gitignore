@@ -2,6 +2,11 @@
 #
 # Get latest from https://github.com/github/gitignore/blob/main/Unity.gitignore
 #
+
+# api json
+Assets/Resources/config.json
+Assets/Resources/config.json.meta
+
 .utmp/
 /[Ll]ibrary/
 /[Tt]emp/
