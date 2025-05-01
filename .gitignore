@@ -75,3 +75,6 @@ crashlytics-build.properties
 
 # JetBrains Rider
 .idea/
+
+# environment variable file
+.env
