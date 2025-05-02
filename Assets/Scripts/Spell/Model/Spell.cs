@@ -1,4 +1,4 @@
-﻿namespace Spell.Models
+﻿namespace Spell.Model
 {
     public abstract class Spell
     {

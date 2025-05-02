@@ -1,8 +1,7 @@
 ﻿using Common.Utils;
 using Cysharp.Threading.Tasks;
-using Newtonsoft.Json;
 using Spell.Apis;
-using Spell.Models;
+using Spell.Model;
 using UnityEngine;
 
 namespace Spell
@@ -12,7 +11,7 @@ namespace Spell
         private readonly WavToTextApi _wavToTextApi = new();
         private readonly TextToSpellApi _textToSpellApi = new();
 
-        public async UniTask<Models.Spell> BuildSpellAsync(AudioClip audioClip)
+        public async UniTask<Model.Spell> BuildSpellAsync(AudioClip audioClip)
         {
             // Step 1: Convert audio file to wav
             var wav = await WavUtility.FromAudioClipAsync(audioClip);
