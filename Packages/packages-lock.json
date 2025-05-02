@@ -1,5 +1,12 @@
 {
   "dependencies": {
+    "com.cysharp.unitask": {
+      "version": "https://github.com/Cysharp/UniTask.git?path=src/UniTask/Assets/Plugins/UniTask",
+      "depth": 0,
+      "source": "git",
+      "dependencies": {},
+      "hash": "06067cd4c83e372310d6f79d1c625f6870ff7a2a"
+    },
     "com.unity.ai.navigation": {
       "version": "2.0.6",
       "depth": 0,
@@ -209,6 +216,13 @@
         "com.unity.modules.jsonserialize": "1.0.0"
       },
       "url": "https://packages.unity.com"
+    },
+    "xyz.candycoded.env": {
+      "version": "https://github.com/CandyCoded/env.git#v1.1.5",
+      "depth": 0,
+      "source": "git",
+      "dependencies": {},
+      "hash": "0199164aab5e5986cb32936c61e38216e3208fc3"
     },
     "com.unity.modules.accessibility": {
       "version": "1.0.0",
