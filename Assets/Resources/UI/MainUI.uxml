@@ -1,0 +1,6 @@
+<ui:UXML xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:ui="UnityEngine.UIElements" xmlns:uie="UnityEditor.UIElements" noNamespaceSchemaLocation="../../../UIElementsSchema/UIElements.xsd" editor-extension-mode="False">
+    <ui:VisualElement style="flex-grow: 1; background-color: rgba(0, 0, 0, 0); width: 10%; background-image: none; height: 30%; -unity-background-scale-mode: scale-to-fit; flex-direction: column;">
+        <ui:VisualElement name="Space" style="flex-grow: 1; background-color: rgba(0, 0, 0, 0); width: 100%; background-image: none; height: 30%; -unity-background-scale-mode: scale-to-fit; flex-direction: column;" />
+        <ui:VisualElement name="RecordingIcon" style="flex-grow: 1; background-color: rgba(0, 0, 0, 0); width: 100%; background-image: resource(&apos;Icon/microphone&apos;); height: 30%; -unity-background-scale-mode: scale-to-fit; flex-direction: column;" />
+    </ui:VisualElement>
+</ui:UXML>
