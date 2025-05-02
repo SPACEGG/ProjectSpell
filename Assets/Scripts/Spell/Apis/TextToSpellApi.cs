@@ -39,7 +39,7 @@ You are a game assistant. Respond with ONLY a JSON object.
         {
             var payload = new
             {
-                model = "gpt-3.5-turbo",
+                model = Model,
                 messages = new object[]
                 {
                     new { role = "system", content = SystemPrompt },
