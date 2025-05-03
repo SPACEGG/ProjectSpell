@@ -35,7 +35,7 @@ namespace Spell.Model.Core
 
         private static void ApplyVFX(GameObject gameObject)
         {
-            gameObject.transform.localScale = Vector3.one * 25f;
+            gameObject.transform.localScale = Vector3.one * 2f;
 
             var filter = gameObject.AddComponent<MeshFilter>();
             var renderer = gameObject.AddComponent<MeshRenderer>();

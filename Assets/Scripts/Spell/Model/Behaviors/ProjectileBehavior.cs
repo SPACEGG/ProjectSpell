@@ -8,7 +8,7 @@ namespace Spell.Model.Behaviors
         /// <summary>
         /// Speed of the projectile
         /// </summary>
-        private const float Speed = 300f;
+        private const float Speed = 30f;
 
         /// <summary>
         /// Duration of the projectile's flight
