@@ -1,5 +1,6 @@
 ﻿using Cysharp.Threading.Tasks;
 using Record;
+using Spell.Dev.Premades;
 using UnityEngine;
 
 namespace Spell.Dev.UI
@@ -44,6 +45,14 @@ namespace Spell.Dev.UI
         public void OnApiRequestButtonClicked()
         {
             _spellController.BuildSpellAsync(_recordingClip).Forget();
+        }
+
+        public void OnCastSpellButtonClicked()
+        {
+            var spellData = FireballSpellDataFactory.Create();
+            var targetPosition = Camera.main != null ? Camera.main.ScreenToWorldPoint(Input.mousePosition) : Vector3.up;
+
+            _view.CastSpell(spellData, targetPosition);
         }
     }
 }

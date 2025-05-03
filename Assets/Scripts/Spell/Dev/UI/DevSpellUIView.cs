@@ -1,3 +1,5 @@
+using Spell.Model.Core;
+using Spell.Model.Data;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
@@ -10,6 +12,8 @@ namespace Spell.Dev.UI
         [SerializeField] private TMP_Text recordButtonLabel;
         [SerializeField] private Button playButton;
         [SerializeField] private Button apiRequestButton;
+        [SerializeField] private Button castSpellButton;
+        [SerializeField] private SpellCaster spellCaster;
 
         private DevSpellUIPresenter _presenter;
 
@@ -20,6 +24,7 @@ namespace Spell.Dev.UI
             recordButton.onClick.AddListener(_presenter.OnRecordButtonClicked);
             playButton.onClick.AddListener(_presenter.OnPlayButtonClicked);
             apiRequestButton.onClick.AddListener(_presenter.OnApiRequestButtonClicked);
+            castSpellButton.onClick.AddListener(_presenter.OnCastSpellButtonClicked);
         }
 
         public void ToggleRecordButton(bool isRecording)
@@ -31,6 +36,18 @@ namespace Spell.Dev.UI
         {
             var audioSource = gameObject.AddComponent<AudioSource>();
             audioSource.PlayOneShot(recordingClip);
+        }
+
+        public void CastSpell(SpellData spellData, Vector3 targetPosition)
+        {
+            if (spellCaster != null)
+            {
+                spellCaster.CastSpell(spellData, targetPosition);
+            }
+            else
+            {
+                Debug.LogWarning("SpellCaster is not assigned.");
+            }
         }
     }
 }
