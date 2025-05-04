@@ -9,7 +9,7 @@ namespace Spell.Dev.UI
 
         private void Awake()
         {
-            var spellController = new SpellController();
+            var spellController = new SpellDataController();
             var recordController = new RecordController();
 
             var presenter = new DevSpellUIPresenter(view, spellController, recordController);

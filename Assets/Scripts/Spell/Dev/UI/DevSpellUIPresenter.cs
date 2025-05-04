@@ -9,12 +9,12 @@ namespace Spell.Dev.UI
     {
         private readonly DevSpellUIView _view;
 
-        private readonly SpellController _spellController;
+        private readonly SpellDataController _spellController;
         private readonly RecordController _recordController;
 
         private AudioClip _recordingClip;
 
-        public DevSpellUIPresenter(DevSpellUIView view, SpellController spellController,
+        public DevSpellUIPresenter(DevSpellUIView view, SpellDataController spellController,
             RecordController recordController)
         {
             _view = view;

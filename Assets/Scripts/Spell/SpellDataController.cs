@@ -1,4 +1,4 @@
-﻿using Common.Utils;
+using Common.Utils;
 using Cysharp.Threading.Tasks;
 using Spell.Apis;
 using Spell.Model;
@@ -6,7 +6,7 @@ using UnityEngine;
 
 namespace Spell
 {
-    public class SpellController
+    public class SpellDataController
     {
         private readonly WavToTextApi _wavToTextApi = new();
         private readonly TextToSpellApi _textToSpellApi = new();
