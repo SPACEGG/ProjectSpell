@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
-using System.Numerics;
 using Spell.Model.Enums;
+using UnityEngine;
 
 namespace Spell.Model.Data
 {

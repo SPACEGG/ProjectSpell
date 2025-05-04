@@ -1,7 +1,6 @@
 ﻿using Spell.Model.Behaviors;
 using Spell.Model.Data;
 using Spell.Model.Enums;
-using Unity.VisualScripting;
 using UnityEngine;
 
 namespace Spell.Model.Core
@@ -42,10 +41,13 @@ namespace Spell.Model.Core
 
             // Grab built-in sphere mesh
             var tempSphere = GameObject.CreatePrimitive(PrimitiveType.Sphere);
-            filter.sharedMesh = tempSphere.GetComponent<MeshFilter>().sharedMesh;
-            Object.Destroy(tempSphere); // Cleanup temporary object
+            if (tempSphere != null)
+            {
+                filter.sharedMesh = tempSphere.GetComponent<MeshFilter>().sharedMesh;
+                Object.Destroy(tempSphere); // Cleanup temporary object
+            }
 
-            // Set material
+            // Set material (메모리 누수 방지: 필요시 Material.Destroy 사용)
             var mat = new Material(Shader.Find("Universal Render Pipeline/Simple Lit"))
             {
                 color = Color.red

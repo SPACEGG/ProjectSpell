@@ -15,7 +15,7 @@ namespace Spell.Model.Core
                 Element = ElementType.None,
                 Behavior = BehaviorType.Projectile,
                 Actions = new List<SpellActionData>(),
-                PositionOffset = Vector3.zero,
+                PositionOffset = null,
                 Direction = null,
                 Count = 1,
                 Shape = ShapeType.None,
@@ -53,9 +53,9 @@ namespace Spell.Model.Core
         }
 
         // JSON 문자열을 SpellData로 파싱
+        // UnityEngine.JsonUtility는 UnityEngine.Vector3만 지원
         public static SpellData FromJson(string json)
         {
-            // UnityEngine.JsonUtility는 UnityEngine.Vector3만 지원
             return JsonUtility.FromJson<SpellData>(json);
         }
 

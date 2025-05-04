@@ -29,12 +29,14 @@ namespace Spell.Dev.UI
 
         public void ToggleRecordButton(bool isRecording)
         {
-            recordButtonLabel.text = isRecording ? "Stop" : "Record";
+            if (recordButtonLabel != null)
+                recordButtonLabel.text = isRecording ? "Stop" : "Record";
         }
 
         public void PlayRecording(AudioClip recordingClip)
         {
-            var audioSource = gameObject.AddComponent<AudioSource>();
+            if (recordingClip == null) return;
+            var audioSource = GetComponent<AudioSource>() ?? gameObject.AddComponent<AudioSource>();
             audioSource.PlayOneShot(recordingClip);
         }
 
