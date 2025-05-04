@@ -2,8 +2,12 @@
 {
     public enum ShapeType
     {
-        None, // 추가
+        None,
         Cube,
         Sphere,
+        Capsule,
+        Cylinder,
+        Plane,
+        Quad
     }
 }

@@ -14,16 +14,68 @@ namespace Spell.Apis
         private const string Model = "gpt-4.1-nano";
 
         private const string SystemPrompt = @"
-You are a game assistant. Respond with ONLY a JSON object.
+당신은 게임 주문 생성 도우미입니다. 사용자로부터 마법 주문 요청을 받으면, 반드시 아래 규칙에 따라 ""JSON 형식으로만"" 응답하십시오. 설명이나 텍스트를 절대 포함하지 마십시오.
 
-## Available Elements
+## 사용할 수 있는 요소 (Element)
+- ""Fire""
+- ""Ice""
+- ""Earth""
+- ""Common""
 
-- fire
-- ice
-- earth
+출력 시에는 첫 글자만 대문자인 PascalCase 형식으로 출력하세요.
 
-## example:
-{""element"":""fire"", direction"":[x,y,z],""power"":n}";
+## 사용할 수 있는 행동 유형 (Behavior)
+- ""Projectile""
+
+출력 시 PascalCase 형식으로 출력하세요.
+
+## 사용할 수 있는 형태 (Shape)
+- ""Sphere"", ""Cube"", ""Capsule"", ""Cylinder"", ""Plane"", ""Quad""
+
+출력 시 PascalCase 형식으로 출력하세요.
+
+## 필수 포함 필드 (모든 주문 JSON에 반드시 포함해야 하는 항목)
+
+- ""Name"" (string): 주문의 이름입니다. 짧고 창의적인 이름을 작성하세요 (예: ""Fireball"", ""Ice Shard"").
+- ""Element"" (string): 위에 명시된 요소 중 하나를 사용하세요.
+- ""Behavior"" (string): 위에 명시된 행동 중 하나를 사용하세요.
+- ""Shape"" (string): 주문의 외형을 결정할 3D 기본 도형입니다.
+- ""Size"" (float): 주문 오브젝트의 크기입니다. 0보다 큰 실수여야 합니다.
+- ""HasGravity"" (boolean): 중력의 영향을 받는지 여부입니다.
+- ""PositionOffset"" (float 배열): [x, y, z] 형태의 벡터. 시전자 기준으로 어느 위치에 생성할지 설정합니다. 기본값은 [0, 0, 0]입니다.
+- ""Direction"" (float 배열): [x, y, z] 방향 벡터입니다. 정규화된 단위 벡터여야 하며, 기본값은 [0, 0, 1]입니다.
+- ""Count"" (int): 생성할 주문 오브젝트의 개수입니다. 1 이상의 정수여야 합니다.
+- ""Actions"" (문자열 배열): 현재는 사용하지 않지만, 항상 빈 배열([])로 포함해야 합니다.
+
+## 응답 형식 예시:
+
+{
+  ""Name"": ""Fireball"",
+  ""Element"": ""Fire"",
+  ""Behavior"": ""Projectile"",
+  ""Actions"": [],
+  ""PositionOffset"": [0, 0, 0],
+  ""Direction"": [0, 0, 1],
+  ""Count"": 1,
+  ""Shape"": ""Sphere"",
+  ""Size"": 1.5,
+  ""HasGravity"": false
+}
+
+## 규칙 요약:
+- 반드시 유효한 JSON 형식으로만 응답할 것.
+- 텍스트나 설명, 마크다운을 절대 포함하지 말 것.
+- 모든 값은 구체적이고 실행 가능한 값이어야 하며, null 또는 undefined는 절대 사용하지 말 것.
+- ""Element"", ""Behavior"", ""Shape""는 PascalCase로 정확히 표기할 것.
+- ""Size""는 0보다 큰 실수, ""Count""는 1 이상의 정수일 것.
+- ""Direction""은 반드시 정규화된 방향 벡터여야 함.
+
+## 입력 예시:
+""거대한 얼음 창을 날려줘""
+
+→ 위 명령을 적절히 해석하여 JSON 형태의 주문 데이터를 생성하십시오.
+";
+
 
         private readonly string _apiKey;
 
@@ -35,15 +87,16 @@ You are a game assistant. Respond with ONLY a JSON object.
             }
         }
 
-        public async UniTask<string> TextToSpellAsync(string text)
+        public async UniTask<string> TextToSpellAsync(string text, int powerLevel)
         {
+            var userPrompt = $"[PowerLevel: {powerLevel}] {text}";
             var payload = new
             {
                 model = Model,
                 messages = new object[]
                 {
                     new { role = "system", content = SystemPrompt },
-                    new { role = "user", content = text }
+                    new { role = "user", content = userPrompt }
                 }
             };
             string requestJson = JsonConvert.SerializeObject(payload);

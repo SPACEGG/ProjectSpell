@@ -11,7 +11,7 @@ namespace Spell.Model.Core
         private readonly WavToTextApi _wavToTextApi = new();
         private readonly TextToSpellApi _textToSpellApi = new();
 
-        public async UniTask<SpellData> BuildSpellDataAsync(AudioClip audioClip)
+        public async UniTask<SpellData> BuildSpellDataAsync(AudioClip audioClip, int powerLevel)
         {
             // Step 1: Convert audio file to wav
             var wav = await WavUtility.FromAudioClipAsync(audioClip);
@@ -20,7 +20,7 @@ namespace Spell.Model.Core
             var text = await _wavToTextApi.WavToTextAsync(wav);
 
             // Step 3: Convert text to spell (GPT JSON응답)
-            var spellJson = await _textToSpellApi.TextToSpellAsync(text);
+            var spellJson = await _textToSpellApi.TextToSpellAsync(text, powerLevel);
 
             // Step 4: Parse JSON to SpellData (예외 처리 포함)
             var spellData = SpellDataFactory.SafeFromJson(spellJson);

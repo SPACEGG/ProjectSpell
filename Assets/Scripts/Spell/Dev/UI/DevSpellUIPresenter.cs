@@ -44,7 +44,7 @@ namespace Spell.Dev.UI
                 _view.PlayRecording(_recordingClip);
         }
 
-        public async void OnApiRequestButtonClicked()
+        public async void OnApiRequestButtonClicked(int powerLevel)
         {
             if (_recordingClip == null)
             {
@@ -52,7 +52,7 @@ namespace Spell.Dev.UI
                 return;
             }
 
-            var spellData = await _spellController.BuildSpellDataAsync(_recordingClip);
+            var spellData = await _spellController.BuildSpellDataAsync(_recordingClip, powerLevel);
             if (spellData != null)
             {
                 _currentSpellData = spellData; // API 결과 저장
