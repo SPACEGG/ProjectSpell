@@ -1,11 +1,9 @@
 using Common.Utils;
 using Cysharp.Threading.Tasks;
 using Spell.Apis;
-using Spell.Model;
-using Spell.Model.Core;
 using UnityEngine;
 
-namespace Spell
+namespace Spell.Model.Core
 {
     public class SpellDataController
     {
