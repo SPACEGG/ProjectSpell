@@ -2,7 +2,7 @@ using Common.Utils;
 using Cysharp.Threading.Tasks;
 using Spell.Apis;
 using Spell.Model;
-using Spell.Model.Data;
+using Spell.Model.Core;
 using UnityEngine;
 
 namespace Spell

@@ -2,7 +2,7 @@ using Spell.Model.Enums;
 using System.Collections.Generic;
 using UnityEngine;
 
-namespace Spell.Model.Data
+namespace Spell.Model.Core
 {
     public static class SpellDataFactory
     {

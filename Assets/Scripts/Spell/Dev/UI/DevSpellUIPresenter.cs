@@ -2,6 +2,7 @@
 using Record;
 using Spell.Dev.Premades;
 using UnityEngine;
+using Spell.Model.Core;
 
 namespace Spell.Dev.UI
 {
