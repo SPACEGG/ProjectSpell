@@ -49,10 +49,10 @@ namespace Spell.Dev.UI
 
         public void OnCastSpellButtonClicked()
         {
-            var spellData = FireballSpellDataFactory.Create();
-            var offset = Vector3.zero; // TODO: GPT 응답으로 대체
+            var spellData = SpellDataFactory.Create(); // 올바른 사용 (실제 팩토리/메서드명에 맞게 수정)
+            // spellData.Offset 등 필요한 값 세팅
 
-            _view.CastSpellFromView(spellData, offset);
+            _view.CastSpellFromView(spellData);
         }
     }
 }
