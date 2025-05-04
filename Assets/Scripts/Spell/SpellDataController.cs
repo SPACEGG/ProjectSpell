@@ -2,6 +2,7 @@ using Common.Utils;
 using Cysharp.Threading.Tasks;
 using Spell.Apis;
 using Spell.Model;
+using Spell.Model.Data;
 using UnityEngine;
 
 namespace Spell
@@ -11,7 +12,7 @@ namespace Spell
         private readonly WavToTextApi _wavToTextApi = new();
         private readonly TextToSpellApi _textToSpellApi = new();
 
-        public async UniTask<Model.Spell> BuildSpellAsync(AudioClip audioClip)
+        public async UniTask<SpellData> BuildSpellDataAsync(AudioClip audioClip)
         {
             // Step 1: Convert audio file to wav
             var wav = await WavUtility.FromAudioClipAsync(audioClip);
@@ -19,13 +20,13 @@ namespace Spell
             // Step 2: Convert wav to text
             var text = await _wavToTextApi.WavToTextAsync(wav);
 
-            // Step 3: Convert text to spell
+            // Step 3: Convert text to spell (GPT JSON응답)
             var spellJson = await _textToSpellApi.TextToSpellAsync(text);
 
-            // TODO: Step 4: Instantiate the spell
-            Debug.Log(spellJson);
+            // Step 4: Parse JSON to SpellData (예외 처리 포함)
+            var spellData = SpellDataFactory.SafeFromJson(spellJson);
 
-            return new FailureSpell();
+            return spellData;
         }
     }
 }

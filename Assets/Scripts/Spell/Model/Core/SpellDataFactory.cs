@@ -51,5 +51,28 @@ namespace Spell.Model.Data
                 HasGravity = hasGravity
             };
         }
+
+        // JSON 문자열을 SpellData로 파싱
+        public static SpellData FromJson(string json)
+        {
+            // UnityEngine.JsonUtility는 UnityEngine.Vector3만 지원
+            return JsonUtility.FromJson<SpellData>(json);
+        }
+
+        // JSON 문자열을 SpellData로 파싱 (예외 처리 포함)
+        public static SpellData SafeFromJson(string json)
+        {
+            try
+            {
+                var spellData = FromJson(json);
+                Debug.Log($"Parsed SpellData: {spellData}");
+                return spellData;
+            }
+            catch (System.Exception ex)
+            {
+                Debug.LogError($"Failed to parse SpellData: {ex.Message}\nJSON: {json}");
+                return null;
+            }
+        }
     }
 }

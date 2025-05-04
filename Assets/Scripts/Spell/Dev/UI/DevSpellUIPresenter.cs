@@ -44,7 +44,7 @@ namespace Spell.Dev.UI
 
         public void OnApiRequestButtonClicked()
         {
-            _spellController.BuildSpellAsync(_recordingClip).Forget();
+            _spellController.BuildSpellDataAsync(_recordingClip).Forget();
         }
 
         public void OnCastSpellButtonClicked()
