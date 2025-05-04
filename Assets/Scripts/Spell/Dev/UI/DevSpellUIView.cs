@@ -17,6 +17,12 @@ namespace Spell.Dev.UI
 
         private DevSpellUIPresenter _presenter;
 
+        private void Awake()
+        {
+            if (GetComponent<AudioSource>() == null)
+                gameObject.AddComponent<AudioSource>();
+        }
+
         public void Initialize(DevSpellUIPresenter presenter)
         {
             _presenter = presenter;
@@ -36,7 +42,7 @@ namespace Spell.Dev.UI
         public void PlayRecording(AudioClip recordingClip)
         {
             if (recordingClip == null) return;
-            var audioSource = GetComponent<AudioSource>() ?? gameObject.AddComponent<AudioSource>();
+            var audioSource = GetComponent<AudioSource>();
             audioSource.PlayOneShot(recordingClip);
         }
 
