@@ -50,9 +50,9 @@ namespace Spell.Dev.UI
         public void OnCastSpellButtonClicked()
         {
             var spellData = FireballSpellDataFactory.Create();
-            var targetPosition = Camera.main != null ? Camera.main.ScreenToWorldPoint(Input.mousePosition) : Vector3.up;
+            var offset = Vector3.zero; // TODO: GPT 응답으로 대체
 
-            _view.CastSpell(spellData, targetPosition);
+            _view.CastSpellFromView(spellData, offset);
         }
     }
 }

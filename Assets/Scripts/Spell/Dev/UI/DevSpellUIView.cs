@@ -38,11 +38,12 @@ namespace Spell.Dev.UI
             audioSource.PlayOneShot(recordingClip);
         }
 
-        public void CastSpell(SpellData spellData, Vector3 targetPosition)
+        public void CastSpellFromView(SpellData spellData, Vector3 offset)
         {
             if (spellCaster != null)
             {
-                spellCaster.CastSpell(spellData, targetPosition);
+                var spawnPosition = spellCaster.transform.position + offset;
+                spellCaster.CastSpell(spellData, spawnPosition);
             }
             else
             {

@@ -9,7 +9,7 @@ namespace Spell.Model.Core
 
         private Transform CastOrigin => castOrigin != null ? castOrigin : transform;
 
-        public void CastSpell(SpellData data, Vector3 targetPosition)
+        public void CastSpell(SpellData data, Vector3 spawnPosition)
         {
             if (data == null)
             {
@@ -20,7 +20,7 @@ namespace Spell.Model.Core
             var spell = SpellFactory.CreateSpellGameObject(data);
 
             spell.transform.position = CastOrigin.position;
-            spell.Activate(targetPosition, transform);
+            spell.Activate(spawnPosition, transform);
         }
     }
 }
