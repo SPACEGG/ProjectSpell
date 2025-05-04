@@ -2,6 +2,7 @@
 {
     public enum ShapeType
     {
+        None, // 추가
         Cube,
         Sphere,
     }

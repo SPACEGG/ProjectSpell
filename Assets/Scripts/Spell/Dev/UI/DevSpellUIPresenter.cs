@@ -2,6 +2,7 @@
 using Record;
 using Spell.Model.Core;
 using UnityEngine;
+using Spell.Model.Data; // 추가
 
 namespace Spell.Dev.UI
 {
@@ -12,6 +13,7 @@ namespace Spell.Dev.UI
         private readonly RecordController _recordController;
 
         private AudioClip _recordingClip;
+        private SpellData _currentSpellData; // 추가
 
         public DevSpellUIPresenter(DevSpellUIView view, SpellDataController spellController,
             RecordController recordController)
@@ -42,17 +44,30 @@ namespace Spell.Dev.UI
                 _view.PlayRecording(_recordingClip);
         }
 
-        public void OnApiRequestButtonClicked()
+        public async void OnApiRequestButtonClicked()
         {
-            if (_recordingClip != null)
-                _spellController.BuildSpellDataAsync(_recordingClip).Forget();
+            if (_recordingClip == null)
+            {
+                Debug.LogWarning("녹음된 오디오가 없습니다.");
+                return;
+            }
+
+            var spellData = await _spellController.BuildSpellDataAsync(_recordingClip);
+            if (spellData != null)
+            {
+                _currentSpellData = spellData; // API 결과 저장
+                Debug.Log($"SpellData 생성 성공: {spellData.Name}");
+                // 필요하다면 _view에 spellData 전달
+            }
+            else
+            {
+                Debug.LogWarning("SpellData 생성 실패");
+            }
         }
 
         public void OnCastSpellButtonClicked()
         {
-            var spellData = SpellDataFactory.Create();
-            // spellData.Offset 등 필요한 값 세팅
-
+            var spellData = _currentSpellData ?? SpellDataFactory.Create(); // API 결과 우선 사용
             _view.CastSpellFromView(spellData);
         }
     }
