@@ -26,20 +26,21 @@ namespace Spell.Model.Core
 
             behavior.Data = data;
 
-            // SpellData 기반 VFX 적용
-            ApplyVFX(gameObject, data);  // TODO:이펙트 및 머티리얼 GPT프롬프트에 추가
+            ApplyVFX(gameObject, data);  
 
             return behavior;
         }
 
-        // SpellData의 Shape, Size, Element 정보를 활용하여 VFX 적용
+        // TODO: 에셋 이펙트 및 머티리얼 추가해야됨 -> SpellData및 GPT프롬프트 수정
         private static void ApplyVFX(GameObject gameObject, SpellData data)
         {
-            // 크기 적용
-            float size = data.Size > 0 ? data.Size : 2f;
-            gameObject.transform.localScale = Vector3.one * size;
+            // 크기 적용 (Vector3)
+            Vector3 size = data.Size;
+            if (size == Vector3.zero)
+                size = Vector3.one * 0.001f;
+            gameObject.transform.localScale = size;
 
-            // 메시 적용
+            // 메시 적용 (shape만 사용)
             Mesh mesh = null;
             GameObject tempPrimitive = null;
             switch (data.Shape)
@@ -73,35 +74,8 @@ namespace Spell.Model.Core
             var filter = gameObject.AddComponent<MeshFilter>();
             filter.sharedMesh = mesh;
 
-            var renderer = gameObject.AddComponent<MeshRenderer>();
-
-            // ElementType에 따라 색상 지정
-            Color color = Color.red;
-            switch (data.Element)
-            {
-                case ElementType.Fire:
-                    color = Color.red;
-                    break;
-                case ElementType.Ice:
-                    color = Color.cyan;
-                    break;
-                case ElementType.Earth:
-                    color = new Color(0.5f, 0.25f, 0f);
-                    break;
-                case ElementType.Common:
-                    color = Color.white;
-                    break;
-                case ElementType.None:
-                default:
-                    color = Color.gray;
-                    break;
-            }
-
-            var mat = new Material(Shader.Find("Universal Render Pipeline/Simple Lit"))
-            {
-                color = color
-            };
-            renderer.material = mat;
+            var renderer = gameObject.AddComponent<MeshRenderer>();  // TODO: 머티리얼 렌더링 등 에셋 추가가
+            renderer.material = new Material(Shader.Find("Universal Render Pipeline/Simple Lit"));
         }
     }
 }
