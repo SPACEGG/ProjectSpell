@@ -34,7 +34,7 @@ namespace Spell.Dev.UI
 
             recordButton.onClick.AddListener(_presenter.OnRecordButtonClicked);
             playButton.onClick.AddListener(_presenter.OnPlayButtonClicked);
-            apiRequestButton.onClick.AddListener(() => _presenter.OnApiRequestButtonClicked(_selectedPowerLevel));
+            apiRequestButton.onClick.AddListener(() => _presenter.OnApiRequestButtonClicked(_selectedPowerLevel).Forget());
             castSpellButton.onClick.AddListener(_presenter.OnCastSpellButtonClicked);
 
             level1Button.onClick.AddListener(() => SetPowerLevel(1));

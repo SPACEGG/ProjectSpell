@@ -44,7 +44,7 @@ namespace Spell.Dev.UI
                 _view.PlayRecording(_recordingClip);
         }
 
-        public async void OnApiRequestButtonClicked(int powerLevel)
+        public async UniTaskVoid OnApiRequestButtonClicked(int powerLevel)
         {
             if (_recordingClip == null)
             {
