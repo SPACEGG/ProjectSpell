@@ -1,20 +1,21 @@
 ﻿using Cysharp.Threading.Tasks;
 using Record;
-using Spell.Dev.Premades;
+using Spell.Model.Core;
 using UnityEngine;
+using Spell.Model.Data; // 추가
 
 namespace Spell.Dev.UI
 {
     public class DevSpellUIPresenter
     {
         private readonly DevSpellUIView _view;
-
-        private readonly SpellController _spellController;
+        private readonly SpellDataController _spellController;
         private readonly RecordController _recordController;
 
         private AudioClip _recordingClip;
+        private SpellData _currentSpellData; // 추가
 
-        public DevSpellUIPresenter(DevSpellUIView view, SpellController spellController,
+        public DevSpellUIPresenter(DevSpellUIView view, SpellDataController spellController,
             RecordController recordController)
         {
             _view = view;
@@ -39,20 +40,35 @@ namespace Spell.Dev.UI
 
         public void OnPlayButtonClicked()
         {
-            _view.PlayRecording(_recordingClip);
+            if (_recordingClip != null)
+                _view.PlayRecording(_recordingClip);
         }
 
-        public void OnApiRequestButtonClicked()
+        public async UniTaskVoid OnApiRequestButtonClicked(int powerLevel)
         {
-            _spellController.BuildSpellAsync(_recordingClip).Forget();
+            if (_recordingClip == null)
+            {
+                Debug.LogWarning("녹음된 오디오가 없습니다.");
+                return;
+            }
+
+            var spellData = await _spellController.BuildSpellDataAsync(_recordingClip, powerLevel);
+            if (spellData != null)
+            {
+                _currentSpellData = spellData; // API 결과 저장
+                Debug.Log($"SpellData 생성 성공: {spellData.Name}");
+                // 필요하다면 _view에 spellData 전달
+            }
+            else
+            {
+                Debug.LogWarning("SpellData 생성 실패");
+            }
         }
 
         public void OnCastSpellButtonClicked()
         {
-            var spellData = FireballSpellDataFactory.Create();
-            var targetPosition = Camera.main != null ? Camera.main.ScreenToWorldPoint(Input.mousePosition) : Vector3.up;
-
-            _view.CastSpell(spellData, targetPosition);
+            var spellData = _currentSpellData ?? SpellDataFactory.Create(); // API 결과 우선 사용
+            _view.CastSpellFromView(spellData);
         }
     }
 }

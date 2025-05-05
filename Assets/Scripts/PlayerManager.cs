@@ -2,6 +2,7 @@ using Cysharp.Threading.Tasks;
 using Entity;
 using Spell;
 using UnityEngine;
+using Spell.Model.Core; // 추가
 
 public class PlayerManager : MonoBehaviour
 {
@@ -21,12 +22,12 @@ public class PlayerManager : MonoBehaviour
     public bool hasGravity = false;
 
     private VoiceRecorder voiceRecorder;
-    private SpellController _spellController;
+    private SpellDataController _spellController;
 
     private void Start()
     {
         voiceRecorder = new();
-        _spellController = new SpellController();
+        _spellController = new SpellDataController();
     }
 
     private void Update()
@@ -68,8 +69,7 @@ public class PlayerManager : MonoBehaviour
     private async UniTaskVoid UseSpell()
     {
         // spell 생성 (이게 시간이 좀 걸림)
-        await _spellController.BuildSpellAsync(voiceRecorder.VoiceClip);
+        await _spellController.BuildSpellDataAsync(voiceRecorder.VoiceClip, 1); // powerLevel 기본값 1 전달
         // TODO: spell 생성 후 바로 skill을 실행할 것인가? 아니면 skillReady 플래그 같은걸 두는가?
-        // yield return StartCoroutine(스킬실행);
-    }
-}
+    }   // yield return StartCoroutine(스킬실행);
+} // 클래스 종료

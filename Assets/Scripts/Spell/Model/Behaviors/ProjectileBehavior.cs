@@ -17,10 +17,10 @@ namespace Spell.Model.Behaviors
 
         public override void Activate(Vector3 targetPosition, Transform caster)
         {
-            // Calculate the direction and distance to the target
-            var direction = (targetPosition - transform.position).normalized;
+            // SpellData의 Direction을 사용, 없으면 기본값 [0,0,1]
+            Vector3 direction = Data.Direction ?? Vector3.forward;
+            direction = direction.normalized;
 
-            // Move the projectile towards the target
             StartCoroutine(MoveProjectile(direction));
         }
 
@@ -40,3 +40,12 @@ namespace Spell.Model.Behaviors
         }
     }
 }
+
+// 이 코드는 ProjectileBehavior(투사체 스펠 동작) 클래스입니다.
+// - SpellBehaviorBase를 상속받아 Activate를 구현합니다.
+// - Activate가 호출되면, 목표 위치(targetPosition)와 시전자(caster) 정보를 받아
+//   투사체를 해당 방향으로 이동시키는 코루틴(MoveProjectile)을 실행합니다.
+// - MoveProjectile 코루틴은 Duration(3초) 동안 지정된 방향으로 Speed(30f) 속도로 이동하다가
+//   시간이 끝나면 오브젝트를 파괴합니다.
+//
+// 즉, 이 코드는 "투사체 형태의 스펠"이 날아가는 동작을 담당합니다.

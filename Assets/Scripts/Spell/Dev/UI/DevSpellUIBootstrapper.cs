@@ -1,5 +1,6 @@
 ﻿using Record;
 using UnityEngine;
+using Spell.Model.Core;
 
 namespace Spell.Dev.UI
 {
@@ -9,10 +10,10 @@ namespace Spell.Dev.UI
 
         private void Awake()
         {
-            var spellController = new SpellController();
+            var spellDataController = new SpellDataController();
             var recordController = new RecordController();
 
-            var presenter = new DevSpellUIPresenter(view, spellController, recordController);
+            var presenter = new DevSpellUIPresenter(view, spellDataController, recordController);
             view.Initialize(presenter);
         }
     }
