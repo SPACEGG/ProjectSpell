@@ -7,7 +7,7 @@ namespace Spell.Model.Core
 {
     public static class SpellDataFactory
     {
-        // 기본값 생성
+        // Todo: 디폴트 값 고민
         public static SpellData Create()
         {
             return new SpellData
@@ -20,7 +20,7 @@ namespace Spell.Model.Core
                 Direction = null,
                 Count = 1,
                 Shape = ShapeType.None,
-                Size = 1f,
+                Size = Vector3.one, // 수정: float -> Vector3.one
                 HasGravity = false
             };
         }
@@ -35,7 +35,7 @@ namespace Spell.Model.Core
             Vector3? direction,
             int count,
             ShapeType shape,
-            float size,
+            Vector3 size, // 수정: float -> Vector3
             bool hasGravity)
         {
             return new SpellData
@@ -48,7 +48,7 @@ namespace Spell.Model.Core
                 Direction = direction,
                 Count = count,
                 Shape = shape,
-                Size = size,
+                Size = size, // 수정: float -> Vector3
                 HasGravity = hasGravity
             };
         }

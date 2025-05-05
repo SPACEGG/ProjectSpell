@@ -41,7 +41,7 @@ namespace Spell.Model.Behaviors
             float speed = Data.Speed > 0 ? Data.Speed : 30f;
             float duration = Data.Duration > 0 ? Data.Duration : 3f;
 
-            rb.velocity = direction * speed;
+            rb.linearVelocity = direction * speed;
 
             StartCoroutine(DestroyAfterSeconds(duration));
         }

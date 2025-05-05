@@ -7,9 +7,10 @@ namespace Spell.Model.Behaviors
     /// </summary>
     public class FailureBehavior : SpellBehaviorBase
     {
-        public override void Activate(Vector3 targetPosition, Transform caster)
+        public override void Behave(Vector3 spawnPosition)
         {
-            Debug.Log($"Spell {Data.Name} failed to cast.");
+            Debug.LogWarning("FailureBehavior: 스펠 동작 실패! (정의되지 않은 BehaviorType)");
+            // 필요시 실패 이펙트 등 추가
         }
     }
 }
