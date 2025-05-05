@@ -22,15 +22,16 @@ namespace Spell.Model.Behaviors
             direction = direction.normalized;
 
             float speed = Data.Speed > 0 ? Data.Speed : 30f; // SpellData에서 속도 사용, 없으면 기본값
+            float duration = Data.Duration > 0 ? Data.Duration : 3f; // SpellData에서 지속시간 사용, 없으면 기본값
 
-            StartCoroutine(MoveProjectile(direction, speed));
+            StartCoroutine(MoveProjectile(direction, speed, duration));
         }
 
-        private IEnumerator MoveProjectile(Vector3 direction, float speed)
+        private IEnumerator MoveProjectile(Vector3 direction, float speed, float duration)
         {
             float elapsedTime = 0f;
 
-            while (elapsedTime < Duration)
+            while (elapsedTime < duration)
             {
                 transform.position += direction * (speed * Time.deltaTime);
                 elapsedTime += Time.deltaTime;

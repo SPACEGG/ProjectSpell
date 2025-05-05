@@ -34,7 +34,7 @@ namespace Spell.Apis
 
 출력 시 PascalCase 형식으로 출력하세요.
 
-## 필수 포함 필드 (모든 주문 JSON에 반드시 포함해야 하는 항목)
+## 필수 포함 필드 (하나의 항목씩 단계별로 생각해서 작성하세요)
 
 - ""Name"" (string): 주문의 이름입니다. 짧고 창의적인 이름을 작성하세요 (예: ""Fireball"", ""Ice Shard"").
 - ""Element"" (string): 위에 명시된 요소 중 하나를 사용하세요.
@@ -46,6 +46,8 @@ namespace Spell.Apis
 - ""Direction"" (float 배열): [x, y, z] 방향 벡터입니다. 정규화된 단위 벡터여야 하며, 기본값은 [0, 0, 1]입니다. 발사지점에서 발사되는 방향을 의미합니다. 
 - ""Count"" (int): 생성할 주문 오브젝트의 개수입니다. 1 이상의 정수여야 합니다.
 - ""Actions"" (문자열 배열): 현재는 사용하지 않지만, 항상 빈 배열([])로 포함해야 합니다.
+- ""Speed"" (float): 투사체의 속도입니다. 기본값은 10.0입니다.
+- ""Duration"" (float): 투사체의 지속 시간입니다. 기본값은 5.0입니다.
 
 ## 응답 형식 예시:
 
@@ -59,7 +61,9 @@ namespace Spell.Apis
   ""Count"": 1,
   ""Shape"": ""Sphere"",
   ""Size"": 1.5,
-  ""HasGravity"": false
+  ""HasGravity"": true,
+  ""Speed"": 10.0,
+  ""Duration"": 5.0
 }
 
 ## 규칙 요약:
