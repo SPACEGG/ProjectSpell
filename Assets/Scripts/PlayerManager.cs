@@ -47,7 +47,11 @@ public class PlayerManager : MonoBehaviour
     private async UniTaskVoid UseSpell()
     {
         // spell 생성 (이게 시간이 좀 걸림)
-        await _spellController.BuildSpellDataAsync(voiceRecorder.VoiceClip, 1); // powerLevel 기본값 1 전달
+        await _spellController.BuildSpellDataAsync(
+            voiceRecorder.VoiceClip, 
+            1, 
+            Camera.main != null ? Camera.main.transform.position : Vector3.zero
+        ); // powerLevel 기본값 1, cameraTargetPosition 추가
         // TODO: spell 생성 후 바로 skill을 실행할 것인가? 아니면 skillReady 플래그 같은걸 두는가?
     }   // yield return StartCoroutine(스킬실행);
 } // 클래스 종료
