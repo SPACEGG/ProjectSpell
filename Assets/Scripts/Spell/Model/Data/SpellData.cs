@@ -21,5 +21,6 @@ namespace Spell.Model.Data
         public ShapeType Shape;
         public float Size;
         public bool HasGravity;
+        public float Speed; // 추가: 투사체 속도 등
     }
 }

@@ -8,7 +8,7 @@ namespace Spell.Model.Behaviors
         /// <summary>
         /// Speed of the projectile
         /// </summary>
-        private const float Speed = 30f;
+        private const float Speed = 30f;  // Todo:기본값 고민
 
         /// <summary>
         /// Duration of the projectile's flight
@@ -21,16 +21,18 @@ namespace Spell.Model.Behaviors
             Vector3 direction = Data.Direction ?? Vector3.forward;
             direction = direction.normalized;
 
-            StartCoroutine(MoveProjectile(direction));
+            float speed = Data.Speed > 0 ? Data.Speed : 30f; // SpellData에서 속도 사용, 없으면 기본값
+
+            StartCoroutine(MoveProjectile(direction, speed));
         }
 
-        private IEnumerator MoveProjectile(Vector3 direction)
+        private IEnumerator MoveProjectile(Vector3 direction, float speed)
         {
             float elapsedTime = 0f;
 
             while (elapsedTime < Duration)
             {
-                transform.position += direction * (Speed * Time.deltaTime);
+                transform.position += direction * (speed * Time.deltaTime);
                 elapsedTime += Time.deltaTime;
                 yield return null;
             }

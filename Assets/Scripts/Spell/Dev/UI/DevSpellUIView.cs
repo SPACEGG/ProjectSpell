@@ -52,7 +52,6 @@ namespace Spell.Dev.UI
             level2Button.interactable = powerLevel != 2;
             level3Button.interactable = powerLevel != 3;
 
-            // 필요시 색상 등 추가 UI 효과도 적용 가능
         }
 
         public void ToggleRecordButton(bool isRecording)

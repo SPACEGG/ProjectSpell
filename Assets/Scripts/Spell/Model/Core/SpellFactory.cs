@@ -27,7 +27,7 @@ namespace Spell.Model.Core
             behavior.Data = data;
 
             // SpellData 기반 VFX 적용
-            ApplyVFX(gameObject, data);
+            ApplyVFX(gameObject, data);  // TODO:이펙트 및 머티리얼 GPT프롬프트에 추가
 
             return behavior;
         }

@@ -20,6 +20,7 @@ namespace Spell.Model.Core
             // SpellData에서 PositionOffset을 가져와서 사용 (null이면 Vector3.zero)
             var offset = data.PositionOffset ?? Vector3.zero;
             var spawnPosition = CastOrigin.position + offset;
+            
             var spell = SpellFactory.CreateSpellGameObject(data);
 
             spell.transform.position = spawnPosition;
