@@ -9,7 +9,7 @@ namespace Spell.Model.Core
 
         public Transform CastOrigin => castOrigin != null ? castOrigin : transform; // 여기서 transform 사용
 
-        public void CastSpell(SpellData data)
+        public void CastSpell(SpellData data, Vector3 cameraTargetPosition)
         {
             if (data == null)
             {
@@ -26,6 +26,9 @@ namespace Spell.Model.Core
 
             spell.transform.position = spawnPosition;
             spell.Behave(spawnPosition);
+
+            // 예시: 주문 생성 시 cameraTargetPosition을 TextToSpellApi에 넘겨주는 코드가 필요하다면
+            // await textToSpellApi.TextToSpellAsync(주문텍스트, powerLevel, cameraTargetPosition);
         }
     }
 }
