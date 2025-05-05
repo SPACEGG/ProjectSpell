@@ -17,8 +17,7 @@ namespace Spell.Model.Behaviors
         private void SpawnProjectile(Vector3 spawnPosition, int index, int totalCount)
         {
             // 방향
-            Vector3 direction = Data.Direction ?? Vector3.forward;
-            direction = direction.normalized;
+            Vector3 direction = Data.Direction.Value.normalized;
 
             // 여러 개일 때 퍼뜨리기(간단 예시, 필요시 수정)
             if (totalCount > 1)
@@ -38,8 +37,8 @@ namespace Spell.Model.Behaviors
             rb.useGravity = Data.HasGravity;
 
             // 속도, 지속시간
-            float speed = Data.Speed > 0 ? Data.Speed : 30f;
-            float duration = Data.Duration > 0 ? Data.Duration : 3f;
+            float speed = Data.Speed;
+            float duration = Data.Duration;
 
             rb.linearVelocity = direction * speed;
 

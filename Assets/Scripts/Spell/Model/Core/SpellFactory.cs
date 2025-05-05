@@ -9,24 +9,31 @@ namespace Spell.Model.Core
     {
         public static SpellBehaviorBase CreateSpellGameObject(SpellData data)
         {
-            var gameObject = new GameObject($"[Spell] {data.Name}");
+            var gameObject = new GameObject($"[Spell] {data?.Name}");
 
             SpellBehaviorBase behavior;
-            switch (data.Behavior)
+            // 실패 조건: null, BehaviorType.None, 이름이 Failure/DefaultSpell
+            if (data == null || data.Behavior == BehaviorType.None || data.Name == "Failure" || data.Name == "DefaultSpell")
             {
-                case BehaviorType.Projectile:
-                    behavior = gameObject.AddComponent<ProjectileBehavior>();
-                    break;
-                default:  // Todo: 디폴트를 투사체로 할건지, 아니면 실패로 할건지 결정해야됨
-                    Debug.LogWarning($"Unknown BehaviorType: {data.Behavior}");
-                    Object.Destroy(gameObject);
-                    behavior = gameObject.AddComponent<FailureBehavior>();
-                    break;
+                behavior = gameObject.AddComponent<FailureBehavior>();
+            }
+            else
+            {
+                switch (data.Behavior)
+                {
+                    case BehaviorType.Projectile:
+                        behavior = gameObject.AddComponent<ProjectileBehavior>();
+                        break;
+                    default:
+                        Debug.LogWarning($"Unknown BehaviorType: {data.Behavior}");
+                        behavior = gameObject.AddComponent<FailureBehavior>();
+                        break;
+                }
             }
 
             behavior.Data = data;
 
-            ApplyVFX(gameObject, data);  
+            ApplyVFX(gameObject, data);
 
             return behavior;
         }

@@ -7,22 +7,10 @@ namespace Spell.Model.Core
 {
     public static class SpellDataFactory
     {
-        // Todo: 디폴트 값 고민
+        // 시스템 오류 방지용 최소값만 채움. 실제 주문 실패 시에는 FailureBehavior로 분기할 것!
         public static SpellData Create()
         {
-            return new SpellData
-            {
-                Name = "DefaultSpell",
-                Element = ElementType.None,
-                Behavior = BehaviorType.Projectile,
-                Actions = new List<SpellActionData>(),
-                PositionOffset = null,
-                Direction = null,
-                Count = 1,
-                Shape = ShapeType.None,
-                Size = Vector3.one, // 수정: float -> Vector3.one
-                HasGravity = false
-            };
+            return new SpellData();
         }
 
         // 파싱된 값으로 생성 (GPT 응답 등)
@@ -35,8 +23,11 @@ namespace Spell.Model.Core
             Vector3? direction,
             int count,
             ShapeType shape,
-            Vector3 size, // 수정: float -> Vector3
-            bool hasGravity)
+            Vector3 size, 
+            bool hasGravity,
+            float speed,        
+            float duration      
+        )
         {
             return new SpellData
             {
@@ -48,8 +39,10 @@ namespace Spell.Model.Core
                 Direction = direction,
                 Count = count,
                 Shape = shape,
-                Size = size, // 수정: float -> Vector3
-                HasGravity = hasGravity
+                Size = size, 
+                HasGravity = hasGravity,
+                Speed = speed,       
+                Duration = duration 
             };
         }
 

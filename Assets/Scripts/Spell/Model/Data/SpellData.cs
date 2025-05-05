@@ -19,9 +19,26 @@ namespace Spell.Model.Data
         public int Count;
 
         public ShapeType Shape;
-        public Vector3 Size; 
+        public Vector3 Size;
         public bool HasGravity;
-        public float Speed; 
-        public float Duration; 
+        public float Speed;
+        public float Duration;
+
+        // 생성자에서 기본값 할당
+        public SpellData()
+        {
+            Name = "DefaultSpell";
+            Element = ElementType.None;
+            Behavior = BehaviorType.Projectile;
+            Actions = new List<SpellActionData>();
+            PositionOffset = Vector3.zero; // 0으로 기본값 지정
+            Direction = Vector3.forward; // 앞방향으로 기본값 지정
+            Count = 1;
+            Shape = ShapeType.Sphere;
+            Size = Vector3.zero;
+            HasGravity = false;
+            Speed = 0f;
+            Duration = 0f;
+        }
     }
 }
