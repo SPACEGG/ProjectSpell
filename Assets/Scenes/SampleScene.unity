@@ -261,13 +261,13 @@ MonoBehaviour:
   recordKey: 324
   uiController: {fileID: 2088568619}
   elementType: 2
-  shapeType: 1
+  shapeType: 2
   offset: {x: 0, y: 0, z: 2}
   speed: 15
-  scale: 0.15
-  count: 10
-  spreadAngle: 0
-  spreadRange: 10
+  scale: 1
+  count: 5
+  spreadAngle: 15
+  spreadRange: 0
   hasGravity: 1
 --- !u!1 &832575517
 GameObject:

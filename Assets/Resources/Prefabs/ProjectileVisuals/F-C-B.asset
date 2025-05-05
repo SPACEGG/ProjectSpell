@@ -12,8 +12,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ab7fa0467d7892049812c802f3b1d2cd, type: 3}
   m_Name: F-C-B
   m_EditorClassIdentifier: 
-  elementType: 0
-  shapeType: 0
+  elementType: 1
+  shapeType: 1
   sizeCategory: 2
   prefabList:
   - {fileID: 7138742554378494211, guid: ec551de8d96e8ba47a515e2b936e5d40, type: 3}
