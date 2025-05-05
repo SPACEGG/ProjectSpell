@@ -8,14 +8,14 @@ namespace Spell.Model.Behaviors
         /// <summary>
         /// Speed of the projectile
         /// </summary>
-        private const float Speed = 30f;  // Todo:기본값 고민
+        private const float Speed = 0f;  // Todo:기본값 고민
 
         /// <summary>
         /// Duration of the projectile's flight
         /// </summary>
-        private const int Duration = 3;
+        private const int Duration = 60;
 
-        public override void Activate(Vector3 targetPosition, Transform caster)
+        public override void Behave(Vector3 spawnPosition)
         {
             // SpellData의 Direction을 사용, 없으면 기본값 [0,0,1]
             Vector3 direction = Data.Direction ?? Vector3.forward;

@@ -19,9 +19,9 @@ namespace Spell.Model.Data
         public int Count;
 
         public ShapeType Shape;
-        public Vector3 Size; // float Size -> Vector3 Size로 변경
+        public Vector3 Size; 
         public bool HasGravity;
-        public float Speed; // 추가: 투사체 속도 등
-        public float Duration; // 추가: 투사체 지속 시간(초)
+        public float Speed; 
+        public float Duration; 
     }
 }

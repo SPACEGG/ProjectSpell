@@ -8,6 +8,6 @@ namespace Spell.Model.Behaviors
         public SpellData Data;
         
         // Activate는 추상 메서드이므로 자식 클래스서 정의
-        public abstract void Activate(Vector3 spawnPosition, Transform caster);
+        public abstract void Behave(Vector3 spawnPosition);
     }
 }
