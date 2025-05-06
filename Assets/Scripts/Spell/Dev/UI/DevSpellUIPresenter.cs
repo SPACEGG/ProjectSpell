@@ -67,7 +67,9 @@ namespace Spell.Dev.UI
                 cameraTargetPosition = cam.transform.position + cam.transform.forward * maxDistance;
             }
 
-            var spellData = await _spellController.BuildSpellDataAsync(_recordingClip, powerLevel, cameraTargetPosition);
+            Vector3 casterPosition = _view.transform.position; // 캐스터 위치
+
+            var spellData = await _spellController.BuildSpellDataAsync(_recordingClip, powerLevel, cameraTargetPosition, casterPosition);
             if (spellData != null)
             {
                 _currentSpellData = spellData; // API 결과 저장
