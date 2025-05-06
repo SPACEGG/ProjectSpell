@@ -2,6 +2,8 @@ using Spell.Model.Enums;
 using System.Collections.Generic;
 using UnityEngine;
 using Spell.Model.Data;
+using Newtonsoft.Json;
+using Newtonsoft.Json.Converters;
 
 namespace Spell.Model.Core
 {
@@ -50,7 +52,11 @@ namespace Spell.Model.Core
         // UnityEngine.JsonUtility는 UnityEngine.Vector3만 지원
         public static SpellData FromJson(string json)
         {
-            return JsonUtility.FromJson<SpellData>(json);
+            var settings = new JsonSerializerSettings
+            {
+                Converters = { new StringEnumConverter(), new Vector3Converter() }
+            };
+            return JsonConvert.DeserializeObject<SpellData>(json, settings);
         }
 
         // JSON 문자열을 SpellData로 파싱 (예외 처리 포함)

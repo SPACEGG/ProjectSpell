@@ -22,6 +22,9 @@ namespace Spell.Model.Core
             // Step 3: Convert text to spell (GPT JSON응답)
             var spellJson = await _textToSpellApi.TextToSpellAsync(text, powerLevel, cameraTargetPosition, casterPosition);
 
+            // GPT 응답 본문(JSON) 실제로 출력
+            Debug.Log(spellJson);
+
             // Step 4: Parse JSON to SpellData (예외 처리 포함)
             var spellData = SpellDataFactory.SafeFromJson(spellJson);
 
