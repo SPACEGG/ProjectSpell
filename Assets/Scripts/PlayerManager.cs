@@ -1,4 +1,5 @@
 using Cysharp.Threading.Tasks;
+using Entity;
 using Spell;
 using UnityEngine;
 using Spell.Model.Core; // 추가
@@ -9,8 +10,17 @@ public class PlayerManager : MonoBehaviour
     public KeyCode recordKey = KeyCode.Mouse1;
     public UIController uiController;
 
-    private string spellText;
-    private SSpell sSpell;
+    // temp
+    public Spell.Model.Enums.ElementType elementType = Spell.Model.Enums.ElementType.Fire;
+    public Spell.Model.Enums.ShapeType shapeType = Spell.Model.Enums.ShapeType.Sphere;
+    public Vector3 offset = new(0f, 0f, 2f);
+    public float speed = 12f;
+    public float scale = 0.15f;
+    public int count = 30;
+    public float spreadAngle = 30f;
+    public float spreadRange = 0f;
+    public bool hasGravity = false;
+
     private VoiceRecorder voiceRecorder;
     private SpellDataController _spellController;
 
@@ -24,7 +34,19 @@ public class PlayerManager : MonoBehaviour
     {
         if (Input.GetKeyDown(attackKey))
         {
-            // 기본공격
+            // FIXME: 기본공격
+            GameObject projectileEntity = new GameObject("ProjectileEntity");
+            projectileEntity.transform.SetPositionAndRotation(Camera.main.transform.position, Camera.main.transform.rotation);
+            projectileEntity.AddComponent<ProjectileEntity>()
+                .SetElementType(elementType)
+                .SetShapeType(shapeType)
+                .SetOffset(offset)
+                .SetSpeed(speed)
+                .SetScale(scale)
+                .SetCount(count)
+                .SetSpreadAngle(spreadAngle)
+                .SetSpreadRange(spreadRange)
+                .SetGravity(hasGravity);
         }
 
         if (Input.GetKeyDown(recordKey))
