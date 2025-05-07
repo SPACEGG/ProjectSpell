@@ -9,20 +9,20 @@ namespace Spell.Model.Data
     /// </summary>
     public record SpellData
     {
-        public string Name;
-        public ElementType Element;
-        public BehaviorType Behavior;
-        public List<SpellActionData> Actions;
+        public string Name { get; init; }
+        public ElementType Element { get; init; }
+        public BehaviorType Behavior { get; init; }
+        public List<SpellActionData> Actions { get; init; }
 
-        public Vector3? PositionOffset;
-        public Vector3? Direction;
-        public int Count;
+        public Vector3? PositionOffset { get; init; }
+        public Vector3? Direction { get; init; }
+        public int Count { get; init; }
 
-        public ShapeType Shape;
-        public Vector3 Size;
-        public bool HasGravity;
-        public float Speed;
-        public float Duration;
+        public ShapeType Shape { get; init; }
+        public Vector3 Size { get; init; }
+        public bool HasGravity { get; init; }
+        public float Speed { get; init; }
+        public float Duration { get; init; }
 
         // 생성자에서 기본값 할당
         public SpellData()
