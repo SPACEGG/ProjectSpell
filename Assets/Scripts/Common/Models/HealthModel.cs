@@ -1,31 +1,28 @@
 ﻿using System;
-using Common.Data;
 using UnityEngine;
 
-namespace Common.Components
+namespace Common.Models
 {
-    public class Health : MonoBehaviour
+    public record HealthModel
     {
-        [SerializeField] private HealthData healthData;
-
         public event Action<float> OnHealthChanged;
+
         public event Action OnDeath;
+
         public event Action<float> OnDamageTaken;
+
         public event Action<float> OnHealed;
 
+        public float MaxHealth { get; private set; }
+
         public float CurrentHealth { get; private set; }
-        public float MaxHealth => healthData.MaxHealth;
-        public float HealthPercentage => CurrentHealth / healthData.MaxHealth;
 
-        private void Awake()
+        public float HealthPercentage => CurrentHealth / MaxHealth;
+
+        public HealthModel(float maxHealth)
         {
-            if (healthData == null)
-            {
-                Debug.LogError($"HealthData is not assigned to {gameObject.name}'s Health component!");
-                return;
-            }
-
-            CurrentHealth = healthData.MaxHealth;
+            MaxHealth = maxHealth;
+            CurrentHealth = maxHealth;
         }
 
         public void TakeDamage(float damage)
@@ -48,7 +45,7 @@ namespace Common.Components
             if (amount <= 0) return;
 
             float previousHealth = CurrentHealth;
-            CurrentHealth = Mathf.Min(healthData.MaxHealth, CurrentHealth + amount);
+            CurrentHealth = Mathf.Min(MaxHealth, CurrentHealth + amount);
 
             float actualHealAmount = CurrentHealth - previousHealth;
             if (actualHealAmount > 0)
@@ -65,7 +62,7 @@ namespace Common.Components
 
         public void ResetHealth()
         {
-            CurrentHealth = healthData.MaxHealth;
+            CurrentHealth = MaxHealth;
             OnHealthChanged?.Invoke(CurrentHealth);
         }
     }
