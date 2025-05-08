@@ -3,12 +3,19 @@ using Entity;
 using Spell;
 using UnityEngine;
 using Spell.Model.Core; // 추가
+using Common.Models;
+using Common.Data;
 
 public class PlayerManager : MonoBehaviour
 {
     public KeyCode attackKey = KeyCode.Mouse0;
     public KeyCode recordKey = KeyCode.Mouse1;
     public UIController uiController;
+
+    [SerializeField] private HealthData healthData;
+    public HealthModel HealthModel;
+    [SerializeField] private ManaData manaData;
+    public ManaModel ManaModel;
 
     // temp
     public Spell.Model.Enums.ElementType elementType = Spell.Model.Enums.ElementType.Fire;
@@ -28,10 +35,16 @@ public class PlayerManager : MonoBehaviour
     {
         voiceRecorder = new();
         _spellController = new SpellDataController();
+
+        HealthModel = new HealthModel(healthData);
+        ManaModel = new ManaModel(manaData);
     }
 
     private void Update()
     {
+        // Regenerate mana
+        ManaModel.RegenerateMana(Time.deltaTime);
+
         if (Input.GetKeyDown(attackKey))
         {
             // FIXME: 기본공격
@@ -70,11 +83,11 @@ public class PlayerManager : MonoBehaviour
     {
         // spell 생성 (이게 시간이 좀 걸림)
         await _spellController.BuildSpellDataAsync(
-            voiceRecorder.VoiceClip, 
-            1, 
+            voiceRecorder.VoiceClip,
+            1,
             Camera.main != null ? Camera.main.transform.position : Vector3.zero,
             this.transform.position // 캐스터 위치 추가
         ); // powerLevel 기본값 1, cameraTargetPosition, casterPosition 추가
         // TODO: spell 생성 후 바로 skill을 실행할 것인가? 아니면 skillReady 플래그 같은걸 두는가?
-    }   // yield return StartCoroutine(스킬실행);
+    } // yield return StartCoroutine(스킬실행);
 } // 클래스 종료

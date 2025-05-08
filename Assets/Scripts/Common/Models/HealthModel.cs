@@ -1,4 +1,5 @@
 ﻿using System;
+using Common.Data;
 using UnityEngine;
 
 namespace Common.Models
@@ -19,10 +20,10 @@ namespace Common.Models
 
         public float HealthPercentage => CurrentHealth / MaxHealth;
 
-        public HealthModel(float maxHealth)
+        public HealthModel(HealthData healthData)
         {
-            MaxHealth = maxHealth;
-            CurrentHealth = maxHealth;
+            MaxHealth = healthData.MaxHealth;
+            CurrentHealth = MaxHealth;
         }
 
         public void TakeDamage(float damage)
