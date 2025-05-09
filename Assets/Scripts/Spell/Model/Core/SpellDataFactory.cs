@@ -32,6 +32,11 @@ namespace Spell.Model.Core
             string vfxName = null // VfxName 파라미터 추가 (기본값 null)
         )
         {
+            // string → enum 변환
+            VfxNameType vfxEnum = VfxNameType.None;
+            if (!string.IsNullOrEmpty(vfxName))
+                System.Enum.TryParse(vfxName, out vfxEnum);
+
             return new SpellData
             {
                 Name = name,
@@ -46,7 +51,7 @@ namespace Spell.Model.Core
                 HasGravity = hasGravity,
                 Speed = speed,       
                 Duration = duration,
-                VfxName = vfxName // 할당
+                VfxName = vfxEnum // enum으로 할당
             };
         }
 
@@ -68,6 +73,7 @@ namespace Spell.Model.Core
             {
                 var spellData = FromJson(json);
                 Debug.Log($"Parsed SpellData: {spellData}");
+                // ...기존 VfxName 변환 코드는 필요 없음 (JsonConverter로 자동 변환됨)
                 return spellData;
             }
             catch (System.Exception ex)

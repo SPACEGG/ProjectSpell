@@ -108,7 +108,8 @@ namespace Spell.Apis
 
 // ""HasGravity"" (bool)
 // - true일 경우, 중력 영향을 받아 아래로 떨어집니다.
-// - 메테오, 무거운 투사체는 true, 광선이나 즉발형 주문은 false를 지정하세요.
+// - 메테오, 무거운 투사체는 true, 광선 같은 경우만 false로 지정하세요.
+// - 예: ""Fireball""은 false, ""Meteor""는 true, ""Ice Shield""는 true
 
 // ""PositionOffset"" (Vector3)
 // - 주문의 생성 위치입니다. 캐스터 기준 오프셋으로 [x, y, z] 형태의 벡터입니다.
@@ -140,9 +141,10 @@ namespace Spell.Apis
 // - 예: ""Fireball""은 3.0초, ""Ice Shield""는 10.0초, ""Meteor""는 5.0초
 
 // ""VfxName"" (string)
-// - 주문에 사용할 시각적 이펙트 이름입니다.
-// - 반드시 Unity의 Resources/SpellVFX 폴더에 있는 머티리얼 이름(확장자 제외)이어야 합니다.
-// - 예: ""SH_Vefects_VFX_AdvTrail"", ""SH_Vefects_VFX_Distor""
+// - 주문에 사용할 시각적 이펙트 머티리얼 이름입니다.
+// - 반드시 Unity의 Resources/MagicVFX/Magic VFX - Ice (FREE)/Models/Materials 폴더에 있는 머티리얼 이름(확장자 .mat 제외)이어야 합니다.
+// - 예: ""FlakesA1_01"", ""FrostFlake_01"", ""FrostFlake_02"", ""Glow_Fire"", ""Glow_Ice"", ""Glow_Ice_01"", ""Glow_Ice_02"", ""Glow_Ice_03"", ""Glow_Ice_04"", ""Glow_Ice_05"", ""Glow_Ice_06"", ""PlaneMask_01"", ""SmokeA1_01"", ""SmokeA1_02"", ""SnowFlake_01"", ""SnowFlake_02"", ""SnowFlake_03"", ""SnowFlake_04"", ""SnowFlake_05"", ""SnowFlake_06""
+// - 반드시 존재하는 머티리얼 이름만 사용하세요.
 
 ## 특별 지침
 - 당신이 생성하는 주문은 기본적으로 오브젝트를 발사해서 상대방을 맞추는 투척 주문입니다.

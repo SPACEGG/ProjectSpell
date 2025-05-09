@@ -79,23 +79,26 @@ namespace Spell.Model.Core
             }
 
             var filter = gameObject.AddComponent<MeshFilter>();
-            filter.sharedMesh = mesh;
+            filter.sharedMesh = mesh; // 선택된 메시(Shape)를 적용
 
             var renderer = gameObject.AddComponent<MeshRenderer>();
 
-            // 3. VFX 머티리얼 적용 (SpellData.VfxName이 있으면)
-            if (!string.IsNullOrEmpty(data.VfxName))
+            // 3. VFX 머티리얼 적용 (SpellData.VfxName이 None이 아니면)
+            if (data.VfxName != VfxNameType.None)
             {
-                // 실제 경로에 맞게 수정
-                var vfxMat = Resources.Load<Material>($"Vefects/Trails VFX URP/VFX/Shaders/{data.VfxName}");
+                string vfxNameStr = data.VfxName.ToString();
+                // 실제 경로에 맞게 공백 포함
+                string resourcePath = $"Magic VFX/Magic VFX - Ice (FREE)/Models/Materials/{vfxNameStr}";
+                Debug.Log($"[VFX] Resources.Load 경로: {resourcePath}");
+                var vfxMat = Resources.Load<Material>(resourcePath);
                 if (vfxMat != null)
                 {
                     renderer.material = vfxMat;
-                    Debug.Log($"VFX 머티리얼 적용: Vefects/Trails VFX URP/VFX/Shaders/{data.VfxName}");
+                    Debug.Log($"VFX 머티리얼 적용: {resourcePath}");
                 }
                 else
                 {
-                    Debug.LogWarning($"VFX 머티리얼을 찾을 수 없음: Vefects/Trails VFX URP/VFX/Shaders/{data.VfxName}.mat");
+                    Debug.LogWarning($"VFX 머티리얼을 찾을 수 없음: {resourcePath}.mat");
                     renderer.material = new Material(Shader.Find("Universal Render Pipeline/Simple Lit"));
                 }
             }

@@ -1,6 +1,8 @@
 ﻿using System.Collections.Generic;
 using Spell.Model.Enums;
 using UnityEngine;
+using Newtonsoft.Json;
+using Newtonsoft.Json.Converters;
 
 namespace Spell.Model.Data
 {
@@ -24,7 +26,8 @@ namespace Spell.Model.Data
         public float Speed;
         public float Duration;
 
-        public string VfxName { get; set; } // VFX 머티리얼/이펙트 이름 필드 추가
+        [JsonConverter(typeof(StringEnumConverter))]
+        public VfxNameType VfxName { get; set; } // VFX 머티리얼/이펙트 이름 필드 enum 타입으로 변경
 
         // 생성자에서 기본값 할당
         public SpellData()
@@ -41,6 +44,7 @@ namespace Spell.Model.Data
             HasGravity = false;
             Speed = 0f;
             Duration = 0f;
+            VfxName = VfxNameType.None;
         }
     }
 }
