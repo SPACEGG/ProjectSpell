@@ -1,0 +1,19 @@
+﻿classDiagram
+    direction LR
+
+    class SpellBehavior:::pink {
+        -Action[]
+    }
+
+    SpellBehavior <|-- ProjectileBehavior
+    SpellBehavior <|-- InstantBehavior
+    SpellBehavior <|-- SpawnBehavior
+
+    class Action {
+        +void Apply()
+    }
+
+    Action <|-- DamageAction
+    Action <|-- HealAction
+    Action <|-- BuffAction
+    Action <|-- DotAction

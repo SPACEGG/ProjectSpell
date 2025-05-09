@@ -1,0 +1,87 @@
+﻿sequenceDiagram
+    actor Player
+    participant DevSpellUIView
+    participant DevSpellUIPresenter
+    participant SpellDataController
+    participant SpellCaster
+    participant SpellFactory
+    participant SpellBehaviorBase
+    participant TextToSpellApi
+    participant WavToTextApi
+
+    activate Player
+    Player->>DevSpellUIView: Click Record Button
+    deactivate Player
+
+    activate DevSpellUIView
+    DevSpellUIView->>DevSpellUIPresenter: OnRecordButtonClicked()
+    deactivate DevSpellUIView
+
+    activate DevSpellUIPresenter
+    DevSpellUIPresenter->>DevSpellUIView: ToggleRecordButton(true)
+    deactivate DevSpellUIPresenter
+
+    activate Player
+    Player->>DevSpellUIView: Click API Request Button
+    deactivate Player
+
+    activate DevSpellUIView
+    DevSpellUIView->>DevSpellUIPresenter: OnApiRequestButtonClicked(powerLevel)
+    deactivate DevSpellUIView
+
+    activate DevSpellUIPresenter
+    DevSpellUIPresenter->>SpellDataController: BuildSpellDataAsync(audioClip, powerLevel, cameraTarget, casterPos)
+    deactivate DevSpellUIPresenter
+
+    activate SpellDataController
+    SpellDataController->>WavToTextApi: WavToTextAsync(wav)
+    deactivate SpellDataController
+
+    activate WavToTextApi
+    WavToTextApi-->>SpellDataController: text
+    deactivate WavToTextApi
+
+    activate SpellDataController
+    SpellDataController->>TextToSpellApi: TextToSpellAsync(text, powerLevel, cameraTarget, casterPos)
+    deactivate SpellDataController
+
+    activate TextToSpellApi
+    TextToSpellApi-->>SpellDataController: spellJson
+    deactivate TextToSpellApi
+
+    activate SpellDataController
+    SpellDataController->>SpellDataFactory: SafeFromJson(spellJson)
+    SpellDataFactory-->>SpellDataController: SpellData
+    SpellDataController-->>DevSpellUIPresenter: SpellData
+    deactivate SpellDataController
+
+    activate DevSpellUIPresenter
+    DevSpellUIPresenter-->>DevSpellUIView: Update UI with SpellData
+    deactivate DevSpellUIPresenter
+
+    activate Player
+    Player->>DevSpellUIView: Click Cast Spell Button
+    deactivate Player
+
+    activate DevSpellUIView
+    DevSpellUIView->>DevSpellUIPresenter: OnCastSpellButtonClicked()
+    DevSpellUIPresenter->>DevSpellUIView: CastSpellFromView(SpellData)
+    DevSpellUIView->>SpellCaster: CastSpell(SpellData)
+    deactivate DevSpellUIView
+
+    activate SpellCaster
+    SpellCaster->>SpellFactory: CreateSpellGameObject(SpellData)
+    deactivate SpellCaster
+
+    activate SpellFactory
+    SpellFactory->>SpellBehaviorBase: Create behavior based on type
+    SpellFactory-->>SpellCaster: SpellBehaviorBase instance
+    deactivate SpellFactory
+
+    activate SpellCaster
+    SpellCaster->>SpellBehaviorBase: Behave(spawnPosition)
+    deactivate SpellCaster
+
+    activate SpellBehaviorBase
+    SpellBehaviorBase->>SpellBehaviorBase: Apply spell effects
+    deactivate SpellBehaviorBase

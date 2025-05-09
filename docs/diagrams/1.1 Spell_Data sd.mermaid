@@ -1,0 +1,44 @@
+﻿sequenceDiagram
+    actor Player
+    participant DevSpellUIView
+    participant DevSpellUIPresenter
+    participant SpellDataController
+    participant TextToSpellApi
+    participant WavToTextApi
+    participant SpellDataFactory
+
+    activate Player
+    Player->>DevSpellUIView: Click Record Button
+    deactivate Player
+
+    activate DevSpellUIView
+    DevSpellUIView->>DevSpellUIPresenter: OnRecordButtonClicked()
+    deactivate DevSpellUIView
+
+    activate DevSpellUIPresenter
+    DevSpellUIPresenter->>DevSpellUIView: ToggleRecordButton(true)
+    deactivate DevSpellUIPresenter
+
+    activate DevSpellUIView
+    DevSpellUIView->>DevSpellUIPresenter: OnApiRequestButtonClicked(powerLevel)
+    deactivate DevSpellUIView
+
+    activate DevSpellUIPresenter
+    DevSpellUIPresenter->>SpellDataController: BuildSpellDataAsync(audioClip, powerLevel, cameraTarget, casterPos)
+    deactivate DevSpellUIPresenter
+
+    activate SpellDataController
+    SpellDataController->>WavToTextApi: WavToTextAsync(wav)
+    WavToTextApi-->>SpellDataController: text
+
+    SpellDataController->>TextToSpellApi: TextToSpellAsync(text, powerLevel, cameraTarget, casterPos)
+    TextToSpellApi-->>SpellDataController: spellJson
+
+    SpellDataController->>SpellDataFactory: SafeFromJson(spellJson)
+    SpellDataFactory-->>SpellDataController: SpellData
+    SpellDataController-->>DevSpellUIPresenter: SpellData
+    deactivate SpellDataController
+
+    activate DevSpellUIPresenter
+    DevSpellUIPresenter-->>DevSpellUIView: Update UI with SpellData
+    deactivate DevSpellUIPresenter

@@ -1,0 +1,20 @@
+﻿sequenceDiagram
+    actor Player
+    participant SpellCaster
+    participant SpellFactory
+    participant SpellBehavior
+
+    activate Player
+    Player->>SpellCaster: Cast Spell
+    deactivate Player
+
+    activate SpellCaster
+    SpellCaster->>SpellFactory: CreateSpellGameObject(SpellData)
+    SpellFactory->>SpellBehavior: Create behavior based on type
+    SpellFactory-->>SpellCaster: SpellBehavior instance
+    SpellCaster->>SpellBehavior: Behave(spawnPosition)
+    deactivate SpellCaster
+
+    activate SpellBehavior
+    SpellBehavior->>SpellBehavior: Apply spell effects
+    deactivate SpellBehavior
