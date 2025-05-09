@@ -65,6 +65,7 @@ public class PlayerManager : MonoBehaviour
 
         if (Input.GetKeyUp(recordKey))
         {
+            // TODO: 0.5초 미만이면 무시
             voiceRecorder.StopRecord();
             uiController.HideRecordIcon();
             Debug.Log("녹음 종료. Whisper API 호출...");
