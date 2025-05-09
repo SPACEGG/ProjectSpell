@@ -9,7 +9,7 @@ namespace Spell.Model.Core
     {
         public static SpellBehaviorBase CreateSpellGameObject(SpellData data)
         {
-            var gameObject = new GameObject($"[Spell] {data?.Name}");
+            var  gameObject= new GameObject($"[Spell] {data?.Name}");
 
             SpellBehaviorBase behavior;
             // 실패 조건: null, 이름이 Failure/DefaultSpell

@@ -86,8 +86,7 @@ Element, Behavior, Shape 값은 반드시 아래 명시된 목록 중에서 고�
     (예: ""Fireball""은 [2, 2, 2], ""Ice Shield""는 [3, 3, 1]).
 
 - ""HasGravity"" (boolean)
-	: 중력의 영향을 받는지 여부입니다. true 또는 false로 설정합니다.
-      (예: ""Fireball""은 true, ""Ice Shield""는 false).
+	: 중력의 영향을 받는지 여부입니다. true 또는 false로 설정합니다. 정말 광선같은 경우 아니면 true로 설정하세요.
 - ""PositionOffset"" (Vector3)
 	: [x, y, z] 형태의 벡터. 마법 주문 지팡이 끝부분이 기준인 offset입니다. 
       카메라 타겟 위치와 캐스터 위치를 고려하여 적절한 위치를 설정해야 합니다.
@@ -101,7 +100,9 @@ Element, Behavior, Shape 값은 반드시 아래 명시된 목록 중에서 고�
 - ""Actions"" (문자열 배열)
 	: 현재는 사용하지 않지만, 항상 빈 배열([])로 포함해야 합니다.
 - ""Speed"" (float)
-	: 투사체의 속도입니다. 필드 크기와 캐릭터 사이즈와 powerlevel을 고려해 주문에 적 속도를 설정해주세요. 
+	: 투사체의 속도입니다. 필드 크기, spawn position, targetpostion, powerlevel을 고려해 주문자의 의도대로 주문을 발사할 수 있도록 적절한 속도를 설정해야 합니다.
+        (0.0은 사용하지 마세요. 0.0은 ""Ice Shield""와 같은 고정형 주문에만 사용됩니다.)
+        (예: ""Fireball""은 12.0, ""Ice Shield""는 0.0, ""Meteor""는 20.0).
         (예: ""Fireball""은 12.0, ""Ice Shield""는 0.0).
 - ""Duration"" (float)
 	: 주문 오브젝트의 지속 시간입니다. 필드 크기와 캐릭터 사이즈를 고려해 적절한 지속 시간을 설정해야 합니다.
