@@ -12,8 +12,8 @@ namespace Spell.Model.Core
             var gameObject = new GameObject($"[Spell] {data?.Name}");
 
             SpellBehaviorBase behavior;
-            // 실패 조건: null, 이름이 Failure/DefaultSpell
-            if (data == null || data.Name == "Failure" || data.Name == "DefaultSpell")
+            // 실패 조건: null, 이름이 Failure
+            if (data == null || data.Name == "Failure")
             {
                 behavior = gameObject.AddComponent<FailureBehavior>();
             }
@@ -31,9 +31,7 @@ namespace Spell.Model.Core
                 }
             }
 
-            behavior.Data = data;
-
-            ApplyVFX(gameObject, data);
+            // ApplyVFX(gameObject, data);
 
             return behavior;
         }
