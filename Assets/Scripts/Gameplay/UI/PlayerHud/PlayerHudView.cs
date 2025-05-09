@@ -7,19 +7,23 @@ namespace Gameplay.UI.PlayerHud
 {
     public class PlayerHudView : MonoBehaviour
     {
+        [Header("Health")]
         [SerializeField] private Slider hpSlider;
         [SerializeField] private TextMeshProUGUI hpText;
+
+        [Header("Mana")]
         [SerializeField] private Slider[] mpSliders;
+        [SerializeField] private Image[] mpBorders;
         [SerializeField] private float animationSpeed = 8f;
 
-        private bool isAnimatingHp;
-        private float targetHpValue;
-        private bool isAnimatingMp;
-        private float[] targetMpValues;
+        private bool _isAnimatingHp;
+        private float _targetHpValue;
+        private bool _isAnimatingMp;
+        private float[] _targetMpValues;
 
         private void Awake()
         {
-            targetMpValues = new float[mpSliders.Length];
+            _targetMpValues = new float[mpSliders.Length];
         }
 
         private void Update()
@@ -30,9 +34,9 @@ namespace Gameplay.UI.PlayerHud
 
         public void SetHp(float current, float max)
         {
-            targetHpValue = current / max;
+            _targetHpValue = current / max;
             hpText.text = $"{current} / {max}";
-            isAnimatingHp = true;
+            _isAnimatingHp = true;
         }
 
         public void SetMp(float currentMana, float manaPerLevel)
@@ -44,47 +48,51 @@ namespace Gameplay.UI.PlayerHud
             {
                 if (i < filledManaLevelCount)
                 {
-                    targetMpValues[i] = 1f;
+                    _targetMpValues[i] = 1f;
+                    mpBorders[i].enabled = true;
                 }
                 else if (i == filledManaLevelCount)
                 {
-                    targetMpValues[i] = manaPercentageInLastLevel / manaPerLevel;
+                    _targetMpValues[i] = manaPercentageInLastLevel / manaPerLevel;
+                    mpBorders[i].enabled = false;
                 }
                 else
                 {
-                    targetMpValues[i] = 0f;
+                    _targetMpValues[i] = 0f;
+                    mpBorders[i].enabled = false;
                 }
             }
 
-            isAnimatingMp = true;
+            _isAnimatingMp = true;
         }
 
         private void UpdateHpAnimation()
         {
-            if (!isAnimatingHp) return;
+            if (!_isAnimatingHp) return;
 
-            float currentSpeed = hpSlider.value > targetHpValue ? animationSpeed * 2 : animationSpeed;
-            hpSlider.value = Mathf.Lerp(hpSlider.value, targetHpValue, Time.deltaTime * currentSpeed);
-            
-            isAnimatingHp = Mathf.Abs(hpSlider.value - targetHpValue) > 0.001f;
+            float currentSpeed = hpSlider.value > _targetHpValue ? animationSpeed * 2 : animationSpeed;
+            hpSlider.value = Mathf.Lerp(hpSlider.value, _targetHpValue, Time.deltaTime * currentSpeed);
+
+            _isAnimatingHp = Mathf.Abs(hpSlider.value - _targetHpValue) > 0.001f;
         }
 
         private void UpdateMpAnimation()
         {
-            if (!isAnimatingMp) return;
+            if (!_isAnimatingMp) return;
 
             bool stillAnimating = false;
             for (int i = 0; i < mpSliders.Length; i++)
             {
-                float currentSpeed = mpSliders[i].value > targetMpValues[i] ? animationSpeed * 2 : animationSpeed;
-                mpSliders[i].value = Mathf.Lerp(mpSliders[i].value, targetMpValues[i], Time.deltaTime * currentSpeed);
-                
-                if (Mathf.Abs(mpSliders[i].value - targetMpValues[i]) > 0.001f)
+                float currentSpeed = mpSliders[i].value > _targetMpValues[i] ? animationSpeed * 2 : animationSpeed;
+                mpSliders[i].value = Mathf.Lerp(mpSliders[i].value, _targetMpValues[i], Time.deltaTime * currentSpeed);
+
+                if (Mathf.Abs(mpSliders[i].value - _targetMpValues[i]) > 0.001f)
                 {
                     stillAnimating = true;
                 }
             }
-            isAnimatingMp = stillAnimating;
+
+            _isAnimatingMp = stillAnimating;
         }
     }
 }
