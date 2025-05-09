@@ -28,7 +28,8 @@ namespace Spell.Model.Core
             Vector3 size, 
             bool hasGravity,
             float speed,        
-            float duration      
+            float duration,
+            string vfxName = null // VfxName 파라미터 추가 (기본값 null)
         )
         {
             return new SpellData
@@ -44,7 +45,8 @@ namespace Spell.Model.Core
                 Size = size, 
                 HasGravity = hasGravity,
                 Speed = speed,       
-                Duration = duration 
+                Duration = duration,
+                VfxName = vfxName // 할당
             };
         }
 

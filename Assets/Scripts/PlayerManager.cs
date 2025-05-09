@@ -3,6 +3,7 @@ using Entity;
 using Spell;
 using UnityEngine;
 using Spell.Model.Core; // 추가
+using Spell.Model.Data; // 추가
 
 public class PlayerManager : MonoBehaviour
 {
@@ -23,6 +24,7 @@ public class PlayerManager : MonoBehaviour
 
     private VoiceRecorder voiceRecorder;
     private SpellDataController _spellController;
+    [SerializeField] private SpellCaster spellCaster; // SpellCaster 연결
 
     private void Start()
     {
@@ -32,6 +34,7 @@ public class PlayerManager : MonoBehaviour
 
     private void Update()
     {
+        
         if (Input.GetKeyDown(attackKey))
         {
             // FIXME: 기본공격
@@ -49,6 +52,7 @@ public class PlayerManager : MonoBehaviour
                 .SetGravity(hasGravity);
         }
 
+        // 마우스 우클릭(녹음 시작)
         if (Input.GetKeyDown(recordKey))
         {
             voiceRecorder.StartRecord();
@@ -56,6 +60,7 @@ public class PlayerManager : MonoBehaviour
             Debug.Log("녹음 시작");
         }
 
+        // 마우스 우클릭 해제(녹음 종료 및 주문 생성/시전)
         if (Input.GetKeyUp(recordKey))
         {
             voiceRecorder.StopRecord();
@@ -65,16 +70,27 @@ public class PlayerManager : MonoBehaviour
         }
     }
 
-    // TODO: 이 함수 이름이 UseSpell이 적절한가? (스킬실행?스펠실행?스펠저장?)
     private async UniTaskVoid UseSpell()
     {
-        // spell 생성 (이게 시간이 좀 걸림)
-        await _spellController.BuildSpellDataAsync(
+        Vector3 cameraTargetPosition = CameraUtil.GetCameraTargetPosition();
+        Vector3 direction = CameraUtil.GetCameraForward();
+
+        var spellData = await _spellController.BuildSpellDataAsync(
             voiceRecorder.VoiceClip, 
             1, 
-            Camera.main != null ? Camera.main.transform.position : Vector3.zero,
-            this.transform.position // 캐스터 위치 추가
-        ); // powerLevel 기본값 1, cameraTargetPosition, casterPosition 추가
-        // TODO: spell 생성 후 바로 skill을 실행할 것인가? 아니면 skillReady 플래그 같은걸 두는가?
-    }   // yield return StartCoroutine(스킬실행);
+            cameraTargetPosition,
+            this.transform.position,
+            direction
+        );
+        // spell 생성 후 바로 시전
+        if (spellData != null && spellCaster != null)
+        {
+            spellCaster.CastSpell(spellData);
+            Debug.Log($"플레이어가 주문 시전: {spellData.Name}");
+        }
+        else
+        {
+            Debug.LogWarning("SpellData 생성 실패 또는 SpellCaster 미할당");
+        }
+    }
 } // 클래스 종료

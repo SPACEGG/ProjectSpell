@@ -24,6 +24,8 @@ namespace Spell.Model.Data
         public float Speed;
         public float Duration;
 
+        public string VfxName { get; set; } // VFX 머티리얼/이펙트 이름 필드 추가
+
         // 생성자에서 기본값 할당
         public SpellData()
         {
