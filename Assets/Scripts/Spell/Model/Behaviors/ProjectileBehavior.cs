@@ -1,6 +1,8 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using Entity.Prefabs;
+using Spell.Model.Actions;
+using Spell.Model.Core;
 using Spell.Model.Data;
 using Spell.Model.Enums;
 using UnityEngine;
@@ -9,26 +11,27 @@ namespace Spell.Model.Behaviors
 {
     public class ProjectileBehavior : SpellBehaviorBase
     {
-
         private PrefabVisualData projectileVisualData;
-        private GameObject projectilePrefab;        // 실제 프리펩
+        private GameObject projectilePrefab; // 실제 프리펩
+        private SpellData _spellData; // 스펠 데이터
 
-        private ElementType elementType;            // 원소 타입
-        private ShapeType shapeType;                // 형태
-        private Vector3 scale = Vector3.one;        // 크기
-        private float speed = 1f;                   // 속도
-        private int count = 1;                      // 개수
-        private float spreadAngle = 10f;            // 발사 퍼지는 각도
-        private float spreadRange = 0f;             // 생성 범위
-        private bool hasGravity = true;             // 중력 여부
-        private bool activateOnCollision = true;    // 충돌 시 활성화 (false라면 수명 끝날때 활성화)
-        private float lifetime = 5f;                // 수명 (끝나면 사라짐)
-        private Vector3? direction;                 // 발사 방향 (로컬좌표계)
+        private ElementType elementType; // 원소 타입
+        private ShapeType shapeType; // 형태
+        private Vector3 scale = Vector3.one; // 크기
+        private float speed = 1f; // 속도
+        private int count = 1; // 개수
+        private float spreadAngle = 10f; // 발사 퍼지는 각도
+        private float spreadRange = 0f; // 생성 범위
+        private bool hasGravity = true; // 중력 여부
+        private bool activateOnCollision = true; // 충돌 시 활성화 (false라면 수명 끝날때 활성화)
+        private float lifetime = 5f; // 수명 (끝나면 사라짐)
+        private Vector3? direction; // 발사 방향 (로컬좌표계)
 
-        private Vector3 worldDirection;             // 발사 방향 (월드좌표계)
+        private Vector3 worldDirection; // 발사 방향 (월드좌표계)
 
         public override void Behave(SpellData spellData)
         {
+            _spellData = spellData;
             elementType = spellData.Element;
             shapeType = spellData.Shape;
             direction = spellData.Direction ?? Vector3.forward;
@@ -79,9 +82,7 @@ namespace Spell.Model.Behaviors
                 {
                     if (activateOnCollision)
                     {
-                        // TODO: Action.Apply
-
-                        // 터지고사라지기
+                        ApplyActions(col.gameObject);
                         proj.ApplyDestroyEffect(0.1f);
                     }
                 };
@@ -91,13 +92,28 @@ namespace Spell.Model.Behaviors
             }
         }
 
+        private void ApplyActions(GameObject target)
+        {
+            if (_spellData?.Actions == null) return;
+
+            foreach (var actionData in _spellData.Actions)
+            {
+                var action = ActionFactory.CreateAction(actionData);
+                if (action == null) continue;
+
+                var context = ActionContextFactory.CreateContext(actionData, target, _spellData);
+                if (context == null) continue;
+
+                action.Apply(context);
+            }
+        }
+
         // 스스로를 제거
         private IEnumerator DestroyEntity(float seconds)
         {
             yield return new WaitForSeconds(seconds);
             if (activateOnCollision)
             {
-                // 그냥사라지기
                 Destroy(gameObject);
             }
             else

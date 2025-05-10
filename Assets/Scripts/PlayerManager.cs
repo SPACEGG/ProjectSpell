@@ -1,3 +1,5 @@
+using System;
+using System.Collections.Generic;
 using Cysharp.Threading.Tasks;
 using UnityEngine;
 using Spell.Model.Core;
@@ -33,20 +35,24 @@ public class PlayerManager : MonoBehaviour
     private SpellDataController _spellController;
     private SpellCaster spellCaster;
 
+    private void Awake()
+    {
+        HealthModel = new HealthModel(healthData);
+        ManaModel = new ManaModel(manaData);
+    }
+
     private void Start()
     {
         voiceRecorder = new();
         _spellController = new SpellDataController();
 
-        HealthModel = new HealthModel(healthData);
-        ManaModel = new ManaModel(manaData);
         spellCaster = GetComponent<SpellCaster>();
 
         defaultSpell = SpellDataFactory.Create(
             "Default Spell",
             elementType,
             BehaviorType.Projectile,
-            null,
+            new List<SpellActionData> { new(ActionType.Damage, TargetType.Enemy, 10f) },
             offset,
             Vector3.forward,
             count,
