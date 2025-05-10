@@ -1166,7 +1166,10 @@ PrefabInstance:
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
-    m_AddedGameObjects: []
+    m_AddedGameObjects:
+    - targetCorrespondingSourceObject: {fileID: 5360683131785772904, guid: 0331b169005eb1d469455efaa6b9024a, type: 3}
+      insertIndex: 0
+      addedObject: {fileID: 1200393729}
     m_AddedComponents:
     - targetCorrespondingSourceObject: {fileID: 4697017240656324050, guid: 0331b169005eb1d469455efaa6b9024a, type: 3}
       insertIndex: -1
@@ -1197,6 +1200,11 @@ MonoBehaviour:
 --- !u!95 &1153214927 stripped
 Animator:
   m_CorrespondingSourceObject: {fileID: 5615497917579445399, guid: 0331b169005eb1d469455efaa6b9024a, type: 3}
+  m_PrefabInstance: {fileID: 1153214924}
+  m_PrefabAsset: {fileID: 0}
+--- !u!4 &1153214928 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 5360683131785772904, guid: 0331b169005eb1d469455efaa6b9024a, type: 3}
   m_PrefabInstance: {fileID: 1153214924}
   m_PrefabAsset: {fileID: 0}
 --- !u!1 &1181101985
@@ -1274,6 +1282,58 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1181101985}
   m_CullTransparentMesh: 1
+--- !u!1 &1200393727
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1200393729}
+  - component: {fileID: 1200393728}
+  m_Layer: 0
+  m_Name: DamagePopupManager
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &1200393728
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1200393727}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ca0ed293b54920c4db264ff4bf33380d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  healthProviderComponent: {fileID: 1153214926}
+  damagePopupPrefab: {fileID: 1501800706159081942, guid: a95f53cd289964945a5d05dfc15ca3b7, type: 3}
+  popupDuration: 1
+  popupMoveSpeed: 1
+  popupFadeSpeed: 1
+  popupOffset: {x: 0, y: 1, z: 0}
+  damageColor: {r: 1, g: 0, b: 0, a: 1}
+  healColor: {r: 0, g: 1, b: 0, a: 1}
+--- !u!4 &1200393729
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1200393727}
+  serializedVersion: 2
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 0.092175364, y: 0.97262955, z: 0.0007658005}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 1153214928}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1236627173
 GameObject:
   m_ObjectHideFlags: 0

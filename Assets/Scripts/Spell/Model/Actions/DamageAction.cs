@@ -32,8 +32,6 @@ namespace Spell.Model.Actions
                 return;
             }
 
-            Debug.Log("Applying damage action to target: " + damageContext.Target.name);
-
             var healthProvider = damageContext.Target.GetComponent<IHealthProvider>();
             if (healthProvider == null)
             {
