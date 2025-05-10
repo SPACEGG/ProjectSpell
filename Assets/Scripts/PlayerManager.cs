@@ -1,3 +1,5 @@
+using System;
+using System.Collections.Generic;
 using Cysharp.Threading.Tasks;
 using UnityEngine;
 using Spell.Model.Core;
@@ -56,7 +58,7 @@ public class PlayerManager : MonoBehaviour
             "Default Spell",
             elementType,
             BehaviorType.Projectile,
-            null,
+            new List<SpellActionData> { new(ActionType.Damage, TargetType.Enemy, 10f) },
             offset,
             Vector3.forward,
             count,
