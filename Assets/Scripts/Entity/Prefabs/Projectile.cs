@@ -14,6 +14,8 @@ namespace Entity.Prefabs
 
         [SerializeField]
         private GameObject effectPrefab;
+        [SerializeField]
+        private bool isAlignForward = true;
         private Rigidbody rb;
         private bool isCollide = false;
 
@@ -24,7 +26,7 @@ namespace Entity.Prefabs
 
         private void FixedUpdate()
         {
-            if (!isCollide)
+            if (!isCollide && isAlignForward)
                 AlignForwardToVelocity();
         }
 

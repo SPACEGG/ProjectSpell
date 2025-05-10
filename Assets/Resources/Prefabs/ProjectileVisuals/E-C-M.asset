@@ -16,4 +16,8 @@ MonoBehaviour:
   shapeType: 1
   sizeCategory: 1
   prefabList:
-  - {fileID: 8003682821565505078, guid: 13eb340b6f998e549ad2025685d758ed, type: 3}
+  - {fileID: 8876082839775477964, guid: 758769833116b394fa448c1ff82bf42e, type: 3}
+  - {fileID: 6285264895703233671, guid: 7585a8da06217ee4fadae29a15adde19, type: 3}
+  - {fileID: 7707350985276976811, guid: ee4ee3f37c05f0547bdb3034db3b37c3, type: 3}
+  - {fileID: 8238546814279812930, guid: 3320abd32bb143e45b89345f441cfe98, type: 3}
+  - {fileID: 3340233252952908866, guid: 05d8671f34213504d9d972dee9b1f751, type: 3}

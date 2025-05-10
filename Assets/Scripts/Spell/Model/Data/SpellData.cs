@@ -12,7 +12,6 @@ namespace Spell.Model.Data
     /// <summary>
     /// Gpt의 응답으로 사용할 클래스이자 Spell를 생성할 때 필요한 데이터 클래스.
     /// </summary>
-    // [CreateAssetMenu(fileName = "SpellData", menuName = "Scriptable Objects/SpellData")]
     public class SpellData
     {
         public string Name { get; init; }

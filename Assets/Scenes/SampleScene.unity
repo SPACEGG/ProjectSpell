@@ -260,6 +260,8 @@ MonoBehaviour:
   attackKey: 323
   recordKey: 324
   uiController: {fileID: 2088568619}
+  healthData: {fileID: 11400000, guid: 8c8a45572bd365944ab6bfd6faab500f, type: 2}
+  manaData: {fileID: 11400000, guid: 90dc09c05d45d6849bb458aac0a02e9c, type: 2}
   elementType: 1
   shapeType: 2
   offset: {x: 0, y: 0, z: 0}

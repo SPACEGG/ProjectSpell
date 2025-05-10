@@ -19,6 +19,8 @@ namespace Gameplay.UI.PlayerHud
             _mpModel = playerManager.ManaModel;
 
             _presenter = new PlayerHudPresenter(view, _hpModel, _mpModel);
+
+            Debug.Log(_hpModel.CurrentHealth);
         }
 
         private void OnDestroy()

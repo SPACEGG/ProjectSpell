@@ -1,5 +1,7 @@
+using System;
 using UnityEngine;
 
+[Obsolete("이거 말고 RecordController을 쓰세요")]
 public class VoiceRecorder
 {
 
