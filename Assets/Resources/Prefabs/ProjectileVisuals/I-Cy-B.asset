@@ -17,3 +17,12 @@ MonoBehaviour:
   sizeCategory: 2
   prefabList:
   - {fileID: 3452393733236986927, guid: dac7c95657bcc8c4394d994eb565f5a9, type: 3}
+  - {fileID: 1516884699599311547, guid: 6e51963cf3aad6149890110dcbccaba8, type: 3}
+  - {fileID: 2460847083134605567, guid: b1131e8000929dd4db2b5fb290fb1a77, type: 3}
+  - {fileID: 6669417086250108769, guid: b46cbf4f9cbb67043b8f408805066a08, type: 3}
+  - {fileID: 2241779531678386783, guid: d62d5c225608c94408a98df9c6a9fb19, type: 3}
+  - {fileID: 1036250395987674645, guid: f1d6f9b0de0484d4f8beedaa1dfe83b2, type: 3}
+  - {fileID: 5038742684398153257, guid: bd28404c0fb4c5e40aacf334aa2b0950, type: 3}
+  - {fileID: 3880008467054783958, guid: 2a17430bdd217b143b08532656423c81, type: 3}
+  - {fileID: 2423306959780804255, guid: b6ace71ca6cf3cb42ba239be7602b8e5, type: 3}
+  - {fileID: 1821468218813192420, guid: 791d5b63db87ff14d857567a2cea1db4, type: 3}
