@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using Cysharp.Threading.Tasks;
 using UnityEngine;
 using Spell.Model.Core;
@@ -41,7 +42,7 @@ namespace Player
                 "Default Spell",
                 ElementType.Earth,
                 BehaviorType.Projectile,
-                null,
+                new List<SpellActionData>() { new(ActionType.Damage, TargetType.Enemy, 10) },
                 Vector3.zero,
                 Vector3.forward,
                 1,
