@@ -4,7 +4,7 @@ using UnityEngine;
 
 namespace Player
 {
-    public class HealthManaManager : MonoBehaviour
+    public class HealthManaManager : MonoBehaviour, IHealthProvider, IManaProvider
     {
         [SerializeField]
         private HealthData healthData;
@@ -16,8 +16,8 @@ namespace Player
 
         private void Awake()
         {
-            HealthModel = new(healthData);
-            ManaModel = new(manaData);
+            HealthModel = new HealthModel(healthData);
+            ManaModel = new ManaModel(manaData);
         }
     }
 }

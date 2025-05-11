@@ -25,7 +25,6 @@ namespace Gameplay.UI.PlayerHud
 
         private void UpdateHp(float currentHealth)
         {
-            Debug.Log("UpdateHp: " + currentHealth);
             _view.SetHp(currentHealth, _healthModel.MaxHealth);
         }
 
