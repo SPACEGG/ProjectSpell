@@ -1,4 +1,5 @@
 ﻿using Common.Models;
+using Player;
 using UnityEngine;
 
 namespace Gameplay.UI.PlayerHud
@@ -7,7 +8,7 @@ namespace Gameplay.UI.PlayerHud
     {
         [SerializeField] private PlayerHudView view;
 
-        [SerializeField] private PlayerManager playerManager;
+        [SerializeField] private HealthManaManager playerHealthManaManager;
 
         private PlayerHudPresenter _presenter;
         private HealthModel _hpModel;
@@ -15,8 +16,8 @@ namespace Gameplay.UI.PlayerHud
 
         private void Start()
         {
-            _hpModel = playerManager.HealthModel;
-            _mpModel = playerManager.ManaModel;
+            _hpModel = playerHealthManaManager.HealthModel;
+            _mpModel = playerHealthManaManager.ManaModel;
 
             _presenter = new PlayerHudPresenter(view, _hpModel, _mpModel);
 
