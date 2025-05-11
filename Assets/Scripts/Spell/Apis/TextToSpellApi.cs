@@ -82,16 +82,9 @@ Element, Behavior, Shape 값은 반드시 아래 명시된 목록 중에서 고�
 - ""PositionOffset"" (Vector3)
 	: [x, y, z] 형태의 벡터. 마법 주문 지팡이 끝부분이 기준인 offset입니다. 
       카메라 타겟 위치와 캐스터 위치를 고려하여 적절한 위치를 설정해야 합니다.
-      (예: [0, 0, 0]은 지팡이 끝에서 발사하는 경우, [0, 1, 0]은 캐스터 위쪽에서 발사하는 경우).
+      (예: [0, 0, 0]은 지팡이 끝에서 발사하는 경우, [0, 1, 0]은 캐스터 위쪽에서 발사하는 경우, [0, 10, 0]은 하늘에서 발사되는 경우).
 - ""Direction"" (Vector3)
-	: [x, y, z] 방향 벡터여야 하며, 기본적으로는 투사체 주문이기 때문에 카메라 기준 앞인 [0, 0, 1]이지만, 하늘에서 떨어지는 경우 필드크기와 캐릭터 사이즈를 고려하여 적절한 방향을 설정해야 합니다.
-      (예: [0, 0, 1]은 정면, [0, -1, 1]은 메테오 같은 경우 위에서 앞쪽으로 떨어지는 경우).
-      실제 시스템에서는 이 Direction 벡터가 오브젝트의 Transform 기준으로 월드 방향으로 변환되어 발사 방향이 결정됩니다. 값이 없으면 [0,0,1]이 기본값입니다.
-
-      실제 시스템 동작: SpellData.Direction 값이 있으면 그 방향으로, 없으면 [0,0,1]로 발사됩니다.
-      이 방향 벡터는 ProjectileBehavior에서 transform.TransformDirection을 통해 월드 방향으로 변환되어,
-      발사체의 forward 방향이 되고, Rigidbody.AddForce로 해당 방향으로 힘이 가해져 날아갑니다.
-      즉, Direction에 따라 실제 발사체가 날아가는 방향이 결정됩니다.
+	: [x, y, z] 방향 벡터입니다. [0, 0, 1]은 앞을 향한 방향, [0, -1, 0]은 아래를 향한 방향입니다.
 - ""Count"" (int)
 	: 생성할 주문 오브젝트의 개수입니다. 1 이상의 정수여야 합니다. 꼭 1일 필요는 없습니다. 궁극기의 경우 더 화려하고 강력할 수 있게 설정해주세요.
         (예: ""Frost Javelin""은 3개, ""Fireball""은 1개).
@@ -215,14 +208,12 @@ Element, Behavior, Shape 값은 반드시 아래 명시된 목록 중에서 고�
             }
         }
 
+        // FIXME: cameraTargetPosition, casterPosition 없애기
         public async UniTask<string> TextToSpellAsync(string text, int powerLevel, Vector3 cameraTargetPosition, Vector3 casterPosition)
         {
             // 카메라 타겟 위치와 캐스터 위치 정보를 프롬프트에 추가
             var userPrompt =
-                $"[PowerLevel: {powerLevel}] {text}\n" +
-                $"카메라가 가리키는 월드 좌표: [{cameraTargetPosition.x:F2}, {cameraTargetPosition.y:F2}, {cameraTargetPosition.z:F2}]\n" +
-                $"캐스터(시전자) 위치: [{casterPosition.x:F2}, {casterPosition.y:F2}, {casterPosition.z:F2}]\n" +
-                $"이 좌표들을 주문의 방향(Direction) 또는 PositionOffset 계산에 참고하세요.";
+                $"[PowerLevel: {powerLevel}] {text}\n";
 
             var payload = new
             {
