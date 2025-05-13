@@ -2,14 +2,15 @@ using System;
 using System.Collections.Generic;
 using Cysharp.Threading.Tasks;
 using UnityEngine;
-using Spell.Model.Core;
+using Spell.Models.Core; // 추가
+using Sells.Models.Data;
 using Common.Models;
-using Common.Data;
-using Spell.Model.Data;
+using Spell.Moell.Data;
 using Spell.Model.Enums;
 using System;
 
 [Obsolete("이거는 너무 복잡해서 안씁니다. Scripts/Player에 있는 컴포넌트들을 대신 쓰세요.")]
+
 public class PlayerManager : MonoBehaviour
 {
     public KeyCode attackKey = KeyCode.Mouse0;
@@ -37,6 +38,8 @@ public class PlayerManager : MonoBehaviour
 
     private VoiceRecorder voiceRecorder;
     private SpellDataController _spellController;
+    [SerializeField] private SpellCaster spellCaster; // SpellCaster 연결
+    
     private SpellCaster spellCaster;
 
     private float recordStartTime;
@@ -82,6 +85,7 @@ public class PlayerManager : MonoBehaviour
             spellCaster.CastSpell(defaultSpell);
         }
 
+        // 마우스 우클릭(녹음 시작)
         if (Input.GetKeyDown(recordKey))
         {
             voiceRecorder.StartRecord();
@@ -90,6 +94,7 @@ public class PlayerManager : MonoBehaviour
             Debug.Log("녹음 시작");
         }
 
+        // 마우스 우클릭 해제(녹음 종료 및 주문 생성/시전)
         if (Input.GetKeyUp(recordKey))
         {
             voiceRecorder.StopRecord();
@@ -106,19 +111,25 @@ public class PlayerManager : MonoBehaviour
 
     private async UniTaskVoid UseSpell()
     {
-        // spell 생성
-        SpellData spelldata = await _spellController.BuildSpellDataAsync(
-            voiceRecorder.VoiceClip,
-            1,
-            Camera.main != null ? Camera.main.transform.position : Vector3.zero,
-            transform.position // 캐스터 위치 추가
-        ); // powerLevel 기본값 1, cameraTargetPosition, casterPosition 추가
+        Vector3 cameraTargetPosition = CameraUtil.GetCameraTargetPosition();
+        Vector3 direction = CameraUtil.GetCameraForward();
 
-        spellCaster.CastSpell(spelldata);
-
-        // 마나 소모
-        ManaModel.UseMana(manaCost);
-
-        // TODO: spell 생성 후 바로 skill을 실행할 것인가? 아니면 skillReady 플래그 같은걸 두는가?
-    } // yield return StartCoroutine(스킬실행);
-}
+        var spellData = await _spellController.BuildSpellDataAsync(
+            voiceRecorder.VoiceClip, 
+            1, 
+            cameraTargetPosition,
+            this.transform.position,
+            direction
+        );
+        // spell 생성 후 바로 시전
+        if (spellData != null && spellCaster != null)
+        {
+            spellCaster.CastSpell(spellData);
+            Debug.Log($"플레이어가 주문 시전: {spellData.Name}");
+        }
+        else
+        {
+            Debug.LogWarning("SpellData 생성 실패 또는 SpellCaster 미할당");
+        }
+    }
+} // 클래스 종료

@@ -9,7 +9,7 @@ namespace Spell.Model.Core
     {
         public static SpellBehaviorBase CreateSpellGameObject(SpellData data)
         {
-            var gameObject = new GameObject($"[Spell] {data?.Name}");
+            var  gameObject= new GameObject($"[Spell] {data?.Name}");
 
             SpellBehaviorBase behavior;
             // 실패 조건: null, 이름이 Failure
@@ -40,14 +40,12 @@ namespace Spell.Model.Core
         private static void ApplyVFX(GameObject gameObject, SpellData data)
         {
             // 1. 크기 적용 (Vector3)
-            // SpellData의 Size(x, y, z) 값을 오브젝트의 localScale에 적용하여 각 축별로 크기를 조절
             Vector3 size = data.Size;
             if (size == Vector3.zero)
                 size = Vector3.one * 0.001f;
             gameObject.transform.localScale = size;
 
             // 2. 메시 적용 (Shape)
-            // SpellData의 Shape에 따라 Unity 기본 도형을 임시로 생성하고, 해당 메시를 복사하여 사용
             Mesh mesh = null;
             GameObject tempPrimitive = null;
             switch (data.Shape)
@@ -74,20 +72,38 @@ namespace Spell.Model.Core
             }
             if (tempPrimitive != null)
             {
-                // 임시 오브젝트에서 메시를 꺼내와서 사용 후 바로 삭제
                 mesh = tempPrimitive.GetComponent<MeshFilter>().sharedMesh;
                 Object.Destroy(tempPrimitive);
             }
 
-            // 3. MeshFilter, MeshRenderer 컴포넌트 추가 및 메시/머티리얼 적용
-            // - MeshFilter: 3D 형태(Shape) 담당
-            // - MeshRenderer: 화면에 렌더링(그리기) 담당
             var filter = gameObject.AddComponent<MeshFilter>();
-            filter.sharedMesh = mesh;
+            filter.sharedMesh = mesh; // 선택된 메시(Shape)를 적용
 
             var renderer = gameObject.AddComponent<MeshRenderer>();
-            renderer.material = new Material(Shader.Find("Universal Render Pipeline/Simple Lit"));
-            // TODO: 머티리얼, 렌더링 에셋 등은 추후 SpellData에 추가하여 동적으로 적용 가능
+
+            // 3. VFX 머티리얼 적용 (SpellData.VfxName이 None이 아니면)
+            if (data.VfxName != VfxNameType.None)
+            {
+                string vfxNameStr = data.VfxName.ToString();
+                // 실제 경로에 맞게 공백 포함
+                string resourcePath = $"Magic VFX/Magic VFX - Ice (FREE)/Models/Materials/{vfxNameStr}";
+                Debug.Log($"[VFX] Resources.Load 경로: {resourcePath}");
+                var vfxMat = Resources.Load<Material>(resourcePath);
+                if (vfxMat != null)
+                {
+                    renderer.material = vfxMat;
+                    Debug.Log($"VFX 머티리얼 적용: {resourcePath}");
+                }
+                else
+                {
+                    Debug.LogWarning($"VFX 머티리얼을 찾을 수 없음: {resourcePath}.mat");
+                    renderer.material = new Material(Shader.Find("Universal Render Pipeline/Simple Lit"));
+                }
+            }
+            else
+            {
+                renderer.material = new Material(Shader.Find("Universal Render Pipeline/Simple Lit"));
+            }
         }
     }
 }
