@@ -7,7 +7,7 @@ namespace Spell.Model.Core
 {
     public static class ActionContextFactory
     {
-        public static SpellContext CreateContext(SpellActionData actionData, GameObject target, SpellData spellData)
+        public static SpellContext CreateContext(SpellActionData actionData, GameObject target, GameObject origin, SpellData spellData)
         {
             return actionData.Action switch
             {

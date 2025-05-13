@@ -82,7 +82,7 @@ namespace Spell.Model.Behaviors
                 {
                     if (activateOnCollision)
                     {
-                        ApplyActions(col.gameObject);
+                        ApplyActions(col.gameObject, proj.gameObject);
                         proj.ApplyDestroyEffect(0.1f);
                     }
                 };
@@ -92,7 +92,7 @@ namespace Spell.Model.Behaviors
             }
         }
 
-        private void ApplyActions(GameObject target)
+        private void ApplyActions(GameObject target, GameObject origin)
         {
             if (_spellData?.Actions == null) return;
 
@@ -101,7 +101,7 @@ namespace Spell.Model.Behaviors
                 var action = ActionFactory.CreateAction(actionData);
                 if (action == null) continue;
 
-                var context = ActionContextFactory.CreateContext(actionData, target, _spellData);
+                var context = ActionContextFactory.CreateContext(actionData, target, origin, _spellData);
                 if (context == null) continue;
 
                 action.Apply(context);

@@ -2,12 +2,11 @@ using System;
 using System.Collections.Generic;
 using Cysharp.Threading.Tasks;
 using UnityEngine;
-using Spell.Models.Core; // 추가
-using Sells.Models.Data;
 using Common.Models;
-using Spell.Moell.Data;
 using Spell.Model.Enums;
-using System;
+using Spell.Model.Data;
+using Common.Data;
+using Spell.Model.Core;
 
 [Obsolete("이거는 너무 복잡해서 안씁니다. Scripts/Player에 있는 컴포넌트들을 대신 쓰세요.")]
 
@@ -39,8 +38,6 @@ public class PlayerManager : MonoBehaviour
     private VoiceRecorder voiceRecorder;
     private SpellDataController _spellController;
     [SerializeField] private SpellCaster spellCaster; // SpellCaster 연결
-    
-    private SpellCaster spellCaster;
 
     private float recordStartTime;
 
@@ -115,8 +112,8 @@ public class PlayerManager : MonoBehaviour
         Vector3 direction = CameraUtil.GetCameraForward();
 
         var spellData = await _spellController.BuildSpellDataAsync(
-            voiceRecorder.VoiceClip, 
-            1, 
+            voiceRecorder.VoiceClip,
+            1,
             cameraTargetPosition,
             this.transform.position,
             direction
