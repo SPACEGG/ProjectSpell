@@ -4,7 +4,7 @@ using UnityEngine;
 
 namespace Spell.Model.Actions
 {
-    public record HealSpellContext : SpellContext
+    public record HealActionContext : ActionContext
     {
         public GameObject Target { get; init; }
         public float BaseHeal { get; init; }
@@ -13,9 +13,9 @@ namespace Spell.Model.Actions
 
     public class HealAction : SpellAction
     {
-        public override void Apply(SpellContext context)
+        public override void Apply(ActionContext context)
         {
-            if (context is not HealSpellContext HealContext)
+            if (context is not HealActionContext HealContext)
             {
                 Debug.LogError("Invalid context type for HealAction");
                 return;

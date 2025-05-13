@@ -4,7 +4,7 @@ using UnityEngine;
 
 namespace Spell.Model.Actions
 {
-    public record KnuckbackSpellContext : SpellContext
+    public record KnockbackActionContext : ActionContext
     {
         public GameObject Target { get; init; }
         public GameObject Origin { get; init; }
@@ -12,58 +12,58 @@ namespace Spell.Model.Actions
         public ElementType Element { get; init; }
     }
 
-    public class KnuckbackAction : SpellAction
+    public class KnockbackAction : SpellAction
     {
-        public override void Apply(SpellContext context)
+        public override void Apply(ActionContext context)
         {
-            if (context is not KnuckbackSpellContext KnuckbackContext)
+            if (context is not KnockbackActionContext KnockbackContext)
             {
                 Debug.LogError("Invalid context type for KnuckbackAction");
                 return;
             }
 
-            if (KnuckbackContext.Target == null)
+            if (KnockbackContext.Target == null)
             {
                 Debug.LogWarning("No target specified for knuckback action");
                 return;
             }
 
-            if (!KnuckbackContext.Target.TryGetComponent<Rigidbody>(out var targetRigid))
+            if (!KnockbackContext.Target.TryGetComponent<Rigidbody>(out var targetRigid))
             {
-                targetRigid = KnuckbackContext.Target.GetComponentInParent<Rigidbody>();
+                targetRigid = KnockbackContext.Target.GetComponentInParent<Rigidbody>();
 
                 if (targetRigid == null)
                 {
-                    Debug.LogWarning($"Target {KnuckbackContext.Target.name} has no Rigidbody");
+                    Debug.LogWarning($"Target {KnockbackContext.Target.name} has no Rigidbody");
                     return;
                 }
             }
 
-            if (KnuckbackContext.Origin == null)
+            if (KnockbackContext.Origin == null)
             {
                 Debug.LogWarning("No origin specified for knuckback action");
                 return;
             }
 
-            if (!KnuckbackContext.Origin.TryGetComponent<Rigidbody>(out var originRigid))
+            if (!KnockbackContext.Origin.TryGetComponent<Rigidbody>(out var originRigid))
             {
-                targetRigid = KnuckbackContext.Target.GetComponentInParent<Rigidbody>();
+                targetRigid = KnockbackContext.Target.GetComponentInParent<Rigidbody>();
 
                 if (targetRigid == null)
                 {
-                    Debug.LogWarning($"Origin {KnuckbackContext.Origin.name} has no Rigidbody");
+                    Debug.LogWarning($"Origin {KnockbackContext.Origin.name} has no Rigidbody");
                     return;
                 }
             }
 
             if (originRigid.linearVelocity.sqrMagnitude < 0.01f)
             {
-                Debug.LogWarning($"Origin {KnuckbackContext.Origin.name} has no velocity");
+                Debug.LogWarning($"Origin {KnockbackContext.Origin.name} has no velocity");
                 return;
             }
 
             Vector3 direction = originRigid.linearVelocity.normalized;
-            targetRigid.AddForce(direction * KnuckbackContext.BaseForce, ForceMode.Impulse);
+            targetRigid.AddForce(direction * KnockbackContext.BaseForce, ForceMode.Impulse);
         }
     }
 }

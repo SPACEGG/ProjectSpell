@@ -4,7 +4,7 @@ using UnityEngine;
 
 namespace Spell.Model.Actions
 {
-    public record DamageSpellContext : SpellContext
+    public record DamageActionContext : ActionContext
     {
         public GameObject Target { get; init; }
         public float BaseDamage { get; init; }
@@ -13,9 +13,9 @@ namespace Spell.Model.Actions
 
     public class DamageAction : SpellAction
     {
-        public override void Apply(SpellContext context)
+        public override void Apply(ActionContext context)
         {
-            if (context is not DamageSpellContext damageContext)
+            if (context is not DamageActionContext damageContext)
             {
                 Debug.LogError("Invalid context type for DamageAction");
                 return;

@@ -4,7 +4,7 @@ using UnityEngine;
 
 namespace Spell.Model.Actions
 {
-    public record ManaRegenSpellContext : SpellContext
+    public record ManaRegenActionContext : ActionContext
     {
         public GameObject Target { get; init; }
         public float BaseManaRegen { get; init; }
@@ -13,9 +13,9 @@ namespace Spell.Model.Actions
 
     public class ManaRegenAction : SpellAction
     {
-        public override void Apply(SpellContext context)
+        public override void Apply(ActionContext context)
         {
-            if (context is not ManaRegenSpellContext ManaContext)
+            if (context is not ManaRegenActionContext ManaContext)
             {
                 Debug.LogError("Invalid context type for ManaRegenAction");
                 return;
