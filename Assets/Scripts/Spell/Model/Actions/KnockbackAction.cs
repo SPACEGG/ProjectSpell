@@ -51,9 +51,15 @@ namespace Spell.Model.Actions
 
                 if (targetRigid == null)
                 {
-                    Debug.LogWarning($"Origin {KnuckbackContext.Target.name} has no Rigidbody");
+                    Debug.LogWarning($"Origin {KnuckbackContext.Origin.name} has no Rigidbody");
                     return;
                 }
+            }
+
+            if (originRigid.linearVelocity.sqrMagnitude < 0.01f)
+            {
+                Debug.LogWarning($"Origin {KnuckbackContext.Origin.name} has no velocity");
+                return;
             }
 
             Vector3 direction = originRigid.linearVelocity.normalized;
