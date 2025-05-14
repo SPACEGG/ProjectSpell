@@ -1,5 +1,6 @@
+using Unity.Netcode;
 using UnityEngine;
-#if ENABLE_INPUT_SYSTEM 
+#if ENABLE_INPUT_SYSTEM
 using UnityEngine.InputSystem;
 #endif
 
@@ -9,11 +10,16 @@ using UnityEngine.InputSystem;
 namespace StarterAssets
 {
     [RequireComponent(typeof(CharacterController))]
-#if ENABLE_INPUT_SYSTEM 
+#if ENABLE_INPUT_SYSTEM
     [RequireComponent(typeof(PlayerInput))]
 #endif
-    public class ThirdPersonController : MonoBehaviour
+    public class NetworkThirdPersonController : NetworkBehaviour
     {
+        [Header("Controls")]
+        [SerializeField] private CharacterController characterController;
+        [SerializeField] private GameObject playerCameraObject;
+        [SerializeField] private GameObject playerFollowCamera;
+
         [Header("Player")]
         [Tooltip("Move speed of the character in m/s")]
         public float MoveSpeed = 2.0f;
@@ -100,13 +106,13 @@ namespace StarterAssets
         private int _animIDAttack;
         private int _animIDSpell;
 
-#if ENABLE_INPUT_SYSTEM 
+#if ENABLE_INPUT_SYSTEM
         private PlayerInput _playerInput;
 #endif
         private Animator _animator;
         private CharacterController _controller;
         private StarterAssetsInputs _input;
-        private GameObject _mainCamera;
+        private GameObject _globalCamera;
 
         private const float _threshold = 0.01f;
 
@@ -133,24 +139,46 @@ namespace StarterAssets
         private void Awake()
         {
             // get a reference to our main camera
-            if (_mainCamera == null)
+            if (_globalCamera == null)
             {
-                _mainCamera = GameObject.FindGameObjectWithTag("MainCamera");
+                _globalCamera = GameObject.FindGameObjectWithTag("GlobalCamera");
+            }
+
+            playerCameraObject.SetActive(false);
+            playerFollowCamera.SetActive(false);
+
+            characterController.enabled = false;
+#if ENABLE_INPUT_SYSTEM
+            _playerInput = GetComponent<PlayerInput>();
+            _playerInput.enabled = false;
+#else
+			Debug.LogError( "Starter Assets package is missing dependencies. Please use Tools/Starter Assets/Reinstall Dependencies to fix it");
+#endif
+        }
+
+        public override void OnNetworkSpawn()
+        {
+            if (IsLocalPlayer)
+            {
+                characterController.enabled = true;
+                _playerInput.enabled = true;
+
+                playerCameraObject.SetActive(true);
+                playerFollowCamera.SetActive(true);
+                if (_globalCamera)
+                {
+                    _globalCamera.SetActive(false);
+                }
             }
         }
 
         private void Start()
         {
             _cinemachineTargetYaw = CinemachineCameraTarget.transform.rotation.eulerAngles.y;
-            
+
             _hasAnimator = TryGetComponent(out _animator);
             _controller = GetComponent<CharacterController>();
             _input = GetComponent<StarterAssetsInputs>();
-#if ENABLE_INPUT_SYSTEM 
-            _playerInput = GetComponent<PlayerInput>();
-#else
-			Debug.LogError( "Starter Assets package is missing dependencies. Please use Tools/Starter Assets/Reinstall Dependencies to fix it");
-#endif
 
             AssignAnimationIDs();
 
@@ -163,17 +191,23 @@ namespace StarterAssets
         {
             _hasAnimator = TryGetComponent(out _animator);
 
-            JumpAndGravity();
-            GroundedCheck();
-            Move();
+            if (IsLocalPlayer)
+            {
+                JumpAndGravity();
+                GroundedCheck();
+                Move();
 
-            Attack();
-            Spell();
+                Attack();
+                Spell();
+            }
         }
 
         private void LateUpdate()
         {
-            CameraRotation();
+            if (IsLocalPlayer)
+            {
+                CameraRotation();
+            }
         }
 
         private void AssignAnimationIDs()
@@ -190,7 +224,7 @@ namespace StarterAssets
         //공격, 스펠
         private void Attack()
         {
-            if(_hasAnimator && !isAttack && !isSpell && _input.attack)
+            if (_hasAnimator && !isAttack && !isSpell && _input.attack)
             {
                 _animator.SetTrigger(_animIDAttack);
                 isAttack = true;
@@ -203,6 +237,7 @@ namespace StarterAssets
             isAttack = false;
             isAttackDirection = false;
         }
+
         private void Spell()
         {
             if (_hasAnimator && !isAttack && !isSpell && _input.spell)
@@ -211,7 +246,6 @@ namespace StarterAssets
                 isSpell = true;
                 isSpellDirection = true;
                 Debug.Log("스펠 처리");
-
             }
         }
 
@@ -220,6 +254,7 @@ namespace StarterAssets
             isSpell = false;
             isSpellDirection = false;
         }
+
         private void GroundedCheck()
         {
             // set sphere position, with offset
@@ -301,7 +336,7 @@ namespace StarterAssets
             if (_input.move != Vector2.zero)
             {
                 _targetRotation = Mathf.Atan2(inputDirection.x, inputDirection.z) * Mathf.Rad2Deg +
-                                  _mainCamera.transform.eulerAngles.y;
+                                  _globalCamera.transform.eulerAngles.y;
                 float rotation = Mathf.SmoothDampAngle(transform.eulerAngles.y, _targetRotation, ref _rotationVelocity,
                     RotationSmoothTime);
 
@@ -421,7 +456,8 @@ namespace StarterAssets
                 if (FootstepAudioClips.Length > 0)
                 {
                     var index = Random.Range(0, FootstepAudioClips.Length);
-                    AudioSource.PlayClipAtPoint(FootstepAudioClips[index], transform.TransformPoint(_controller.center), FootstepAudioVolume);
+                    AudioSource.PlayClipAtPoint(FootstepAudioClips[index], transform.TransformPoint(_controller.center),
+                        FootstepAudioVolume);
                 }
             }
         }
