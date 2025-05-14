@@ -1,5 +1,6 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
+using Common.Models;
 using Entity.Prefabs;
 using Spell.Model.Actions;
 using Spell.Model.Core;
@@ -9,13 +10,12 @@ using UnityEngine;
 
 namespace Spell.Model.Behaviors
 {
-    public class ProjectileBehavior : SpellBehaviorBase
+    public class ProjectileBehavior : SpellBehaviorBase, IHealthProvider, IElementProvider
     {
         private PrefabVisualData projectileVisualData;
         private GameObject projectilePrefab; // 실제 프리펩
         private SpellData _spellData; // 스펠 데이터
 
-        private ElementType elementType; // 원소 타입
         private ShapeType shapeType; // 형태
         private Vector3 scale = Vector3.one; // 크기
         private float speed = 1f; // 속도
@@ -28,11 +28,13 @@ namespace Spell.Model.Behaviors
         private Vector3? direction; // 발사 방향 (로컬좌표계)
 
         private Vector3 worldDirection; // 발사 방향 (월드좌표계)
+        public HealthModel HealthModel { get; private set; }
+        public ElementType Element { get; private set; }
 
         public override void Behave(SpellData spellData)
         {
             _spellData = spellData;
-            elementType = spellData.Element;
+            Element = spellData.Element;
             shapeType = spellData.Shape;
             direction = spellData.Direction ?? Vector3.forward;
             count = spellData.Count;
@@ -54,7 +56,7 @@ namespace Spell.Model.Behaviors
         // 발사체 소환
         private void SpawnProjectile()
         {
-            projectilePrefab = GetPrefab(elementType, shapeType, scale);
+            projectilePrefab = GetPrefab(Element, shapeType, scale);
 
             for (int i = 0; i < count; i++)
             {
@@ -100,7 +102,7 @@ namespace Spell.Model.Behaviors
             {
                 var action = ActionFactory.CreateAction(actionData);
                 if (action == null) continue;
-                ActionContext context = new(actionData, collided, origin, _spellData);
+                ActionContext context = new(actionData, collided, origin);
                 action.Apply(context);
             }
         }

@@ -13,7 +13,7 @@ namespace Entity.Prefabs
         {
             foreach (var entry in entries)
             {
-                if (entry.elementType == element &&
+                if (entry.Element == element &&
                     entry.shapeType == shape &&
                     entry.sizeCategory == size)
                 {

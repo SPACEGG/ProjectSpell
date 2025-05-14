@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using Common.Models;
 using Spell.Model.Behaviors;
 using Spell.Model.Data;
 using Spell.Model.Enums;
@@ -18,7 +19,7 @@ namespace Spell.Model.Actions
         public float Value { get; init; }               // action 값
         public ElementType OriginElement { get; init; } // origin의 원소타입
 
-        public ActionContext(SpellActionData actionData, GameObject activator, GameObject origin, SpellData spellData)
+        public ActionContext(SpellActionData actionData, GameObject activator, GameObject origin)
         {
             GameObject caster = origin.GetComponent<SpellBehaviorBase>().Caster;
 
@@ -31,7 +32,7 @@ namespace Spell.Model.Actions
             };
             Origin = origin;
             Value = actionData.Value;
-            OriginElement = spellData.Element;
+            OriginElement = origin.GetComponent<IElementProvider>().Element;
         }
     }
 }
