@@ -7,9 +7,9 @@ namespace Spell.Model.Core
 {
     public static class SpellFactory
     {
-        public static SpellBehaviorBase CreateSpellGameObject(SpellData data)
+        public static SpellBehaviorBase CreateSpellGameObject(SpellData data, GameObject caster)
         {
-            var  gameObject= new GameObject($"[Spell] {data?.Name}");
+            var gameObject = new GameObject($"[Spell] {data?.Name}");
 
             SpellBehaviorBase behavior;
             // 실패 조건: null, 이름이 Failure
@@ -33,6 +33,7 @@ namespace Spell.Model.Core
 
             // ApplyVFX(gameObject, data);
 
+            behavior.Caster = caster;
             return behavior;
         }
 

@@ -1,4 +1,7 @@
-﻿using Spell.Model.Enums;
+﻿using System.Collections.Generic;
+using Spell.Model.Behaviors;
+using Spell.Model.Data;
+using Spell.Model.Enums;
 using UnityEngine;
 
 namespace Spell.Model.Actions
@@ -10,9 +13,25 @@ namespace Spell.Model.Actions
 
     public record ActionContext
     {
-        public GameObject Target { get; init; }
-        public GameObject Origin { get; init; }
-        public float Value { get; init; }
-        public ElementType OriginElement { get; init; }
+        public List<GameObject> Targets { get; init; }  // action 적용대상
+        public GameObject Origin { get; init; }         // action을 실행한 오브젝트
+        public float Value { get; init; }               // action 값
+        public ElementType OriginElement { get; init; } // origin의 원소타입
+
+        public ActionContext(SpellActionData actionData, GameObject activator, GameObject origin, SpellData spellData)
+        {
+            GameObject caster = origin.GetComponent<SpellBehaviorBase>().Caster;
+
+            Targets = actionData.Target switch
+            {
+                TargetType.Activator => new List<GameObject>() { activator },
+                TargetType.Caster => new List<GameObject>() { caster },
+                // TargetType.Global => TODO: BattleManager.GetAllPlayers() 같은거 필요함,
+                _ => null
+            };
+            Origin = origin;
+            Value = actionData.Value;
+            OriginElement = spellData.Element;
+        }
     }
 }

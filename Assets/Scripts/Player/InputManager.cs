@@ -52,8 +52,8 @@ namespace Player
                 ElementType.Earth,
                 BehaviorType.Projectile,
                 new List<SpellActionData>() {
-                    new(ActionType.Damage, TargetType.Enemy, defaultAttackDamage),
-                    new(ActionType.ManaRegen, TargetType.Self, defaultAttackManaRegen),
+                    new(ActionType.Damage, TargetType.Activator, defaultAttackDamage),
+                    new(ActionType.ManaRegen, TargetType.Caster, defaultAttackManaRegen),
                 },
                 Vector3.zero,
                 Vector3.forward,
@@ -81,12 +81,13 @@ namespace Player
                 recordController.GetRecordingClip(),
                 1,
                 Camera.main != null ? Camera.main.transform.position : Vector3.zero,
-                transform.position
+                transform.position,
+                transform.forward
             );
 
             // 선택된 레벨만큼 마나 소모
             healthManaManager.ManaModel.UseMana(selectedManaLevel);
-            spellCaster.CastSpell(spelldata);
+            spellCaster.CastSpell(spelldata, gameObject);
         }
 
         #region Key Inputs
@@ -95,7 +96,7 @@ namespace Player
         {
             if (Input.GetKeyDown(attackKey))
             {
-                spellCaster.CastSpell(defaultSpell);
+                spellCaster.CastSpell(defaultSpell, gameObject);
             }
         }
 

@@ -92,7 +92,7 @@ namespace Spell.Model.Behaviors
             }
         }
 
-        private void ApplyActions(GameObject target, GameObject origin)
+        private void ApplyActions(GameObject collided, GameObject origin)
         {
             if (_spellData?.Actions == null) return;
 
@@ -100,10 +100,7 @@ namespace Spell.Model.Behaviors
             {
                 var action = ActionFactory.CreateAction(actionData);
                 if (action == null) continue;
-
-                var context = ActionContextFactory.CreateContext(actionData, target, origin, _spellData);
-                if (context == null) continue;
-
+                ActionContext context = new(actionData, collided, origin, _spellData);
                 action.Apply(context);
             }
         }
