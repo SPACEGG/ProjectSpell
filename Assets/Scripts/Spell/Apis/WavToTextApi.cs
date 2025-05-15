@@ -19,7 +19,8 @@ namespace Spell.Apis
         {
             if (!env.TryParseEnvironmentVariable("API_KEY", out _apiKey))
             {
-                throw new ArgumentException("API key is not set in the environment variables.");
+                Debug.LogError("API key is not set in the environment variables.");
+                _apiKey = string.Empty;
             }
         }
 
