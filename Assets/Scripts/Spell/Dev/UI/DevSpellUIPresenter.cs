@@ -52,24 +52,11 @@ namespace Spell.Dev.UI
                 return;
             }
 
-            // 카메라 중앙에서 Ray를 쏴서 충돌 지점 계산
-            Vector3 cameraTargetPosition;
-            Camera cam = Camera.main;
-            Ray ray = cam.ViewportPointToRay(new Vector3(0.5f, 0.5f, 0f));
-            RaycastHit hit;
-            float maxDistance = 100f;
-            if (Physics.Raycast(ray, out hit, maxDistance))
-            {
-                cameraTargetPosition = hit.point;
-            }
-            else
-            {
-                cameraTargetPosition = cam.transform.position + cam.transform.forward * maxDistance;
-            }
+            Vector3 cameraTargetPosition = CameraUtil.GetCameraTargetPosition();
+            Vector3 direction = CameraUtil.GetCameraForward();
+            Vector3 casterPosition = _view.transform.position;
 
-            Vector3 casterPosition = _view.transform.position; // 캐스터 위치
-
-            var spellData = await _spellController.BuildSpellDataAsync(_recordingClip, powerLevel, cameraTargetPosition, casterPosition);
+            var spellData = await _spellController.BuildSpellDataAsync(_recordingClip, powerLevel, cameraTargetPosition, casterPosition, direction);
             if (spellData != null)
             {
                 _currentSpellData = spellData; // API 결과 저장

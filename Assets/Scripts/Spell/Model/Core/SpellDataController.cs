@@ -20,16 +20,16 @@ namespace Spell.Model.Core
         }
 
         public async UniTask<SpellData> BuildSpellDataAsync(AudioClip audioClip, int powerLevel, Vector3 cameraTargetPosition,
-            Vector3 casterPosition)
+            Vector3 casterPosition, Vector3 direction)
         {
             // Step 1: Convert audio file to wav
             var wav = await WavUtility.FromAudioClipAsync(audioClip);
 
-            return await BuildSpellDataAsyncByWav(wav, powerLevel, cameraTargetPosition, casterPosition);
+            return await BuildSpellDataAsyncByWav(wav, powerLevel, cameraTargetPosition, casterPosition, direction);
         }
 
         public async UniTask<SpellData> BuildSpellDataAsyncByWav(Wav wav, int powerLevel, Vector3 cameraTargetPosition,
-            Vector3 casterPosition)
+            Vector3 casterPosition, Vector3 direction)
         {
             // Step 2: Convert wav to text
             var text = await _wavToTextApi.WavToTextAsync(wav);
@@ -42,6 +42,12 @@ namespace Spell.Model.Core
 
             // Step 4: Parse JSON to SpellData (예외 처리 포함)
             var spellData = SpellDataFactory.SafeFromJson(spellJson);
+
+            // Direction을 실제 forward로 덮어쓰기
+            if (spellData != null)
+            {
+                spellData.Direction = direction;
+            }
 
             return spellData;
         }

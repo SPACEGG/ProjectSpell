@@ -2,10 +2,10 @@
 {
     public abstract class SpellAction
     {
-        public abstract void Apply(SpellContext context);
+        public abstract void Apply(ActionContext context);
     }
 
-    public abstract record SpellContext
+    public abstract record ActionContext
     {
     }
 }
