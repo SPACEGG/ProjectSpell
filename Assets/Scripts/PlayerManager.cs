@@ -1,3 +1,4 @@
+/*
 using System;
 using System.Collections.Generic;
 using Cysharp.Threading.Tasks;
@@ -133,3 +134,4 @@ public class PlayerManager : MonoBehaviour
         }
     }
 } // 클래스 종료
+*/

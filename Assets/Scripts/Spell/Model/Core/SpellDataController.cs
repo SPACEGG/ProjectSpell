@@ -11,8 +11,11 @@ namespace Spell.Model.Core
         private readonly WavToTextApi _wavToTextApi = new();
         private readonly TextToSpellApi _textToSpellApi = new();
 
-        public async UniTask<SpellData> BuildSpellDataAsync(AudioClip audioClip, int powerLevel, Vector3 cameraTargetPosition, Vector3 casterPosition, Vector3 direction)
+        public async UniTask<SpellData> BuildSpellDataAsync(AudioClip audioClip, int powerLevel, Vector3 cameraTargetPosition, Vector3 casterPosition)
         {
+            // 카메라 타겟 포지션과 캐스터 포지션 출력
+            Debug.Log($"[SpellDataController] cameraTargetPosition: {cameraTargetPosition}, casterPosition: {casterPosition}");
+
             // Step 1: Convert audio file to wav
             var wav = await WavUtility.FromAudioClipAsync(audioClip);
 
@@ -28,13 +31,7 @@ namespace Spell.Model.Core
             // Step 4: Parse JSON to SpellData (예외 처리 포함)
             var spellData = SpellDataFactory.SafeFromJson(spellJson);
 
-            // Direction을 실제 forward로 덮어쓰기
-            if (spellData != null)
-            {
-                spellData.Direction = direction;
-            }
-
-            return spellData;
+            return spellData; // Direction 설정 코드 제거
         }
     }
 }

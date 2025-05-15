@@ -1,3 +1,4 @@
+/*
 using UnityEngine;
 using Spell.Model.Enums;
 using System.Collections.Generic;
@@ -25,3 +26,4 @@ namespace Entity.Prefabs
         // big earth    | 큰바위       고인돌
     }
 }
+*/

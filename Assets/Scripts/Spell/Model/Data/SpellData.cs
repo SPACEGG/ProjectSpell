@@ -16,40 +16,34 @@ namespace Spell.Model.Data
     /// </summary>
     public class SpellData
     {
-        public string Name { get; init; }
-        public ElementType Element { get; init; }
-        public BehaviorType Behavior { get; init; }
-        public List<SpellActionData> Actions { get; init; }
+        // SpellFactory에서 참조하는 속성
+        public string Name { get; init; } // 스펠 이름 (GameObject 이름, 실패 체크)
+        public ElementType Element { get; init; } // 원소 속성 (아직 동작 미구현)
+        public BehaviorType Behavior { get; init; } // 동작 타입 (Projectile 등, 컴포넌트 결정)
+        public List<SpellActionData> Actions { get; init; } // 주문 효과(데미지 등, 미구현)
+        public ShapeType Shape { get; init; } // 외형(Shape) 결정 (ApplyVFX에서 사용)
+        public Vector3 Size { get; init; } // 외형(크기) 결정 (ApplyVFX에서 사용)
 
-        public Vector3? PositionOffset { get; init; }
-        public Vector3? Direction { get; init; }
-        public int Count { get; init; }
+        // VFX 관련 속성
+        public string MaterialName { get; set; } // Materials 폴더용
+        public string MeshName { get; set; }     // Meshes 폴더용
+        public string ParticleName { get; set; } // Particles 폴더용
+        public string TrailName { get; set; }    // TrailEffects 폴더용
 
-        public ShapeType Shape { get; init; }
-        public Vector3 Size { get; init; }
-        public bool HasGravity { get; init; }
-        public float Speed { get; init; }
-        public float Duration { get; init; }
+        // Spell 동작(Behavior)에서 참조하는 속성
+        [JsonConverter(typeof(Vector3Converter))]
+        public Vector3 PositionOffset { get; set; } // Vector3로 변경
+        [JsonConverter(typeof(Vector3Converter))]
+        public Vector3 Direction { get; set; } // Vector3로 변경
+        public int Count { get; init; } // 오브젝트 개수 (for문 반복)
+        public bool HasGravity { get; init; } // 중력 적용 여부 (Rigidbody.useGravity)
+        public float Speed { get; init; } // 오브젝트 속도 (Rigidbody.linearVelocity)
+        public float Duration { get; init; } // 오브젝트 수명 (DestroyAfterSeconds)
+        public float SpreadAngle { get; init; } // 퍼짐 각도 (CalculateDirection)
+        public float SpreadRange { get; init; } // 생성 위치 범위 (Spawn 메서드에서 Random.insideUnitSphere)
+        public bool ActivateOnCollision { get; init; } // 충돌 시 활성화 여부 (Spawn 메서드에서 조건문)
 
-        [JsonConverter(typeof(StringEnumConverter))]
-        public VfxNameType VfxName { get; set; } // VFX 머티리얼/이펙트 이름 필드 enum 타입으로 변경
-
-        // 생성자에서 기본값 할당
-        public SpellData()
-        {
-            Name = "DefaultSpell";
-            Element = ElementType.None;
-            Behavior = BehaviorType.Projectile;
-            Actions = new List<SpellActionData>();
-            PositionOffset = Vector3.zero; // 0으로 기본값 지정
-            Direction = Vector3.forward; // 앞방향으로 기본값 지정
-            Count = 1;
-            Shape = ShapeType.Sphere;
-            Size = Vector3.zero;
-            HasGravity = false;
-            Speed = 0f;
-            Duration = 0f;
-            VfxName = VfxNameType.None;
-        }
+        // 생성자에서 기본값 할당 제거
+        public SpellData() { }
     }
 }

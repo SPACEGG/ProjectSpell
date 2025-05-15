@@ -2,12 +2,9 @@
 {
     public enum ShapeType
     {
-        None,
         Cube,
         Sphere,
         Capsule,
-        Cylinder,
-        Plane,
-        Quad
+        Cylinder
     }
 }

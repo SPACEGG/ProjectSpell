@@ -1,3 +1,4 @@
+/*
 using System.Collections.Generic;
 using Spell.Model.Enums;
 using UnityEngine;
@@ -24,3 +25,4 @@ namespace Entity.Prefabs
         }
     }
 }
+*/
