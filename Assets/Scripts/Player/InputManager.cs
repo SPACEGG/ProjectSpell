@@ -30,7 +30,7 @@ namespace Player
         private void Awake()
         {
             recordController = new();
-            spellController = new();
+            spellController = SpellDataController.Singleton;
         }
 
         private void Start()

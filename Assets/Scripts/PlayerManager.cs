@@ -50,7 +50,7 @@ public class PlayerManager : MonoBehaviour
     private void Start()
     {
         voiceRecorder = new();
-        _spellController = new SpellDataController();
+        _spellController = SpellDataController.Singleton;
 
         spellCaster = GetComponent<SpellCaster>();
 

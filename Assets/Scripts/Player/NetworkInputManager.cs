@@ -28,7 +28,7 @@ namespace Player
         private void Awake()
         {
             _recordController = new();
-            _spellController = new();
+            _spellController = SpellDataController.Singleton;
         }
 
         public override void OnNetworkSpawn()
