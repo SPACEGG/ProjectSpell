@@ -51,13 +51,9 @@ namespace Player
                 {
                     Debug.LogError("SpellCaster is null!");
                 }
-                else if (defaultSpell == null)
-                {
-                    Debug.LogError("defaultSpell is null!");
-                }
                 else
                 {
-                    // 카메라 타겟 방향을 계산해서 defaultSpell.Direction에 반영
+                    // 카메라 타겟 방향을 계산해서 direction 설정
                     Vector3 cameraTargetPosition = Vector3.zero;
                     if (Camera.main != null)
                     {
@@ -79,10 +75,13 @@ namespace Player
 
                     // direction을 카메라 타겟 방향으로 설정
                     Vector3 direction = (cameraTargetPosition - transform.position).normalized;
-                    defaultSpell.Direction = direction;
+
+                    // === 매번 새로운 SpellData 생성 ===
+                    var spell = SpellDataFactory.Create();
+                    spell.Direction = direction;
 
                     Debug.Log("CastSpell 호출");
-                    spellCaster.CastSpell(defaultSpell);
+                    spellCaster.CastSpell(spell);
                 }
             }
 
@@ -108,7 +107,8 @@ namespace Player
             }
         }
 
-        // Spell 사용
+        // TODO: 마나 소모
+        // healthManaManager.ManaModel.UseMana(200f);
         private async UniTaskVoid Spell()
         {
             Debug.Log("Spell() 진입");
