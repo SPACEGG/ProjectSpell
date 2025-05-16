@@ -5,7 +5,7 @@ using Spell.Model.Core;
 
 namespace Spell.Model.Behaviors
 {
-    public class ProjectileBehavior : SpellBehaviorBase
+    public class ProjectileBehavior : SpellBehaviorBase, IHealthProvider, IElementProvider
     {
         public override void Behave(SpellData spellData)
         {

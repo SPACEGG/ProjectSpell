@@ -10,6 +10,7 @@ namespace Spell.Model.Core
         public static GameObject CreateSpellGameObject(SpellData data)
         {
             var gameObject = new GameObject($"[Spell] {data?.Name}");
+            var gameObject = new GameObject($"[Spell] {data?.Name}");
 
             SpellBehaviorBase behavior = data?.Behavior switch
             {

@@ -1,3 +1,5 @@
+using System;
+using System.Collections.Generic;
 using Spell.Model.Actions;
 using Spell.Model.Data;
 using Spell.Model.Enums;
@@ -8,16 +10,17 @@ namespace Spell.Model.Core
     {
         public static SpellAction CreateAction(SpellActionData actionData)
         {
-            return actionData.Action switch
-            {
-                ActionType.Damage => CreateDamageAction(),
-                _ => null
-            };
+            return actionConstructors.TryGetValue(actionData.Action, out var constructor)
+                ? constructor()
+                : null;
         }
 
-        private static SpellAction CreateDamageAction()
+        private static readonly Dictionary<ActionType, Func<SpellAction>> actionConstructors = new()
         {
-            return new DamageAction();
-        }
+            { ActionType.Damage, () => new DamageAction() },
+            { ActionType.Heal, () => new HealAction() },
+            { ActionType.Knockback, () => new KnockbackAction() },
+            { ActionType.ManaRegen, () => new ManaRegenAction() }
+        };
     }
 }

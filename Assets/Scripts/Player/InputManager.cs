@@ -12,12 +12,19 @@ namespace Player
     // 플레이어의 마우스 클릭을 담당하는 컴포넌트
     public class InputManager : MonoBehaviour
     {
-        [SerializeField]
-        private KeyCode attackKey = KeyCode.Mouse0;
-        [SerializeField]
-        private KeyCode recordKey = KeyCode.Mouse1;
-        [SerializeField]
-        private float recordIgnoreDuration = 0.5f;
+        // 조작 키 세팅
+        [SerializeField] private KeyCode attackKey = KeyCode.Mouse0;
+        [SerializeField] private KeyCode recordKey = KeyCode.Mouse1;
+        [SerializeField] private KeyCode level1SelectKey = KeyCode.Alpha1;
+        [SerializeField] private KeyCode level2SelectKey = KeyCode.Alpha2;
+        [SerializeField] private KeyCode level3SelectKey = KeyCode.Alpha3;
+
+        // 녹음키 무시 딜레이
+        [SerializeField] private float recordIgnoreDuration = 0.5f;
+
+        // 기본공격 데미지, 마나충전량
+        [SerializeField] private float defaultAttackDamage = 10f;
+        [SerializeField] private float defaultAttackManaRegen = 30f;
 
         private SpellData defaultSpell;
         private float recordStartTime;
@@ -26,6 +33,7 @@ namespace Player
         private SpellDataController spellController;
         private SpellCaster spellCaster;
         private HealthManaManager healthManaManager;
+        private int selectedManaLevel = 1;
 
         private void Awake()
         {
@@ -43,6 +51,32 @@ namespace Player
         }
 
         private void Update()
+        {
+            // 키 입력 받기
+            DefaultAttackKeyInput();
+            RecordKeyInput();
+            ManaLevelSelectKeyInput();
+        }
+
+        // Spell 사용
+        private async UniTaskVoid UseSpell()
+        {
+            SpellData spelldata = await spellController.BuildSpellDataAsync(
+                recordController.GetRecordingClip(),
+                1,
+                Camera.main != null ? Camera.main.transform.position : Vector3.zero,
+                transform.position,
+                transform.forward
+            );
+
+            // 선택된 레벨만큼 마나 소모
+            healthManaManager.ManaModel.UseMana(selectedManaLevel);
+            spellCaster.CastSpell(spelldata, gameObject);
+        }
+
+        #region Key Inputs
+
+        private void DefaultAttackKeyInput()
         {
             if (Input.GetKeyDown(attackKey))
             {
@@ -85,11 +119,13 @@ namespace Player
                 }
             }
 
+        private void RecordKeyInput()
+        {
             if (Input.GetKeyDown(recordKey))
             {
                 Debug.Log("Record key pressed");
                 recordController.StartRecording();
-                // uiController.ShowRecordIcon();
+                // TODO: uiController.ShowRecordIcon();
                 recordStartTime = Time.time;
             }
 
@@ -97,7 +133,7 @@ namespace Player
             {
                 Debug.Log("Record key released");
                 recordController.StopRecording();
-                // uiController.HideRecordIcon();
+                // TODO: uiController.HideRecordIcon();
 
                 if (Time.time - recordStartTime >= recordIgnoreDuration)
                 {

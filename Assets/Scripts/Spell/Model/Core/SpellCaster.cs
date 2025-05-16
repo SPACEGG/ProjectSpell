@@ -10,7 +10,7 @@ namespace Spell.Model.Core
 
         public Transform CastOrigin => castOrigin != null ? castOrigin : transform; // 여기서 transform 사용
 
-        public void CastSpell(SpellData data)
+        public void CastSpell(SpellData data, GameObject caster)
         {
             if (data == null)
             {
