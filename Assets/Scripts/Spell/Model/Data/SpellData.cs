@@ -22,7 +22,7 @@ namespace Spell.Model.Data
         public List<SpellActionData> Actions { get; init; }
 
         public Vector3? PositionOffset { get; init; }
-        public Vector3? Direction { get; init; }
+        public Vector3? Direction { get; set; }
         public int Count { get; init; }
 
         public ShapeType Shape { get; init; }

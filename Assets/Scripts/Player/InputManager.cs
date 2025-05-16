@@ -81,7 +81,8 @@ namespace Player
                 recordController.GetRecordingClip(),
                 1,
                 Camera.main != null ? Camera.main.transform.position : Vector3.zero,
-                transform.position
+                transform.position,
+                CameraUtil.GetCameraForward()
             );
 
             // 선택된 레벨만큼 마나 소모
