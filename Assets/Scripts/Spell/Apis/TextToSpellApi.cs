@@ -18,6 +18,29 @@ namespace Spell.Apis
 사용자로부터 받은 자연어 기반 마법 주문 요청을 Unity 엔진에서 사용할 수 있는 JSON 형식의 주문 데이터로 변환하는 역할을 수행합니다.
 당신의 목표는 플레이어의 주문을 가능한 정확하고 창의적으로 해석하여, 물리적/시각적으로 재현 가능한 마법 효과를 생성하는 것입니다.
 
+## 파워레벨(PowerLevel) 안내
+- PowerLevel은 플레이어가 주문을 시전할 때 선택한 마법의 강도(1~3 등급)입니다.
+- PowerLevel이 높을수록 주문의 크기(Size), 속도(Speed), 지속시간(Duration), 피해량, 효과 범위 등 마법의 전반적인 성능이 강해져야 합니다.
+- PowerLevel이 1이면 약한 주문, 2면 중간, 3이면 강력한 주문이 되도록 모든 수치와 연출을 조정하세요.
+- 예시: PowerLevel이 높을수록 더 큰 불덩이, 더 많은 투사체, 더 빠른 투사체, 더 넓은 범위, 더 긴 지속시간, 더 화려한 이펙트 등을 적용합니다.
+
+## Actions(주문 효과) 필드 안내
+- Actions는 주문이 발동될 때 적용되는 효과(데미지, 힐, 넉백 등)를 배열로 명시합니다.
+- 각 Action 객체는 다음과 같은 필드를 가집니다:
+    - Action: 효과 타입 (Damage, Heal, Knockback, ManaRegen, ManaModify, Knockback 중 하나)
+    - Target: 효과의 대상 (Caster, Activator, Global 중 하나)
+    - Value: 효과의 수치(예: 데미지량, 힐량, 넉백 세기 등, float)
+
+- 예시:
+  Actions: [
+    { ""Action"": ""Damage"", ""Target"": ""Activator"", ""Value"": 30.0 },
+    { ""Action"": ""Knockback"", ""Target"": ""Activator"", ""Value"": 10.0 }
+  ]
+- 주문에 효과가 여러 개면 배열에 모두 포함하세요. 효과가 없으면 빈 배열([])로 반환하세요.
+- 반드시 Action, Target, Value 세 필드를 모두 포함해야 하며, Action/Target 값은 PascalCase로 표기하세요.
+- 최대 체력과 최대 마나를 기반으로 적절한 수치를 설정하세요. 
+- Value 수치는 0 보다 큰 값만 사용하세요.
+
 ## 위치 정보 안내
 - '카메라 타겟 위치(cameraTargetPosition)'는 화면 중앙에서 Ray를 쏴서 처음 만나는 오브젝트(상대방 캐릭터, 환경, 스펠 오브젝트 등)의 월드 좌표입니다.
 - '캐스터 위치(casterPosition)'는 주문을 시전하는 플레이어(지팡이 끝 등)의 월드 좌표입니다.
@@ -227,8 +250,11 @@ namespace Spell.Apis
 // ""Count"" (int)
 // - 생성할 주문 오브젝트의 개수입니다. 1 이상의 정수여야 합니다.
 
-// ""Actions"" (string[])
-// - 현재는 사용하지 않지만, JSON 규격상 항상 빈 배열([])로 포함해야 합니다.
+// ""Actions"" (SpellActionData[])
+// - 주문이 발동될 때 적용되는 효과들의 배열입니다.
+// - 각 객체는 Action(string), Target(string), Value(float) 필드를 가집니다.
+// - 예: [{ ""Action"": ""Damage"", ""Target"": ""Activator"", ""Value"": 30.0 }]
+// - 효과가 없으면 빈 배열([])로 반환하세요.
 
 // ""Speed"" (float)
 // - 투사체의 속도입니다. 0보다 커야 하며, 고정형 주문(예: 방패)은 0.0으로 설정 가능합니다.
@@ -271,7 +297,7 @@ namespace Spell.Apis
     ""HasGravity"": true,
     ""PositionOffset"": [10.0, 20.0, 30.0], 
     ""Direction"": [0, -1, 0], 
-    ""Count"": 1,
+    ""Count"": 5,
     ""Speed"": 25.0,
     ""Duration"": 5.0,
     ""SpreadAngle"": 0.0,
@@ -329,7 +355,7 @@ namespace Spell.Apis
     ""HasGravity"": true,
     ""PositionOffset"": [0.0, 5.0, 10.0], 
     ""Direction"": [0, -1, 0],
-    ""Count"": 1,
+    ""Count"": 2,
     ""Speed"": 10.0,
     ""Duration"": 4.0,
     ""SpreadAngle"": 0.0,
@@ -355,12 +381,14 @@ namespace Spell.Apis
             }
         }
 
-        // FIXME: cameraTargetPosition, casterPosition 없애기
-        public async UniTask<string> TextToSpellAsync(string text, int powerLevel, Vector3 cameraTargetPosition, Vector3 casterPosition)
+        // maxMana, maxHealth 파라미터 추가
+        public async UniTask<string> TextToSpellAsync(string text, int powerLevel, Vector3 cameraTargetPosition, Vector3 casterPosition, float maxMana, float maxHealth)
         {
-            // 카메라 타겟 위치와 캐스터 위치 정보를 프롬프트에 추가
+            // 카메라 타겟 위치와 캐스터 위치, 최대 마나/체력 정보를 프롬프트에 추가
             var userPrompt =
                 $"[PowerLevel: {powerLevel}]\n" +
+                $"[MaxMana: {maxMana}]\n" +
+                $"[MaxHealth: {maxHealth}]\n" +
                 $"[CameraTargetPosition: {cameraTargetPosition.x}, {cameraTargetPosition.y}, {cameraTargetPosition.z}]\n" +
                 $"[CasterPosition: {casterPosition.x}, {casterPosition.y}, {casterPosition.z}]\n" +
                 $"{text}\n";

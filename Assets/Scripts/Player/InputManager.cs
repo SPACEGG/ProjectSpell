@@ -30,7 +30,7 @@ namespace Player
         private SpellDataController spellController;
         private SpellCaster spellCaster;
         private HealthManaManager healthManaManager;
-        private int selectedManaLevel = 1;
+        private int selectedPowerLevel = 1; // 이름 변경
 
         private void Awake()
         {
@@ -52,7 +52,7 @@ namespace Player
             // 키 입력 받기
             DefaultAttackKeyInput();
             RecordKeyInput();
-            ManaLevelSelectKeyInput();
+            PowerLevelSelectKeyInput(); // 이름 변경
         }
 
         #region Key Inputs
@@ -101,22 +101,22 @@ namespace Player
             }
         }
 
-        private void ManaLevelSelectKeyInput()
+        private void PowerLevelSelectKeyInput() // 이름 변경
         {
             if (Input.GetKeyDown(level1SelectKey))
             {
                 // TODO: 레벨1 선택 ui
-                selectedManaLevel = 1;
+                selectedPowerLevel = 1;
             }
             if (Input.GetKeyDown(level2SelectKey))
             {
                 // TODO: 레벨2 선택 ui
-                selectedManaLevel = 2;
+                selectedPowerLevel = 2;
             }
             if (Input.GetKeyDown(level3SelectKey))
             {
                 // TODO: 레벨3 선택 ui
-                selectedManaLevel = 3;
+                selectedPowerLevel = 3;
             }
         }
 
@@ -149,7 +149,7 @@ namespace Player
         private async UniTaskVoid Spell()
         {
             // 마나 소모
-            healthManaManager.ManaModel.UseMana(selectedManaLevel);
+            healthManaManager.ManaModel.UseMana(selectedPowerLevel);
 
             Debug.Log("Spell() 진입");
             // direction 계산 및 전달 제거
@@ -176,7 +176,7 @@ namespace Player
 
             SpellData spelldata = await spellController.BuildSpellDataAsync(
                 recordController.GetRecordingClip(),
-                selectedManaLevel,
+                selectedPowerLevel, // 이름 변경
                 cameraTargetPosition, // 카메라 타겟 위치 전달
                 transform.position    // 시전자 위치 전달
                                       // direction 파라미터 제거
