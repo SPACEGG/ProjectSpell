@@ -125,9 +125,7 @@ namespace StarterAssets
         }
 
         private bool isAttack = false;
-        private bool isAttackDirection = false;
         private bool isSpell = false;
-        private bool isSpellDirection = false;
         private bool isJump = false;
 
         private void Awake()
@@ -194,15 +192,15 @@ namespace StarterAssets
             {
                 _animator.SetTrigger(_animIDAttack);
                 isAttack = true;
-                isAttackDirection = true;
-                Debug.Log("공격 처리");
+
             }
         }
 
         private void endAttack()
         {
             isAttack = false;
-            isAttackDirection = false;
+            _input.attack = false;
+            Debug.Log("공격 처리");
         }
         private void Spell()
         {
@@ -210,8 +208,7 @@ namespace StarterAssets
             {
                 _animator.SetTrigger(_animIDSpell);
                 isSpell = true;
-                isSpellDirection = true;
-                Debug.Log("스펠 처리");
+
 
             }
         }
@@ -219,7 +216,8 @@ namespace StarterAssets
         private void endSpell()
         {
             isSpell = false;
-            isSpellDirection = false;
+            _input.spell = false;
+            Debug.Log("스펠 처리");
         }
         private void GroundedCheck()
         {
