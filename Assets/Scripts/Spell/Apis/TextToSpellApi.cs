@@ -38,7 +38,7 @@ namespace Spell.Apis
   ]
 - 주문에 효과가 여러 개면 배열에 모두 포함하세요. 효과가 없으면 빈 배열([])로 반환하세요.
 - 반드시 Action, Target, Value 세 필드를 모두 포함해야 하며, Action/Target 값은 PascalCase로 표기하세요.
-- 최대 체력과 최대 마나를 기반으로 적절한 수치를 설정하세요. 
+- 최대 체력과 최대 마나를 기반으로 적절한 수치를 설정하세요.
 - Value 수치는 0 보다 큰 값만 사용하세요.
 
 ## 위치 정보 안내
@@ -295,8 +295,8 @@ namespace Spell.Apis
     ""Shape"": ""Sphere"",
     ""Size"": [4, 4, 4],
     ""HasGravity"": true,
-    ""PositionOffset"": [10.0, 20.0, 30.0], 
-    ""Direction"": [0, -1, 0], 
+    ""PositionOffset"": [10.0, 20.0, 30.0],
+    ""Direction"": [0, -1, 0],
     ""Count"": 5,
     ""Speed"": 25.0,
     ""Duration"": 5.0,
@@ -353,7 +353,7 @@ namespace Spell.Apis
     ""Shape"": ""Cube"",
     ""Size"": [3, 3, 3],
     ""HasGravity"": true,
-    ""PositionOffset"": [0.0, 5.0, 10.0], 
+    ""PositionOffset"": [0.0, 5.0, 10.0],
     ""Direction"": [0, -1, 0],
     ""Count"": 2,
     ""Speed"": 10.0,
@@ -377,7 +377,8 @@ namespace Spell.Apis
         {
             if (!env.TryParseEnvironmentVariable("API_KEY", out _apiKey))
             {
-                throw new ArgumentException("API key is not set in the environment variables.");
+                Debug.LogError("API key is not set in the environment variables.");
+                _apiKey = string.Empty;
             }
         }
 

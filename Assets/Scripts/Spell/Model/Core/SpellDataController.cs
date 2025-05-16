@@ -1,3 +1,4 @@
+using Common.Models;
 using Common.Utils;
 using Cysharp.Threading.Tasks;
 using Spell.Apis;
@@ -8,10 +9,18 @@ namespace Spell.Model.Core
 {
     public class SpellDataController
     {
+        private static SpellDataController _instance;
+        public static SpellDataController Singleton => _instance ??= new SpellDataController();
+
         private readonly WavToTextApi _wavToTextApi = new();
         private readonly TextToSpellApi _textToSpellApi = new();
 
-        public async UniTask<SpellData> BuildSpellDataAsync(AudioClip audioClip, int powerLevel, Vector3 cameraTargetPosition, Vector3 casterPosition)
+        private SpellDataController()
+        {
+        }
+
+        public async UniTask<SpellData> BuildSpellDataAsync(AudioClip audioClip, int powerLevel, Vector3 cameraTargetPosition,
+            Vector3 casterPosition)
         {
             // 카메라 타겟 포지션과 캐스터 포지션 출력
             Debug.Log($"[SpellDataController] cameraTargetPosition: {cameraTargetPosition}, casterPosition: {casterPosition}");
@@ -19,6 +28,12 @@ namespace Spell.Model.Core
             // Step 1: Convert audio file to wav
             var wav = await WavUtility.FromAudioClipAsync(audioClip);
 
+            return await BuildSpellDataAsyncByWav(wav, powerLevel, cameraTargetPosition, casterPosition);
+        }
+
+        public async UniTask<SpellData> BuildSpellDataAsyncByWav(Wav wav, int powerLevel, Vector3 cameraTargetPosition,
+            Vector3 casterPosition)
+        {
             // Step 2: Convert wav to text
             var text = await _wavToTextApi.WavToTextAsync(wav);
 
@@ -28,10 +43,10 @@ namespace Spell.Model.Core
 
             // Step 3: Convert text to spell (GPT JSON응답)
             var spellJson = await _textToSpellApi.TextToSpellAsync(
-                text, 
-                powerLevel, 
-                cameraTargetPosition, 
-                casterPosition, 
+                text,
+                powerLevel,
+                cameraTargetPosition,
+                casterPosition,
                 maxMana,         // 추가
                 maxHealth        // 추가
             );
