@@ -52,6 +52,8 @@ namespace Spell.Model.Actions
         private float GetAffinityMultiplier(ElementType originElement, ElementType targetElement)
         {
             float multiplier = 1f;
+            if (originElement == ElementType.None || targetElement == ElementType.None) return multiplier;
+
             if (originElement == ElementType.Ice) multiplier *= 0.8f;
             if (targetElement == ElementType.Ice) multiplier *= 1.25f;
             if (originElement == ElementType.Earth) multiplier *= 2f;
