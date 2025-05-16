@@ -7,7 +7,7 @@ namespace Spell.Model.Core
 {
     public static class SpellFactory
     {
-        public static GameObject CreateSpellGameObject(SpellData data)
+        public static GameObject CreateSpellGameObject(SpellData data, GameObject caster)
         {
             var gameObject = new GameObject($"[Spell] {data?.Name}");
 
@@ -16,6 +16,8 @@ namespace Spell.Model.Core
                 BehaviorType.Projectile => gameObject.AddComponent<ProjectileBehavior>(),
                 _ => gameObject.AddComponent<FailureBehavior>()
             };
+
+            gameObject.GetComponent<SpellBehaviorBase>().Caster = caster;
 
             ApplyVFX(gameObject, data);
             return gameObject;

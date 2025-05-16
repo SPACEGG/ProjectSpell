@@ -1,5 +1,5 @@
 ﻿using Spell.Model.Data;
-using Spell.Model.Behaviors; 
+using Spell.Model.Behaviors;
 using UnityEngine;
 
 namespace Spell.Model.Core
@@ -10,7 +10,7 @@ namespace Spell.Model.Core
 
         public Transform CastOrigin => castOrigin != null ? castOrigin : transform; // 여기서 transform 사용
 
-        public void CastSpell(SpellData data)
+        public void CastSpell(SpellData data, GameObject caster)
         {
             if (data == null)
             {
@@ -23,7 +23,7 @@ namespace Spell.Model.Core
             var spawnPosition = CastOrigin.position + offset;
 
             // SpellData 정보를 바탕으로 실제 동작/외형이 적용된 스펠 오브젝트 씬에 생성
-            var spellObject = SpellFactory.CreateSpellGameObject(data);
+            var spellObject = SpellFactory.CreateSpellGameObject(data, caster);
 
             spellObject.transform.position = spawnPosition;
 

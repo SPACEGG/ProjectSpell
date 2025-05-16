@@ -36,11 +36,11 @@ namespace Common.Models
             OnManaChanged?.Invoke(CurrentMana);
         }
 
-        public void UseMana(float level)
+        public void UseMana(int level)
         {
             if (level <= 0) return;
 
-            CurrentMana = Math.Max(0, CurrentMana - level);
+            CurrentMana = Math.Max(0, CurrentMana - level * ManaPerLevel);
             OnManaChanged?.Invoke(CurrentMana);
         }
 
