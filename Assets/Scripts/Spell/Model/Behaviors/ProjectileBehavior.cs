@@ -2,13 +2,27 @@
 using UnityEngine;
 using Spell.Model.Data;
 using Spell.Model.Core;
+using Common.Models;
+using Spell.Model.Enums;
+using Spell.Model.Actions;
+using System.Collections.Generic;
 
 namespace Spell.Model.Behaviors
 {
     public class ProjectileBehavior : SpellBehaviorBase, IHealthProvider, IElementProvider
     {
+        public ElementType Element { get; init; }
+
+        public HealthModel HealthModel { get; init; }
+
+        private List<SpellActionData> actionList;
+        private bool activateOnCollision;
+
         public override void Behave(SpellData spellData)
         {
+            actionList = spellData.Actions;
+            activateOnCollision = spellData.ActivateOnCollision;
+
             // 팩토리에서 이미 위치를 결정하므로, transform.position만 사용
             Vector3 spawnPosition = transform.position;
 
@@ -21,6 +35,28 @@ namespace Spell.Model.Behaviors
                 SpawnProjectile(spawnPosition, i, count, spellData);
             }
             // 원본 오브젝트는 파괴하지 않고 비활성화만 함
+        }
+
+        private void OnCollisionEnter(Collision collision)
+        {
+            if (activateOnCollision)
+            {
+                ApplyActions(collision.gameObject, gameObject);
+                StartCoroutine(DestroyAfterSeconds(gameObject, 0.1f));
+            }
+        }
+
+        private void ApplyActions(GameObject collided, GameObject origin)
+        {
+            if (actionList == null) return;
+
+            foreach (var actionData in actionList)
+            {
+                var action = ActionFactory.CreateAction(actionData);
+                if (action == null) continue;
+                ActionContext context = new(actionData, collided, origin);
+                action.Apply(context);
+            }
         }
 
         private void SpawnProjectile(Vector3 spawnPosition, int index, int totalCount, SpellData spellData)
