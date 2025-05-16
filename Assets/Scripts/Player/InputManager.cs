@@ -1,11 +1,8 @@
-using System.Collections.Generic;
 using Cysharp.Threading.Tasks;
 using UnityEngine;
 using Spell.Model.Core;
 using Spell.Model.Data;
-using Spell.Model.Enums;
 using Record;
-using Common.Models;
 
 namespace Player
 {
@@ -33,7 +30,7 @@ namespace Player
         private SpellDataController spellController;
         private SpellCaster spellCaster;
         private HealthManaManager healthManaManager;
-        private int selectedManaLevel = 1;
+        private int selectedPowerLevel = 1; // 이름 변경
 
         private void Awake()
         {
@@ -46,24 +43,8 @@ namespace Player
             spellCaster = GetComponent<SpellCaster>();
             healthManaManager = GetComponent<HealthManaManager>();
 
-            // 좌클릭시 나갈 기본공격 SpellData
-            defaultSpell = SpellDataFactory.Create(
-                "Default Spell",
-                ElementType.Earth,
-                BehaviorType.Projectile,
-                new List<SpellActionData>() {
-                    new(ActionType.Damage, TargetType.Enemy, defaultAttackDamage),
-                    new(ActionType.ManaRegen, TargetType.Self, defaultAttackManaRegen),
-                },
-                Vector3.zero,
-                Vector3.forward,
-                1,
-                ShapeType.Sphere,
-                Vector3.one,
-                true,
-                10f,
-                5f
-            );
+            // 파라미터 없이 Create() 호출 시 SpellData의 모든 값이 기본값으로 설정됨
+            defaultSpell = SpellDataFactory.Create();
         }
 
         private void Update()
@@ -71,23 +52,7 @@ namespace Player
             // 키 입력 받기
             DefaultAttackKeyInput();
             RecordKeyInput();
-            ManaLevelSelectKeyInput();
-        }
-
-        // Spell 사용
-        private async UniTaskVoid UseSpell()
-        {
-            SpellData spelldata = await spellController.BuildSpellDataAsync(
-                recordController.GetRecordingClip(),
-                1,
-                Camera.main != null ? Camera.main.transform.position : Vector3.zero,
-                transform.position,
-                CameraUtil.GetCameraForward()
-            );
-
-            // 선택된 레벨만큼 마나 소모
-            healthManaManager.ManaModel.UseMana(selectedManaLevel);
-            spellCaster.CastSpell(spelldata);
+            PowerLevelSelectKeyInput(); // 이름 변경
         }
 
         #region Key Inputs
@@ -96,7 +61,62 @@ namespace Player
         {
             if (Input.GetKeyDown(attackKey))
             {
-                spellCaster.CastSpell(defaultSpell);
+                Debug.Log("Attack key pressed"); // 입력 확인
+                if (spellCaster == null)
+                {
+                    Debug.LogError("SpellCaster is null!");
+                }
+                else
+                {
+                    // 카메라 타겟 방향을 계산해서 direction 설정
+                    Vector3 cameraTargetPosition = Vector3.zero;
+                    if (Camera.main != null)
+                    {
+                        Ray ray = Camera.main.ScreenPointToRay(new Vector3(Screen.width / 2, Screen.height / 2));
+                        int layerMask = ~LayerMask.GetMask("Player"); // "Player" 레이어 무시
+                        if (Physics.Raycast(ray, out RaycastHit hit, Mathf.Infinity, layerMask))
+                        {
+                            cameraTargetPosition = hit.point;
+                        }
+                        else
+                        {
+                            cameraTargetPosition = ray.GetPoint(100f);
+                        }
+                    }
+                    else
+                    {
+                        Debug.LogWarning("Camera.main is null!");
+                    }
+
+                    // direction을 카메라 타겟 방향으로 설정
+                    Vector3 direction = (cameraTargetPosition - transform.position).normalized;
+
+                    // === 매번 새로운 SpellData 생성 ===
+                    var spell = SpellDataFactory.Create();
+                    spell.Direction = direction;
+
+                    Debug.Log("CastSpell 호출");
+                    spellCaster.CastSpell(spell, gameObject);
+                }
+            }
+        }
+
+        private void PowerLevelSelectKeyInput() // 이름 변경
+        {
+            if (Input.GetKeyDown(level1SelectKey))
+            {
+                // TODO: 레벨1 선택 ui
+                selectedPowerLevel = 1;
+            }
+            if (Input.GetKeyDown(level2SelectKey))
+            {
+                // TODO: 레벨2 선택 ui
+                selectedPowerLevel = 2;
+            }
+            if (Input.GetKeyDown(level3SelectKey))
+            {
+                // TODO: 레벨3 선택 ui
+                selectedPowerLevel = 3;
             }
         }
 
@@ -104,6 +124,7 @@ namespace Player
         {
             if (Input.GetKeyDown(recordKey))
             {
+                Debug.Log("Record key pressed");
                 recordController.StartRecording();
                 // TODO: uiController.ShowRecordIcon();
                 recordStartTime = Time.time;
@@ -111,35 +132,64 @@ namespace Player
 
             if (Input.GetKeyUp(recordKey))
             {
+                Debug.Log("Record key released");
                 recordController.StopRecording();
                 // TODO: uiController.HideRecordIcon();
 
                 if (Time.time - recordStartTime >= recordIgnoreDuration)
                 {
-                    UseSpell().Forget();
+                    Debug.Log("Spell() 호출");
+                    Spell().Forget();
                 }
             }
         }
 
-        private void ManaLevelSelectKeyInput()
-        {
-            if (Input.GetKeyDown(level1SelectKey))
-            {
-                selectedManaLevel = 1;
-                // TODO: 선택된 마나 레벨 HUD에 표시
-            }
-            if (Input.GetKeyDown(level2SelectKey))
-            {
-                selectedManaLevel = 2;
-                // TODO: 선택된 마나 레벨 HUD에 표시
-            }
-            if (Input.GetKeyDown(level3SelectKey))
-            {
-                selectedManaLevel = 3;
-                // TODO: 선택된 마나 레벨 HUD에 표시
-            }
-        }
-
         #endregion
+
+        private async UniTaskVoid Spell()
+        {
+            // 마나 소모
+            healthManaManager.ManaModel.UseMana(selectedPowerLevel);
+
+            Debug.Log("Spell() 진입");
+            // direction 계산 및 전달 제거
+
+            // 카메라 타겟 위치 계산 (레이캐스트 사용)
+            Vector3 cameraTargetPosition = Vector3.zero;
+            if (Camera.main != null)
+            {
+                Ray ray = Camera.main.ScreenPointToRay(new Vector3(Screen.width / 2, Screen.height / 2));
+                int layerMask = ~LayerMask.GetMask("Player"); // "Player" 레이어 무시
+                if (Physics.Raycast(ray, out RaycastHit hit, Mathf.Infinity, layerMask))
+                {
+                    cameraTargetPosition = hit.point; // 충돌 지점
+                }
+                else
+                {
+                    cameraTargetPosition = ray.GetPoint(100f); // 충돌이 없으면 레이 방향으로 100 유닛 떨어진 지점
+                }
+            }
+            else
+            {
+                Debug.LogWarning("Camera.main is null!");
+            }
+
+            SpellData spelldata = await spellController.BuildSpellDataAsync(
+                recordController.GetRecordingClip(),
+                selectedPowerLevel, // 이름 변경
+                cameraTargetPosition, // 카메라 타겟 위치 전달
+                transform.position    // 시전자 위치 전달
+                                      // direction 파라미터 제거
+            );
+
+            if (spelldata == null)
+            {
+                Debug.LogError("SpellData 생성 실패!");
+                return;
+            }
+
+            Debug.Log("SpellData 생성 성공, CastSpell 호출");
+            spellCaster.CastSpell(spelldata, gameObject);
+        }
     }
 }

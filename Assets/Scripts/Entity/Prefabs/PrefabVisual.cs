@@ -1,13 +1,15 @@
+/*
 using UnityEngine;
 using Spell.Model.Enums;
 using System.Collections.Generic;
+using Common.Models;
 
 namespace Entity.Prefabs
 {
     [CreateAssetMenu(fileName = "PrefabVisual", menuName = "Scriptable Objects/Entity/PrefabVisual")]
-    public class PrefabVisual : ScriptableObject
+    public class PrefabVisual : ScriptableObject, IElementProvider
     {
-        public ElementType elementType;
+        public ElementType Element { get; set; }
         public ShapeType shapeType;
         public SizeType sizeCategory;
         public List<GameObject> prefabList;
@@ -25,3 +27,4 @@ namespace Entity.Prefabs
         // big earth    | 큰바위       고인돌
     }
 }
+*/

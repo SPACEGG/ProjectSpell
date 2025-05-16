@@ -4,66 +4,70 @@ using UnityEngine;
 
 namespace Spell.Model.Actions
 {
-    public record KnockbackActionContext : ActionContext
-    {
-        public GameObject Target { get; init; }
-        public GameObject Origin { get; init; }
-        public float BaseForce { get; init; }
-        public ElementType Element { get; init; }
-    }
 
+    // 넉백 액션
+    // target에게 origin의 방향, value만큼의 힘을 가한다
+    // [원소별 상성]
+    // target=Earth: value*0.5, origin=Earth: value*2
+    // target=Ice: value*1.5, origin=Ice: value*0.6667
     public class KnockbackAction : SpellAction
     {
         public override void Apply(ActionContext context)
         {
-            if (context is not KnockbackActionContext KnockbackContext)
+            if (context.Origin == null)
             {
-                Debug.LogError("Invalid context type for KnuckbackAction");
+                Debug.LogWarning("Knockback action requires Origin.");
                 return;
             }
 
-            if (KnockbackContext.Target == null)
+            if (!TryGetRigidbody(context.Origin, out var originRigid))
             {
-                Debug.LogWarning("No target specified for knuckback action");
+                Debug.LogWarning($"Origin {context.Origin.name} has no Rigidbody.");
                 return;
-            }
-
-            if (!KnockbackContext.Target.TryGetComponent<Rigidbody>(out var targetRigid))
-            {
-                targetRigid = KnockbackContext.Target.GetComponentInParent<Rigidbody>();
-
-                if (targetRigid == null)
-                {
-                    Debug.LogWarning($"Target {KnockbackContext.Target.name} has no Rigidbody");
-                    return;
-                }
-            }
-
-            if (KnockbackContext.Origin == null)
-            {
-                Debug.LogWarning("No origin specified for knuckback action");
-                return;
-            }
-
-            if (!KnockbackContext.Origin.TryGetComponent<Rigidbody>(out var originRigid))
-            {
-                targetRigid = KnockbackContext.Target.GetComponentInParent<Rigidbody>();
-
-                if (targetRigid == null)
-                {
-                    Debug.LogWarning($"Origin {KnockbackContext.Origin.name} has no Rigidbody");
-                    return;
-                }
             }
 
             if (originRigid.linearVelocity.sqrMagnitude < 0.01f)
             {
-                Debug.LogWarning($"Origin {KnockbackContext.Origin.name} has no velocity");
+                Debug.LogWarning($"Origin {context.Origin.name} has no velocity.");
                 return;
             }
 
             Vector3 direction = originRigid.linearVelocity.normalized;
-            targetRigid.AddForce(direction * KnockbackContext.BaseForce, ForceMode.Impulse);
+
+            foreach (var target in context.Targets)
+            {
+                if (target == null) continue;
+
+                if (target.TryGetComponent(out IElementProvider targetElementProvider) && TryGetRigidbody(target, out var targetRigid))
+                {
+                    float knockbackPower = context.Value * GetAffinityMultiplier(context.OriginElement, targetElementProvider.Element);
+                    targetRigid.AddForce(direction * knockbackPower, ForceMode.Impulse);
+                }
+
+            }
+        }
+
+        // origin vs target
+        private float GetAffinityMultiplier(ElementType originElement, ElementType targetElement)
+        {
+            float multiplier = 1f;
+            if (originElement == ElementType.Common || targetElement == ElementType.Common) return multiplier;
+
+            if (originElement == ElementType.Ice) multiplier *= 0.8f;
+            if (targetElement == ElementType.Ice) multiplier *= 1.25f;
+            if (originElement == ElementType.Earth) multiplier *= 2f;
+            if (targetElement == ElementType.Earth) multiplier *= 0.5f;
+
+            return multiplier;
+        }
+
+        private bool TryGetRigidbody(GameObject obj, out Rigidbody rigidbody)
+        {
+            if (obj.TryGetComponent(out rigidbody))
+                return true;
+
+            rigidbody = obj.GetComponentInParent<Rigidbody>();
+            return rigidbody != null;
         }
     }
 }

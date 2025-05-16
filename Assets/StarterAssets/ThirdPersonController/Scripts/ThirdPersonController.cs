@@ -1,5 +1,5 @@
 using UnityEngine;
-#if ENABLE_INPUT_SYSTEM 
+#if ENABLE_INPUT_SYSTEM
 using UnityEngine.InputSystem;
 #endif
 
@@ -9,7 +9,7 @@ using UnityEngine.InputSystem;
 namespace StarterAssets
 {
     [RequireComponent(typeof(CharacterController))]
-#if ENABLE_INPUT_SYSTEM 
+#if ENABLE_INPUT_SYSTEM
     [RequireComponent(typeof(PlayerInput))]
 #endif
     public class ThirdPersonController : MonoBehaviour
@@ -100,7 +100,7 @@ namespace StarterAssets
         private int _animIDAttack;
         private int _animIDSpell;
 
-#if ENABLE_INPUT_SYSTEM 
+#if ENABLE_INPUT_SYSTEM
         private PlayerInput _playerInput;
 #endif
         private Animator _animator;
@@ -125,9 +125,7 @@ namespace StarterAssets
         }
 
         private bool isAttack = false;
-        private bool isAttackDirection = false;
         private bool isSpell = false;
-        private bool isSpellDirection = false;
         private bool isJump = false;
 
         private void Awake()
@@ -142,11 +140,11 @@ namespace StarterAssets
         private void Start()
         {
             _cinemachineTargetYaw = CinemachineCameraTarget.transform.rotation.eulerAngles.y;
-            
+
             _hasAnimator = TryGetComponent(out _animator);
             _controller = GetComponent<CharacterController>();
             _input = GetComponent<StarterAssetsInputs>();
-#if ENABLE_INPUT_SYSTEM 
+#if ENABLE_INPUT_SYSTEM
             _playerInput = GetComponent<PlayerInput>();
 #else
 			Debug.LogError( "Starter Assets package is missing dependencies. Please use Tools/Starter Assets/Reinstall Dependencies to fix it");
@@ -194,14 +192,15 @@ namespace StarterAssets
             {
                 _animator.SetTrigger(_animIDAttack);
                 isAttack = true;
-                isAttackDirection = true;
+
             }
         }
 
         private void endAttack()
         {
             isAttack = false;
-            isAttackDirection = false;
+            _input.attack = false;
+            Debug.Log("공격 처리");
         }
         private void Spell()
         {
@@ -209,8 +208,7 @@ namespace StarterAssets
             {
                 _animator.SetTrigger(_animIDSpell);
                 isSpell = true;
-                isSpellDirection = true;
-                Debug.Log("스펠 처리");
+
 
             }
         }
@@ -218,7 +216,8 @@ namespace StarterAssets
         private void endSpell()
         {
             isSpell = false;
-            isSpellDirection = false;
+            _input.spell = false;
+            Debug.Log("스펠 처리");
         }
         private void GroundedCheck()
         {

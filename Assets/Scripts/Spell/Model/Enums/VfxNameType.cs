@@ -2,7 +2,7 @@ namespace Spell.Model.Enums
 {
     public enum VfxNameType
     {
-        None,
+        None, // 기본값 추가
         FlakesA1_01,
         FrostFlake_01,
         FrostFlake_02,

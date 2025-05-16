@@ -1,3 +1,4 @@
+using System;
 using Spell.Model.Enums;
 using System.Collections.Generic;
 using UnityEngine;
@@ -12,7 +13,37 @@ namespace Spell.Model.Core
         // 시스템 오류 방지용 최소값만 채움. 실제 주문 실패 시에는 FailureBehavior로 분기할 것!
         public static SpellData Create()
         {
-            return new SpellData();
+            // VFX 후보 배열 정의
+            string[] materialNames = { "M_Stones", "Glow_Fire", "Glow_Ice", "Gold", "Ground", "IceMaterial", "M_StonesV1", "PT_Ground_Grass_Green_01" };
+            string[] meshNames = { "ST_Stone1", "ST_Stone2", "ST_Stone3", "ST_Stone4", "ST_Stone5", "Crystal_1", "Crystal_2", "Crystal_3", "Crystal_4", "Crystal_5" };
+            string[] particleNames = { "prefV_vfx_fire_red", "prefV_vfx_fire_blue", "Ef_IceMagicGlowFree01", "Sparks_green", "Sparks_pink", "Sparks_red", "Sparks_white", "Sparks_yellow" };
+            string[] trailNames = { "VFX_Trail_Fire", "VFX_Trail_Earth", "VFX_Trail_Ice", "VFX_Trail_Nature", "VFX_Trail_Cosmos", "VFX_Trail_Water" };
+
+            System.Random rnd = new System.Random(Guid.NewGuid().GetHashCode());
+
+            return new SpellData
+            {
+                Name = "DefaultSpell",
+                Element = ElementType.Earth,
+                Behavior = BehaviorType.Projectile,
+                Actions = new List<SpellActionData>(),
+                PositionOffset = Vector3.zero,
+                Direction = Vector3.forward,
+                Count = 1,
+                Shape = ShapeType.Sphere, 
+                Size = Vector3.one,     
+                HasGravity = true,
+                Speed = 30f, 
+                Duration = 5f,
+                SpreadAngle = 0f,
+                SpreadRange = 0f,
+                ActivateOnCollision = true,
+                // ---- VFX 속성 랜덤 세팅 ----
+                MaterialName = materialNames[rnd.Next(materialNames.Length)],
+                MeshName = meshNames[rnd.Next(meshNames.Length)],
+                ParticleName = particleNames[rnd.Next(particleNames.Length)],
+                TrailName = trailNames[rnd.Next(trailNames.Length)]
+            };
         }
 
         // 파싱된 값으로 생성 (GPT 응답 등)
@@ -23,35 +54,80 @@ namespace Spell.Model.Core
             List<SpellActionData> actions,
             Vector3? positionOffset,
             Vector3? direction,
-            int count,
-            ShapeType shape,
-            Vector3 size, 
-            bool hasGravity,
-            float speed,        
-            float duration,
-            string vfxName = null // VfxName 파라미터 추가 (기본값 null)
+            int? count,
+            ShapeType? shape,
+            Vector3? size, 
+            bool? hasGravity,
+            float? speed,        
+            float? duration,
+            float? spreadAngle,
+            float? spreadRange,
+            bool? activateOnCollision,
+            string materialName,
+            string meshName,
+            string particleName,
+            string trailName
         )
         {
-            // string → enum 변환
-            VfxNameType vfxEnum = VfxNameType.None;
-            if (!string.IsNullOrEmpty(vfxName))
-                System.Enum.TryParse(vfxName, out vfxEnum);
+            // 모든 속성에 대해 디폴트 처리
+            if (string.IsNullOrEmpty(name))
+                name = "DefaultSpell";
+            if (actions == null)
+                actions = new List<SpellActionData>();
+            if (positionOffset == null)
+                positionOffset = Vector3.zero;
+            if (direction == null)
+                direction = Vector3.forward;
+            if (count == null || count <= 0)
+                count = 1;
+            if (shape == null)
+                shape = ShapeType.Sphere;
+            if (size == null || size == Vector3.zero)
+                size = Vector3.one;
+            if (hasGravity == null)
+                hasGravity = false;
+            if (speed == null || speed <= 0f)
+                speed = 10f;
+            if (duration == null || duration <= 0f)
+                duration = 5f;
+            if (spreadAngle == null)
+                spreadAngle = 0f;
+            if (spreadRange == null)
+                spreadRange = 0f;
+            if (activateOnCollision == null)
+                activateOnCollision = true;
+            if (element == 0) // enum의 기본값이 None일 경우
+                element = ElementType.Earth;
+            if (string.IsNullOrEmpty(materialName))
+                materialName = "None";
+            if (string.IsNullOrEmpty(meshName))
+                meshName = "None";
+            if (string.IsNullOrEmpty(particleName))
+                particleName = "None";
+            if (string.IsNullOrEmpty(trailName))
+                trailName = "None";
 
             return new SpellData
             {
                 Name = name,
                 Element = element,
                 Behavior = behavior,
-                Actions = actions ?? new List<SpellActionData>(),
-                PositionOffset = positionOffset,
-                Direction = direction,
-                Count = count,
-                Shape = shape,
-                Size = size, 
-                HasGravity = hasGravity,
-                Speed = speed,       
-                Duration = duration,
-                VfxName = vfxEnum // enum으로 할당
+                Actions = actions,
+                PositionOffset = positionOffset.Value, // 명시적 .Value 사용
+                Direction = direction.Value,           // 명시적 .Value 사용
+                Count = count.Value,
+                Shape = shape.Value,
+                Size = size.Value, 
+                HasGravity = hasGravity.Value,
+                Speed = speed.Value,       
+                Duration = duration.Value,
+                SpreadAngle = spreadAngle.Value,
+                SpreadRange = spreadRange.Value,
+                ActivateOnCollision = activateOnCollision.Value,
+                MaterialName = materialName,
+                MeshName = meshName,
+                ParticleName = particleName,
+                TrailName = trailName
             };
         }
 

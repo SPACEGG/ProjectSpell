@@ -1,3 +1,4 @@
+/*
 using System.Collections.Generic;
 using Spell.Model.Enums;
 using UnityEngine;
@@ -13,7 +14,7 @@ namespace Entity.Prefabs
         {
             foreach (var entry in entries)
             {
-                if (entry.elementType == element &&
+                if (entry.Element == element &&
                     entry.shapeType == shape &&
                     entry.sizeCategory == size)
                 {
@@ -24,3 +25,4 @@ namespace Entity.Prefabs
         }
     }
 }
+*/

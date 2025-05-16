@@ -56,7 +56,7 @@ namespace Spell.Dev.UI
             Vector3 direction = CameraUtil.GetCameraForward();
             Vector3 casterPosition = _view.transform.position;
 
-            var spellData = await _spellController.BuildSpellDataAsync(_recordingClip, powerLevel, cameraTargetPosition, casterPosition, direction);
+            var spellData = await _spellController.BuildSpellDataAsync(_recordingClip, powerLevel, cameraTargetPosition, casterPosition);
             if (spellData != null)
             {
                 _currentSpellData = spellData; // API 결과 저장
