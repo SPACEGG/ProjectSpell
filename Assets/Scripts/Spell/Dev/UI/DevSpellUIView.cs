@@ -71,7 +71,7 @@ namespace Spell.Dev.UI
         {
             if (spellCaster != null)
             {
-                spellCaster.CastSpell(spellData);
+                spellCaster.CastSpell(spellData, gameObject);
             }
             else
             {
