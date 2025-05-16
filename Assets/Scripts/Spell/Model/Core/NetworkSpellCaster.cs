@@ -1,13 +1,13 @@
-﻿using System.Collections.Generic;
-using Common.Models;
+﻿using Common.Models;
 using Cysharp.Threading.Tasks;
+using Spell.Model.Behaviors;
 using Spell.Model.Data;
-using Spell.Model.Enums;
 using Unity.Netcode;
 using UnityEngine;
 
 namespace Spell.Model.Core
 {
+    // FIXME: 변경사항 많음
     public class NetworkSpellCaster : NetworkBehaviour
     {
         [SerializeField] private Transform castOrigin; // 지팡이 끝부분
@@ -20,27 +20,14 @@ namespace Spell.Model.Core
 
         public override void OnNetworkSpawn()
         {
-            _defaultSpell = SpellDataFactory.Create(
-                "Default Spell",
-                ElementType.Earth,
-                BehaviorType.Projectile,
-                new List<SpellActionData>() { new(ActionType.Damage, TargetType.Enemy, 10) },
-                Vector3.zero,
-                Vector3.forward,
-                1,
-                ShapeType.Sphere,
-                Vector3.one,
-                true,
-                10f,
-                5f
-            );
+            _defaultSpell = SpellDataFactory.Create();
         }
 
 
         [Rpc(SendTo.Server)]
         public void CastDefaultSpellRpc()
         {
-            CastSpell(_defaultSpell);
+            CastSpell(_defaultSpell, gameObject);
         }
 
         [Rpc(SendTo.Server)]
@@ -55,14 +42,13 @@ namespace Spell.Model.Core
                 recording,
                 1,
                 Camera.main ? Camera.main.transform.position : Vector3.zero,
-                transform.position,
-                CameraUtil.GetCameraForward()
+                transform.position
             );
 
-            CastSpell(spellData);
+            CastSpell(spellData, gameObject);
         }
 
-        private void CastSpell(SpellData data)
+        private void CastSpell(SpellData data, GameObject caster)
         {
             if (data == null)
             {
@@ -71,14 +57,27 @@ namespace Spell.Model.Core
             }
 
             // SpellData에서 PositionOffset을 가져와서 사용 (null이면 2칸 앞)
-            var offset = data.PositionOffset ?? new Vector3(0f, 0f, 2f);
+            var offset = data.PositionOffset;
             var spawnPosition = CastOrigin.position + offset;
 
             // SpellData 정보를 바탕으로 실제 동작/외형이 적용된 스펠 오브젝트 씬에 생성
-            var spellBehavior = SpellFactory.CreateSpellGameObject(data);
-            spellBehavior.transform.SetPositionAndRotation(spawnPosition, CastOrigin.rotation);
-            spellBehavior.Behave(data);
-            // 이 이후에 spellBehavior의 Start()가 실행됨
+            var spellObject = SpellFactory.CreateSpellGameObject(data, caster);
+
+            spellObject.transform.position = spawnPosition;
+
+            // === 시전자와 주문 오브젝트가 충돌하지 않도록 처리 ===
+            var casterColliders = GetComponentsInChildren<Collider>();
+            var spellColliders = spellObject.GetComponentsInChildren<Collider>();
+            foreach (var casterCol in casterColliders)
+            {
+                foreach (var spellCol in spellColliders)
+                {
+                    Physics.IgnoreCollision(spellCol, casterCol, true);
+                }
+            }
+
+            var behavedSpellObject = spellObject.GetComponent<SpellBehaviorBase>();
+            behavedSpellObject?.Behave(data);
         }
     }
 
