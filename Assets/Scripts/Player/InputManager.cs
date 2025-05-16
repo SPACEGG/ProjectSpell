@@ -1,11 +1,8 @@
-using System.Collections.Generic;
 using Cysharp.Threading.Tasks;
 using UnityEngine;
 using Spell.Model.Core;
 using Spell.Model.Data;
-using Spell.Model.Enums;
 using Record;
-using Common.Models;
 
 namespace Player
 {
@@ -58,22 +55,6 @@ namespace Player
             ManaLevelSelectKeyInput();
         }
 
-        // Spell 사용
-        private async UniTaskVoid UseSpell()
-        {
-            SpellData spelldata = await spellController.BuildSpellDataAsync(
-                recordController.GetRecordingClip(),
-                1,
-                Camera.main != null ? Camera.main.transform.position : Vector3.zero,
-                transform.position,
-                transform.forward
-            );
-
-            // 선택된 레벨만큼 마나 소모
-            healthManaManager.ManaModel.UseMana(selectedManaLevel);
-            spellCaster.CastSpell(spelldata, gameObject);
-        }
-
         #region Key Inputs
 
         private void DefaultAttackKeyInput()
@@ -115,9 +96,29 @@ namespace Player
                     spell.Direction = direction;
 
                     Debug.Log("CastSpell 호출");
-                    spellCaster.CastSpell(spell);
+                    spellCaster.CastSpell(spell, gameObject);
                 }
             }
+        }
+
+        private void ManaLevelSelectKeyInput()
+        {
+            if (Input.GetKeyDown(level1SelectKey))
+            {
+                // TODO: 레벨1 선택 ui
+                selectedManaLevel = 1;
+            }
+            if (Input.GetKeyDown(level2SelectKey))
+            {
+                // TODO: 레벨2 선택 ui
+                selectedManaLevel = 2;
+            }
+            if (Input.GetKeyDown(level3SelectKey))
+            {
+                // TODO: 레벨3 선택 ui
+                selectedManaLevel = 3;
+            }
+        }
 
         private void RecordKeyInput()
         {
@@ -143,10 +144,13 @@ namespace Player
             }
         }
 
-        // TODO: 마나 소모
-        // healthManaManager.ManaModel.UseMana(200f);
+        #endregion
+
         private async UniTaskVoid Spell()
         {
+            // 마나 소모
+            healthManaManager.ManaModel.UseMana(selectedManaLevel);
+
             Debug.Log("Spell() 진입");
             // direction 계산 및 전달 제거
 
@@ -172,10 +176,10 @@ namespace Player
 
             SpellData spelldata = await spellController.BuildSpellDataAsync(
                 recordController.GetRecordingClip(),
-                1,
+                selectedManaLevel,
                 cameraTargetPosition, // 카메라 타겟 위치 전달
                 transform.position    // 시전자 위치 전달
-                // direction 파라미터 제거
+                                      // direction 파라미터 제거
             );
 
             if (spelldata == null)
@@ -185,7 +189,7 @@ namespace Player
             }
 
             Debug.Log("SpellData 생성 성공, CastSpell 호출");
-            spellCaster.CastSpell(spelldata);
+            spellCaster.CastSpell(spelldata, gameObject);
         }
     }
 }

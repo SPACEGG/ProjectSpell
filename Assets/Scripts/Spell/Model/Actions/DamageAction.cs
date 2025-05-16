@@ -22,7 +22,7 @@ namespace Spell.Model.Actions
                     }
                 }
 
-                ElementType targetElement = ElementType.None;
+                ElementType targetElement = ElementType.Common;
                 if (!target.TryGetComponent(out IElementProvider targetElementProvider))
                     targetElementProvider = target.GetComponentInParent<IElementProvider>();
 
@@ -37,7 +37,7 @@ namespace Spell.Model.Actions
         private float GetAffinityMultiplier(ElementType originElement, ElementType targetElement)
         {
             float multiplier = 1f;
-            if (originElement == ElementType.None || targetElement == ElementType.None) return multiplier;
+            if (originElement == ElementType.Common || targetElement == ElementType.Common) return multiplier;
 
             if (originElement == ElementType.Ice) multiplier *= 0.8f;
             if (targetElement == ElementType.Ice) multiplier *= 1.25f;
