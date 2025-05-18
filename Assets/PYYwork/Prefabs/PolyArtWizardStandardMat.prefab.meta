@@ -1,0 +1,15 @@
+fileFormatVersion: 2
+guid: 0be2238041596834cb15cbff6a0b1f46
+timeCreated: 1536416420
+licenseType: Store
+NativeFormatImporter:
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 128097
+  packageName: Battle Wizard Poly Art
+  packageVersion: 1.2
+  assetPath: Assets/WizardPolyArt/URP_PA/Prefabs/PolyArtWizardStandardMat.prefab
+  uploadId: 422634

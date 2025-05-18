@@ -1,0 +1,15 @@
+fileFormatVersion: 2
+guid: 21917ed6c35bb4f48bef34735591182f
+timeCreated: 1536416446
+licenseType: Store
+NativeFormatImporter:
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 128097
+  packageName: Battle Wizard Poly Art
+  packageVersion: 1.2
+  assetPath: Assets/WizardPolyArt/URP_PA/Prefabs/PolyArtWizardMaskTintMat.prefab
+  uploadId: 422634
