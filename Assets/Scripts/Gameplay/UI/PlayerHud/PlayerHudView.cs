@@ -66,6 +66,16 @@ namespace Gameplay.UI.PlayerHud
             _isAnimatingMp = true;
         }
 
+        public void Show()
+        {
+            gameObject.SetActive(true);
+        }
+
+        public void Hide()
+        {
+            gameObject.SetActive(false);
+        }
+
         private void UpdateHpAnimation()
         {
             if (!_isAnimatingHp) return;

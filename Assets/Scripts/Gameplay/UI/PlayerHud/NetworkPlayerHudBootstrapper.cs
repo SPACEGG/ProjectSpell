@@ -17,8 +17,9 @@ namespace Gameplay.UI.PlayerHud
 
         private void Start()
         {
-            _networkManager ??= NetworkManager.Singleton;
+            view.Hide();
 
+            _networkManager ??= NetworkManager.Singleton;
             _networkManager.OnClientConnectedCallback += NetworkManager_OnClientConnected;
         }
 
@@ -30,6 +31,7 @@ namespace Gameplay.UI.PlayerHud
 
             _playerHealthManaManager = playerObject.GetComponentInChildren<NetworkHealthManaManager>();
             _presenter = new NetworkPlayerHudPresenter(view, _playerHealthManaManager.HealthModel, _playerHealthManaManager.ManaModel);
+            view.Show();
         }
 
         private void OnDestroy()

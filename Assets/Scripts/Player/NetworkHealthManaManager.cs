@@ -1,4 +1,5 @@
-﻿using Common.Data;
+﻿using System;
+using Common.Data;
 using Common.Models;
 using Unity.Netcode;
 using UnityEngine;
@@ -19,6 +20,11 @@ namespace Player
         {
             HealthModel = new NetworkVariable<NetworkHealthModel>(new NetworkHealthModel(healthData));
             ManaModel = new ManaModel(manaData);
+        }
+
+        private void FixedUpdate()
+        {
+            ManaModel.RegenerateMana(Time.deltaTime);
         }
     }
 }
