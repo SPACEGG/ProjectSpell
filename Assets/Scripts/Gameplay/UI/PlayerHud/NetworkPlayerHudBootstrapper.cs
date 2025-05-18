@@ -12,6 +12,7 @@ namespace Gameplay.UI.PlayerHud
         private NetworkPlayerHudPresenter _presenter;
 
         private NetworkHealthManaManager _playerHealthManaManager;
+        private PowerLevelManager _playerPowerLevelManager;
 
         private NetworkManager _networkManager;
 
@@ -30,7 +31,9 @@ namespace Gameplay.UI.PlayerHud
             var playerObject = _networkManager.SpawnManager.GetPlayerNetworkObject(obj);
 
             _playerHealthManaManager = playerObject.GetComponentInChildren<NetworkHealthManaManager>();
-            _presenter = new NetworkPlayerHudPresenter(view, _playerHealthManaManager.HealthModel, _playerHealthManaManager.ManaModel);
+            _playerPowerLevelManager = playerObject.GetComponentInChildren<PowerLevelManager>();
+            _presenter = new NetworkPlayerHudPresenter(view, _playerHealthManaManager.HealthModel, _playerHealthManaManager.ManaModel,
+                _playerPowerLevelManager);
             view.Show();
         }
 

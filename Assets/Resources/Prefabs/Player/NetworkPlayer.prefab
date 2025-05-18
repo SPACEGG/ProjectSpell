@@ -297,6 +297,9 @@ MonoBehaviour:
   ShowTopMostFoldoutHeaderGroup: 1
   attackKey: 323
   recordKey: 324
+  level1SelectKey: 49
+  level2SelectKey: 50
+  level3SelectKey: 51
   recordIgnoreDuration: 0.5
 --- !u!114 &3142652551177973476
 MonoBehaviour:

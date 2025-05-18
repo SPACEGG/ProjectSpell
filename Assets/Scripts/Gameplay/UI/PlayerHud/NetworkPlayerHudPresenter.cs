@@ -1,4 +1,5 @@
 ﻿using Common.Models;
+using Player;
 using Unity.Netcode;
 
 namespace Gameplay.UI.PlayerHud
@@ -9,7 +10,7 @@ namespace Gameplay.UI.PlayerHud
         private readonly NetworkVariable<NetworkHealthModel> _healthModel;
         private readonly ManaModel _manaModel;
 
-        public NetworkPlayerHudPresenter(PlayerHudView view, NetworkVariable<NetworkHealthModel> healthModel, ManaModel manaModel)
+        public NetworkPlayerHudPresenter(PlayerHudView view, NetworkVariable<NetworkHealthModel> healthModel, ManaModel manaModel, PowerLevelManager powerLevelManager)
         {
             _view = view;
             _healthModel = healthModel;
@@ -17,6 +18,7 @@ namespace Gameplay.UI.PlayerHud
 
             healthModel.OnValueChanged += UpdateHp;
             manaModel.OnManaChanged += UpdateMp;
+            powerLevelManager.OnPowerLevelChanged += UpdatePowerLevel;
 
             UpdateHp(healthModel.Value, healthModel.Value);
             UpdateMp(manaModel.CurrentMana);
@@ -30,6 +32,11 @@ namespace Gameplay.UI.PlayerHud
         private void UpdateMp(float currentMana)
         {
             _view.SetMp(currentMana, _manaModel.ManaPerLevel);
+        }
+
+        private void UpdatePowerLevel(OnPowerLevelChangedEventArgs args)
+        {
+            _view.SetPowerLevel(args.NewPowerLevel);
         }
 
         public void Dispose()

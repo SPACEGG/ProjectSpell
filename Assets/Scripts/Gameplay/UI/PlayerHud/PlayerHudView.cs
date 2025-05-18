@@ -69,7 +69,7 @@ namespace Gameplay.UI.PlayerHud
             _isAnimatingMp = true;
         }
 
-        public void SetSpellLevel(int level)
+        public void SetPowerLevel(int level)
         {
             spellLevelIndicator.text = level.ToString();
         }

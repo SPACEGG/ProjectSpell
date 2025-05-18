@@ -7,6 +7,7 @@ using Record;
 namespace Player
 {
     // 플레이어의 마우스 클릭을 담당하는 컴포넌트
+    [RequireComponent(typeof(SpellCaster), typeof(HealthManaManager), typeof(PowerLevelManager))]
     public class InputManager : MonoBehaviour
     {
         // 조작 키 세팅
@@ -30,12 +31,18 @@ namespace Player
         private SpellDataController spellController;
         private SpellCaster spellCaster;
         private HealthManaManager healthManaManager;
-        private int selectedPowerLevel = 1; // 이름 변경
+        private PowerLevelManager _powerLevelManager;
 
         private void Awake()
         {
             recordController = new();
             spellController = SpellDataController.Singleton;
+            _powerLevelManager = GetComponent<PowerLevelManager>();
+
+            if (_powerLevelManager == null)
+            {
+                Debug.LogError("PowerLevelManager component not found on the same GameObject!");
+            }
         }
 
         private void Start()
@@ -52,7 +59,7 @@ namespace Player
             // 키 입력 받기
             DefaultAttackKeyInput();
             RecordKeyInput();
-            PowerLevelSelectKeyInput(); // 이름 변경
+            PowerLevelSelectKeyInput();
         }
 
         #region Key Inputs
@@ -101,22 +108,19 @@ namespace Player
             }
         }
 
-        private void PowerLevelSelectKeyInput() // 이름 변경
+        private void PowerLevelSelectKeyInput()
         {
             if (Input.GetKeyDown(level1SelectKey))
             {
-                // TODO: 레벨1 선택 ui
-                selectedPowerLevel = 1;
+                _powerLevelManager.SetPowerLevel(1);
             }
-            if (Input.GetKeyDown(level2SelectKey))
+            else if (Input.GetKeyDown(level2SelectKey))
             {
-                // TODO: 레벨2 선택 ui
-                selectedPowerLevel = 2;
+                _powerLevelManager.SetPowerLevel(2);
             }
-            if (Input.GetKeyDown(level3SelectKey))
+            else if (Input.GetKeyDown(level3SelectKey))
             {
-                // TODO: 레벨3 선택 ui
-                selectedPowerLevel = 3;
+                _powerLevelManager.SetPowerLevel(3);
             }
         }
 
@@ -149,7 +153,7 @@ namespace Player
         private async UniTaskVoid Spell()
         {
             // 마나 소모
-            healthManaManager.ManaModel.UseMana(selectedPowerLevel);
+            healthManaManager.ManaModel.UseMana(_powerLevelManager.CurrentPowerLevel);
 
             Debug.Log("Spell() 진입");
             // direction 계산 및 전달 제거
@@ -176,10 +180,9 @@ namespace Player
 
             SpellData spelldata = await spellController.BuildSpellDataAsync(
                 recordController.GetRecordingClip(),
-                selectedPowerLevel, // 이름 변경
-                cameraTargetPosition, // 카메라 타겟 위치 전달
-                transform.position    // 시전자 위치 전달
-                                      // direction 파라미터 제거
+                _powerLevelManager.CurrentPowerLevel,
+                cameraTargetPosition,
+                transform.position
             );
 
             if (spelldata == null)
