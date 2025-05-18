@@ -16,6 +16,9 @@ namespace Gameplay.UI.PlayerHud
         [SerializeField] private Image[] mpBorders;
         [SerializeField] private float animationSpeed = 8f;
 
+        [Header("Spells")]
+        [SerializeField] private TextMeshProUGUI spellLevelIndicator;
+
         private bool _isAnimatingHp;
         private float _targetHpValue;
         private bool _isAnimatingMp;
@@ -64,6 +67,11 @@ namespace Gameplay.UI.PlayerHud
             }
 
             _isAnimatingMp = true;
+        }
+
+        public void SetSpellLevel(int level)
+        {
+            spellLevelIndicator.text = level.ToString();
         }
 
         public void Show()
