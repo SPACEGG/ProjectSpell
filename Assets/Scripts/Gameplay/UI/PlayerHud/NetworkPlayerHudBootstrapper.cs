@@ -28,7 +28,7 @@ namespace Gameplay.UI.PlayerHud
 
             var playerObject = _networkManager.SpawnManager.GetPlayerNetworkObject(obj);
 
-            _playerHealthManaManager = playerObject.GetComponent<NetworkHealthManaManager>();
+            _playerHealthManaManager = playerObject.GetComponentInChildren<NetworkHealthManaManager>();
             _presenter = new NetworkPlayerHudPresenter(view, _playerHealthManaManager.HealthModel, _playerHealthManaManager.ManaModel);
         }
 
