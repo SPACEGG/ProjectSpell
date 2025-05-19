@@ -45,11 +45,20 @@ namespace Spell.Model.Data
 
         public void NetworkSerialize<T>(BufferSerializer<T> serializer) where T : IReaderWriter
         {
-            serializer.SerializeValue(ref Name);
-            serializer.SerializeValue(ref Element);
-            serializer.SerializeValue(ref Behavior);
+            // 문자열, enum 등 기본 필드 직렬화
+            var name = Name;
+            serializer.SerializeValue(ref name);
+            if (!serializer.IsWriter) Name = name;
 
-            // List<SpellActionData> 직렬화 
+            var element = Element;
+            serializer.SerializeValue(ref element);
+            if (!serializer.IsWriter) Element = element;
+
+            var behavior = Behavior;
+            serializer.SerializeValue(ref behavior);
+            if (!serializer.IsWriter) Behavior = behavior;
+
+            // SpellActionData 리스트 직렬화
             if (serializer.IsWriter)
             {
                 int count = Actions?.Count ?? 0;
@@ -73,23 +82,65 @@ namespace Spell.Model.Data
                 }
             }
 
-            serializer.SerializeValue(ref Shape);
-            serializer.SerializeValue(ref Size);
+            var shape = Shape;
+            serializer.SerializeValue(ref shape);
+            if (!serializer.IsWriter) Shape = shape;
 
-            serializer.SerializeValue(ref MaterialName);
-            serializer.SerializeValue(ref MeshName);
-            serializer.SerializeValue(ref ParticleName);
-            serializer.SerializeValue(ref TrailName);
+            var size = Size;
+            serializer.SerializeValue(ref size);
+            if (!serializer.IsWriter) Size = size;
 
-            serializer.SerializeValue(ref PositionOffset);
-            serializer.SerializeValue(ref Direction);
-            serializer.SerializeValue(ref Count);
-            serializer.SerializeValue(ref HasGravity);
-            serializer.SerializeValue(ref Speed);
-            serializer.SerializeValue(ref Duration);
-            serializer.SerializeValue(ref SpreadAngle);
-            serializer.SerializeValue(ref SpreadRange);
-            serializer.SerializeValue(ref ActivateOnCollision);
+            var materialName = MaterialName;
+            serializer.SerializeValue(ref materialName);
+            if (!serializer.IsWriter) MaterialName = materialName;
+
+            var meshName = MeshName;
+            serializer.SerializeValue(ref meshName);
+            if (!serializer.IsWriter) MeshName = meshName;
+
+            var particleName = ParticleName;
+            serializer.SerializeValue(ref particleName);
+            if (!serializer.IsWriter) ParticleName = particleName;
+
+            var trailName = TrailName;
+            serializer.SerializeValue(ref trailName);
+            if (!serializer.IsWriter) TrailName = trailName;
+
+            var positionOffset = PositionOffset;
+            serializer.SerializeValue(ref positionOffset);
+            if (!serializer.IsWriter) PositionOffset = positionOffset;
+
+            var direction = Direction;
+            serializer.SerializeValue(ref direction);
+            if (!serializer.IsWriter) Direction = direction;
+
+            var countValue = Count;
+            serializer.SerializeValue(ref countValue);
+            if (!serializer.IsWriter) Count = countValue;
+
+            var hasGravity = HasGravity;
+            serializer.SerializeValue(ref hasGravity);
+            if (!serializer.IsWriter) HasGravity = hasGravity;
+
+            var speed = Speed;
+            serializer.SerializeValue(ref speed);
+            if (!serializer.IsWriter) Speed = speed;
+
+            var duration = Duration;
+            serializer.SerializeValue(ref duration);
+            if (!serializer.IsWriter) Duration = duration;
+
+            var spreadAngle = SpreadAngle;
+            serializer.SerializeValue(ref spreadAngle);
+            if (!serializer.IsWriter) SpreadAngle = spreadAngle;
+
+            var spreadRange = SpreadRange;
+            serializer.SerializeValue(ref spreadRange);
+            if (!serializer.IsWriter) SpreadRange = spreadRange;
+
+            var activateOnCollision = ActivateOnCollision;
+            serializer.SerializeValue(ref activateOnCollision);
+            if (!serializer.IsWriter) ActivateOnCollision = activateOnCollision;
         }
     }
 }
