@@ -1,6 +1,8 @@
+using System;
 using Unity.Netcode;
 using UnityEngine;
 
+[Obsolete("This class is obsolete. Use NetworkCapsuleTest instead.")]
 public class NetworkCapsuleTest : NetworkBehaviour
 {
     private Rigidbody rb;

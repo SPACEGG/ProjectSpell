@@ -1,8 +1,10 @@
+using System;
 using Unity.Netcode;
 using UnityEngine;
 
 namespace Player
 {
+    [Obsolete("This class is deprecated. Use NetworkCameraManager instead.")]
     public class NetworkPowerLevelManager : NetworkBehaviour
     {
         [SerializeField] private KeyCode level1SelectKey = KeyCode.Alpha1;

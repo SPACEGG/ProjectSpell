@@ -1,9 +1,11 @@
+using System;
 using Spell.Model.Core;
 using Unity.Netcode;
 using UnityEngine;
 
 namespace Player
 {
+    [Obsolete("Use NetworkSpellCaster instead.")]
     public class NetworkDefaultAttackManager : NetworkBehaviour
     {
         [SerializeField] private KeyCode attackKey = KeyCode.Mouse0;

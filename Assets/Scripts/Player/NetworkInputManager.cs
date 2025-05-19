@@ -1,4 +1,5 @@
-﻿using Common.Utils;
+﻿using System;
+using Common.Utils;
 using Cysharp.Threading.Tasks;
 using Record;
 using Spell.Model.Core;
@@ -8,6 +9,7 @@ using UnityEngine;
 
 namespace Player
 {
+    [Obsolete("This class is deprecated. Use NetworkDefaultAttackManager instead.")]
     [RequireComponent(typeof(NetworkSpellCaster), typeof(NetworkHealthManaManager), typeof(PowerLevelManager))]
     public class NetworkInputManager : NetworkBehaviour
     {

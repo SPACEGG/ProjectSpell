@@ -1,5 +1,7 @@
+using System;
 using Unity.Netcode;
 using UnityEngine;
+using Random = UnityEngine.Random;
 #if ENABLE_INPUT_SYSTEM
 using UnityEngine.InputSystem;
 #endif
@@ -11,6 +13,7 @@ namespace StarterAssets
 #if ENABLE_INPUT_SYSTEM
     [RequireComponent(typeof(PlayerInput))]
 #endif
+    [Obsolete("This script is deprecated.]")]
     public class NetworkMovementManager : NetworkBehaviour
     {
 
