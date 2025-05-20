@@ -49,9 +49,10 @@ namespace Spell.Model.Behaviors
 
         private void SpawnProjectile(Vector3 spawnPosition, int index, int totalCount, SpellData spellData)
         {
-            // SpreadRange를 이용해 발사체 생성 위치를 랜덤하게 퍼뜨림
-            Vector3 randomOffset = Random.insideUnitSphere * spellData.SpreadRange;
-            GameObject projectile = Instantiate(gameObject, spawnPosition + randomOffset, Quaternion.identity);
+            // 랜덤 오프셋 제거: 항상 동일한 위치에 생성
+            // Vector3 randomOffset = Random.insideUnitSphere * spellData.SpreadRange;
+            // GameObject projectile = Instantiate(gameObject, spawnPosition + randomOffset, Quaternion.identity);
+            GameObject projectile = Instantiate(gameObject, spawnPosition, Quaternion.identity);
             projectile.SetActive(true);
 
             Rigidbody rb = projectile.GetComponent<Rigidbody>();

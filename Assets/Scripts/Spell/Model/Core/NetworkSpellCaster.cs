@@ -7,7 +7,6 @@ using UnityEngine;
 
 namespace Spell.Model.Core
 {
-    // FIXME: 변경사항 많음
     public class NetworkSpellCaster : NetworkBehaviour
     {
         [SerializeField] private Transform castOrigin; // 지팡이 끝부분
@@ -23,17 +22,10 @@ namespace Spell.Model.Core
             _defaultSpell = SpellDataFactory.Create();
         }
 
-
-        [Rpc(SendTo.Server)]
-        public void CastDefaultSpellRpc()
+        // 더 이상 RPC 필요 없음. 각자 입력에서 직접 호출
+        public void CastSpellLocally(SpellData spellData)
         {
-            CastSpell(_defaultSpell, gameObject);
-        }
-
-        [Rpc(SendTo.Server)]
-        public void CastUltimateSpellRpc(CastUltimateSpellRpcArgs args)
-        {
-            _ = BuildAndCastSpell(args.Recording);
+            CastSpell(spellData, gameObject);
         }
 
         private async UniTask BuildAndCastSpell(Wav recording)
@@ -45,9 +37,31 @@ namespace Spell.Model.Core
                 transform.position
             );
 
+            CastSpellLocally(spellData);
+        }
+
+        // 클라이언트에서 호출: SpellData를 서버로 전송, originClientId도 함께 전달
+        [Rpc(SendTo.Server)]
+        public void RequestCastSpellRpc(SpellData spellData, ulong originClientId)
+        {
+            // 서버에서만 실행
+            if (!IsServer) return;
+
+            // 모든 인스턴스(서버+클라)에 SpellData와 originClientId 브로드캐스트
+            SyncSpellDataRpc(spellData, originClientId);
+        }
+
+        // 서버에서 호출: 모든 인스턴스에서 SpellData로 주문 생성, 단 originClientId는 제외
+        [Rpc(SendTo.Everyone)]
+        public void SyncSpellDataRpc(SpellData spellData, ulong originClientId)
+        {
+            if (NetworkManager.Singleton.LocalClientId == originClientId)
+                return; // 자기 자신이면 중복 시전 방지
+
             CastSpell(spellData, gameObject);
         }
 
+        // 실제 스펠 생성 및 적용 (서버에서만 실행)
         private void CastSpell(SpellData data, GameObject caster)
         {
             if (data == null)
@@ -78,16 +92,6 @@ namespace Spell.Model.Core
 
             var behavedSpellObject = spellObject.GetComponent<SpellBehaviorBase>();
             behavedSpellObject?.Behave(data);
-        }
-    }
-
-    public struct CastUltimateSpellRpcArgs : INetworkSerializable
-    {
-        public Wav Recording;
-
-        public void NetworkSerialize<T>(BufferSerializer<T> serializer) where T : IReaderWriter
-        {
-            serializer.SerializeValue(ref Recording);
         }
     }
 }
