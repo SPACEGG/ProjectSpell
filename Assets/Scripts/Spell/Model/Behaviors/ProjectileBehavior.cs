@@ -6,6 +6,7 @@ using Common.Models;
 using Spell.Model.Enums;
 using Spell.Model.Actions;
 using System.Collections.Generic;
+using Multiplay;
 
 namespace Spell.Model.Behaviors
 {
@@ -41,21 +42,8 @@ namespace Spell.Model.Behaviors
         {
             if (activateOnCollision)
             {
-                ApplyActions(collision.gameObject, gameObject);
+                MultiplayManager.Singleton.ApplyActions(actionList, collision.gameObject, gameObject);
                 StartCoroutine(DestroyAfterSeconds(gameObject, 0.1f));
-            }
-        }
-
-        private void ApplyActions(GameObject collided, GameObject origin)
-        {
-            if (actionList == null) return;
-
-            foreach (var actionData in actionList)
-            {
-                var action = ActionFactory.CreateAction(actionData);
-                if (action == null) continue;
-                ActionContext context = new(actionData, collided, origin);
-                action.Apply(context);
             }
         }
 
@@ -92,7 +80,8 @@ namespace Spell.Model.Behaviors
         private IEnumerator DestroyAfterSeconds(GameObject obj, float duration)
         {
             yield return new WaitForSeconds(duration);
-            Destroy(obj);
+
+            if (obj) Destroy(obj);
         }
     }
 }
