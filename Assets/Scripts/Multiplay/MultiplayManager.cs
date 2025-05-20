@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.Linq;
 using Spell.Model.Actions;
 using Spell.Model.Core;
 using Spell.Model.Data;
@@ -14,7 +15,7 @@ namespace Multiplay
 
         public List<GameObject> GetAllPlayers()
         {
-            return new List<GameObject>(GameObject.FindGameObjectsWithTag("Player"));
+            return NetworkManager.Singleton.SpawnManager.PlayerObjects.Select(i => i.gameObject).ToList();
         }
 
         public void ApplyActions(List<SpellActionData> actionList, GameObject collided, GameObject origin)
