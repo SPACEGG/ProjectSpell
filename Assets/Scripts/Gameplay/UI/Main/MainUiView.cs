@@ -9,34 +9,16 @@ namespace Gameplay.UI.Main
         [SerializeField] private Button singlePlayButton;
         [SerializeField] private Button multiPlayButton;
 
-        [Header("Network Selection Ui")]
-        [SerializeField] private NetworkSelectionUi networkSelectionUi;
-
-        private void Start()
+        private void Awake()
         {
-            singlePlayButton.onClick.AddListener(OnSinglePlayButtonClicked);
-            multiPlayButton.onClick.AddListener(OnMultiPlayButtonClicked);
-        }
-
-        private void OnSinglePlayButtonClicked()
-        {
-            // TODO: Implement single player mode
-        }
-
-        private void OnMultiPlayButtonClicked()
-        {
-            networkSelectionUi.Show();
-            Hide();
-        }
-
-        public void Show()
-        {
-            gameObject.SetActive(true);
-        }
-
-        private void Hide()
-        {
-            gameObject.SetActive(false);
+            singlePlayButton.onClick.AddListener(() =>
+            {
+                // TODO: Implement single player mode
+            });
+            multiPlayButton.onClick.AddListener(() =>
+            {
+                // TODO: Implement multi player mode
+            });
         }
     }
 }
