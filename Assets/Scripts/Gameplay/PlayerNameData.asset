@@ -1,0 +1,48 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a1b4db3bf22d0d54286b7a4fe5b86c26, type: 3}
+  m_Name: PlayerNameData
+  m_EditorClassIdentifier: 
+  adjectives:
+  - Angry
+  - Happy
+  - Brave
+  - Clever
+  - Swift
+  - Mighty
+  - Gentle
+  - Wild
+  - Noble
+  - Fierce
+  - Calm
+  - Eager
+  - Bold
+  - Wise
+  - Proud
+  - Lively
+  animals:
+  - Lion
+  - Dolphin
+  - Eagle
+  - Wolf
+  - Tiger
+  - Bear
+  - Fox
+  - Hawk
+  - Dragon
+  - Phoenix
+  - Panther
+  - Falcon
+  - Lynx
+  - Shark
+  - Leopard
+  - Raven
