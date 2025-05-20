@@ -1,9 +1,10 @@
 ﻿using Spell.Model.Data;
+using Unity.Netcode;
 using UnityEngine;
 
 namespace Spell.Model.Behaviors
 {
-    public abstract class SpellBehaviorBase : MonoBehaviour
+    public abstract class SpellBehaviorBase : NetworkBehaviour
     {
         public GameObject Caster { get; set; }
 

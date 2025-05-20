@@ -10,9 +10,9 @@ namespace Spell.Model.Actions
         {
             foreach (var target in context.Targets)
             {
-                if (!target.TryGetComponent<IHealthProvider>(out var healthProvider))
+                if (!target.TryGetComponent<INetworkHealthProvider>(out var healthProvider))
                 {
-                    healthProvider = target.GetComponentInParent<IHealthProvider>();
+                    healthProvider = target.GetComponentInParent<INetworkHealthProvider>();
 
                     if (healthProvider == null)
                     {
@@ -21,7 +21,7 @@ namespace Spell.Model.Actions
                     }
                 }
 
-                healthProvider.HealthModel.Heal(context.Value);
+                healthProvider.HealthModel.Value.Heal(context.Value);
             }
         }
     }

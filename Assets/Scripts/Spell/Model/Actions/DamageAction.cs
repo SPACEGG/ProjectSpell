@@ -11,9 +11,9 @@ namespace Spell.Model.Actions
         {
             foreach (var target in context.Targets)
             {
-                if (!target.TryGetComponent<IHealthProvider>(out var healthProvider))
+                if (!target.TryGetComponent<INetworkHealthProvider>(out var healthProvider))
                 {
-                    healthProvider = target.GetComponentInParent<IHealthProvider>();
+                    healthProvider = target.GetComponentInParent<INetworkHealthProvider>();
 
                     if (healthProvider == null)
                     {
@@ -29,7 +29,7 @@ namespace Spell.Model.Actions
                 if (targetElementProvider != null)
                     targetElement = targetElementProvider.Element;
 
-                healthProvider.HealthModel.TakeDamage(context.Value * GetAffinityMultiplier(context.OriginElement, targetElement));
+                healthProvider.HealthModel.Value.TakeDamage(context.Value * GetAffinityMultiplier(context.OriginElement, targetElement));
 
             }
         }

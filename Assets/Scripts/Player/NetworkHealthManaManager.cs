@@ -18,7 +18,7 @@ namespace Player
 
         private void Awake()
         {
-            HealthModel = new NetworkVariable<NetworkHealthModel>(new NetworkHealthModel(healthData));
+            HealthModel = new NetworkVariable<NetworkHealthModel>(new NetworkHealthModel(healthData), NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Server);
             ManaModel = new ManaModel(manaData);
         }
 

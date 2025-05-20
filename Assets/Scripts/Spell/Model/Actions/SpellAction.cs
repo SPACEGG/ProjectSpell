@@ -27,6 +27,7 @@ namespace Spell.Model.Actions
             {
                 TargetType.Activator => new List<GameObject>() { activator },
                 TargetType.Caster => new List<GameObject>() { caster },
+                TargetType.Global => new List<GameObject>() { activator, caster },
                 // TargetType.Global => TODO: BattleManager.GetAllPlayers() 같은거 필요함,
                 _ => null
             };
