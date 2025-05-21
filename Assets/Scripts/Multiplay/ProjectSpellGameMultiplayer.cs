@@ -48,7 +48,7 @@ namespace Multiplay
         {
             NetworkManager.OnClientConnectedCallback += NetworkManager_Server_OnClientConnectedCallback;
             NetworkManager.StartHost();
-            SceneLoader.Load(SceneLoader.SceneType.CharacterSelectScene);
+            SceneLoader.LoadNetwork(SceneLoader.SceneType.CharacterSelectScene);
         }
 
         private void NetworkManager_Server_OnClientConnectedCallback(ulong clientId)
