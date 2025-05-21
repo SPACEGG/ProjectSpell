@@ -1545,6 +1545,15 @@ MonoBehaviour:
   - {r: 0.48235294, g: 0.24705882, b: 0, a: 1}
   - {r: 1, g: 1, b: 1, a: 1}
   - {r: 1, g: 1, b: 0, a: 1}
+  playerColorMaterials:
+  - {fileID: 2100000, guid: 2558a4cf872b5c549867522fb66654de, type: 2}
+  - {fileID: 2100000, guid: 6a7397a06fd20e04893735bff79695a5, type: 2}
+  - {fileID: 2100000, guid: 2dc6120049c0bdd41b1f1e7c2b7c8e2a, type: 2}
+  - {fileID: 2100000, guid: 1835fb0ba4a103b4c9431c61be5d3a94, type: 2}
+  - {fileID: 2100000, guid: 28d87248ecba67640b81e68d49453f34, type: 2}
+  - {fileID: 2100000, guid: 83af4ac9f52ba4d4dad24233d20d1b85, type: 2}
+  - {fileID: 2100000, guid: 92c4d6372be7bf944a05c1b50765897b, type: 2}
+  - {fileID: 2100000, guid: db7639136a312394bbee6a741a12e169, type: 2}
 --- !u!1 &1645825521
 GameObject:
   m_ObjectHideFlags: 0

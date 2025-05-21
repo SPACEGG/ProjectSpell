@@ -13,6 +13,7 @@ namespace Multiplay
         public static bool _playMultiplayer = true;
 
         [SerializeField] private List<Color> playerColors;
+        [SerializeField] private List<Material> playerColorMaterials;
 
         public event EventHandler OnPlayerInfosChanged;
 
@@ -130,7 +131,7 @@ namespace Multiplay
             return GetPlayerDataFromClientId(NetworkManager.Singleton.LocalClientId);
         }
 
-        private NetworkPlayerInfo GetPlayerDataFromClientId(ulong clientId)
+        public NetworkPlayerInfo GetPlayerDataFromClientId(ulong clientId)
         {
             foreach (var playerInfo in _playerInfos)
             {
@@ -147,6 +148,11 @@ namespace Multiplay
         public Color GetPlayerColor(int colorId)
         {
             return playerColors[colorId];
+        }
+
+        public Material GetPlayerColorMaterial(int colorId)
+        {
+            return playerColorMaterials[colorId];
         }
 
         private int GetIndexFromClientId(ulong clientId)
@@ -173,6 +179,11 @@ namespace Multiplay
             }
 
             return -1;
+        }
+
+        public bool IsPlayerIndexConnected(int playerIndex)
+        {
+            return playerIndex < _playerInfos.Count;
         }
     }
 }
