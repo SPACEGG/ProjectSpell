@@ -23,10 +23,29 @@ namespace Gameplay.UI.Main
 
         private void Awake()
         {
-            hostButton.onClick.AddListener(() => { Multiplayer.StartHost(); });
-            clientButton.onClick.AddListener(() => { Multiplayer.StartClient(); });
+            hostButton.onClick.AddListener(() =>
+            {
+                Multiplayer.StartHost();
+                Debug.Log("Host button clicked");
+            });
+            clientButton.onClick.AddListener(() =>
+            {
+                Multiplayer.StartClient();
+                Debug.Log("Client button clicked");
+            });
 
             randomNameButton.onClick.AddListener(() => { playerNameInputField.text = randomNameData.GetRandomName(); });
+            playerNameInputField.onValueChanged.AddListener(name =>
+            {
+                if (string.IsNullOrEmpty(name))
+                {
+                    playerNameInputField.text = randomNameData.GetRandomName();
+                }
+                else
+                {
+                    Multiplayer.PlayerName = name;
+                }
+            });
         }
 
         private void Start()

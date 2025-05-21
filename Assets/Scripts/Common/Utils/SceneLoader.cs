@@ -19,7 +19,7 @@ namespace Common.Utils
         {
             _targetSceneType = targetSceneType;
 
-            SceneManager.LoadScene(nameof(SceneType.LoadingScene));
+            SceneManager.LoadScene(targetSceneType.ToString());
         }
 
         public static void LoadNetwork(SceneType targetSceneType)

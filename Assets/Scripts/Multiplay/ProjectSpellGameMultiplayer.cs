@@ -3,19 +3,23 @@ using Player;
 using Unity.Netcode;
 using UnityEngine;
 using System.Collections.Generic;
+using Common.Utils;
 
 namespace Multiplay
 {
     public class ProjectSpellGameMultiplayer : NetworkBehaviour
     {
         public static ProjectSpellGameMultiplayer Singleton { get; private set; }
-
         public static bool _playMultiplayer = true;
 
-        public event EventHandler OnPlayerDataNetworkListChanged;
+        [SerializeField] private List<Color> playerColors;
+
+        public event EventHandler OnPlayerInfosChanged;
 
         private NetworkManager NetworkManager => NetworkManager.Singleton;
-        private readonly List<NetworkPlayerInfo> _playerInfos = new();
+        private NetworkList<NetworkPlayerInfo> _playerInfos;
+
+        public string PlayerName { get; set; } = "Player";
 
         private void Awake()
         {
@@ -24,12 +28,18 @@ namespace Multiplay
                 Destroy(gameObject);
                 return;
             }
+
             Singleton = this;
+
+            DontDestroyOnLoad(this);
+
+            _playerInfos = new NetworkList<NetworkPlayerInfo>();
+            _playerInfos.OnListChanged += PlayerDataNetworkList_OnOnListChanged;
         }
 
-        private void PlayerDataNetworkList_OnOnListChanged()
+        private void PlayerDataNetworkList_OnOnListChanged(NetworkListEvent<NetworkPlayerInfo> changeEvent)
         {
-            OnPlayerDataNetworkListChanged?.Invoke(this, EventArgs.Empty);
+            OnPlayerInfosChanged?.Invoke(this, EventArgs.Empty);
         }
 
         #region Host
@@ -38,6 +48,7 @@ namespace Multiplay
         {
             NetworkManager.OnClientConnectedCallback += NetworkManager_Server_OnClientConnectedCallback;
             NetworkManager.StartHost();
+            SceneLoader.Load(SceneLoader.SceneType.CharacterSelectScene);
         }
 
         private void NetworkManager_Server_OnClientConnectedCallback(ulong clientId)
@@ -45,10 +56,9 @@ namespace Multiplay
             _playerInfos.Add(new NetworkPlayerInfo()
             {
                 ClientId = clientId,
-                ColorId = 0, // TODO: 멀티플레이 필레이어 색상 선택하기
+                ColorId = GetFirstUnusedColorId(), // TODO: 멀티플레이 필레이어 색상 선택하기
             });
-            PlayerDataNetworkList_OnOnListChanged();
-            SetPlayerNameRpc("Player");
+            SetPlayerNameRpc(PlayerName);
         }
 
         #endregion
@@ -63,12 +73,12 @@ namespace Multiplay
 
         private void NetworkManager_Client_OnClientConnectedCallback(ulong obj)
         {
-            throw new NotImplementedException();
+            SetPlayerNameRpc(PlayerName);
         }
 
         #endregion
 
-        [Rpc(SendTo.ClientsAndHost)]
+        [Rpc(SendTo.Server)]
         private void SetPlayerNameRpc(string newName, RpcParams rpcParams = default)
         {
             int playerInfoIndex = GetIndexFromClientId(rpcParams.Receive.SenderClientId);
@@ -76,7 +86,67 @@ namespace Multiplay
             var playerInfo = _playerInfos[playerInfoIndex];
             playerInfo.Name = newName;
             _playerInfos[playerInfoIndex] = playerInfo;
-            PlayerDataNetworkList_OnOnListChanged();
+        }
+
+        public void ChangePlayerColor(int colorId)
+        {
+            ChangePlayerColorRpc(colorId);
+        }
+
+        [Rpc(SendTo.Server)]
+        private void ChangePlayerColorRpc(int colorId, RpcParams rpcParams = default)
+        {
+            if (!IsColorAvailable(colorId))
+            {
+                // Color not available
+                return;
+            }
+
+            int playerInfoIndex = GetIndexFromClientId(rpcParams.Receive.SenderClientId);
+
+            var playerInfo = _playerInfos[playerInfoIndex];
+
+            playerInfo.ColorId = colorId;
+
+            _playerInfos[playerInfoIndex] = playerInfo;
+        }
+
+        private bool IsColorAvailable(int colorId)
+        {
+            foreach (var playerInfo in _playerInfos)
+            {
+                if (playerInfo.ColorId == colorId)
+                {
+                    // Already in use
+                    return false;
+                }
+            }
+
+            return true;
+        }
+
+        public NetworkPlayerInfo GetPlayerInfo()
+        {
+            return GetPlayerDataFromClientId(NetworkManager.Singleton.LocalClientId);
+        }
+
+        private NetworkPlayerInfo GetPlayerDataFromClientId(ulong clientId)
+        {
+            foreach (var playerInfo in _playerInfos)
+            {
+                if (playerInfo.ClientId == clientId)
+                {
+                    return playerInfo;
+                }
+            }
+
+            return default;
+        }
+
+
+        public Color GetPlayerColor(int colorId)
+        {
+            return playerColors[colorId];
         }
 
         private int GetIndexFromClientId(ulong clientId)
@@ -88,6 +158,20 @@ namespace Multiplay
                     return i;
                 }
             }
+
+            return -1;
+        }
+
+        private int GetFirstUnusedColorId()
+        {
+            for (int i = 0; i < playerColors.Count; i++)
+            {
+                if (IsColorAvailable(i))
+                {
+                    return i;
+                }
+            }
+
             return -1;
         }
     }
