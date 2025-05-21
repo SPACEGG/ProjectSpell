@@ -25,8 +25,9 @@ namespace Gameplay.UI.Multiplay
                 {
                     // TODO: 게임 시작 로직 추가
                     // SceneLoader.LoadNetwork(SceneLoader.SceneType.GameScene);
+                    Debug.Log("게임 시작");
                 });
-                startButton.enabled = false;
+                startButton.interactable = false;
             }
             else
             {
