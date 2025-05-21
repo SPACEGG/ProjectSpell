@@ -458,6 +458,7 @@ GameObject:
   m_Component:
   - component: {fileID: 4512788188507339531}
   - component: {fileID: 5431715372370749226}
+  - component: {fileID: 6408018536406794444}
   m_Layer: 0
   m_Name: WizardBody
   m_TagString: Untagged
@@ -602,6 +603,19 @@ SkinnedMeshRenderer:
     m_Center: {x: 0.0000038146973, y: 9.283916, z: 89.01546}
     m_Extent: {x: 116.46152, y: 48.080334, z: 112.55812}
   m_DirtyAABB: 0
+--- !u!114 &6408018536406794444
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2390868255971320952}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4cd0b249182b33e42abe3afd63ea4672, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  wizardBodyRenderer: {fileID: 5431715372370749226}
 --- !u!1 &2625845958403476856
 GameObject:
   m_ObjectHideFlags: 0
@@ -1408,7 +1422,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   ShowTopMostFoldoutHeaderGroup: 1
-  castOrigin: {fileID: 0}
   attackKey: 323
   recordKey: 324
   level1SelectKey: 49

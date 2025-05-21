@@ -57,7 +57,7 @@ namespace Multiplay
             _playerInfos.Add(new NetworkPlayerInfo()
             {
                 ClientId = clientId,
-                ColorId = GetFirstUnusedColorId(), // TODO: 멀티플레이 필레이어 색상 선택하기
+                ColorId = GetFirstUnusedColorId(),
             });
             SetPlayerNameRpc(PlayerName);
         }
@@ -128,10 +128,10 @@ namespace Multiplay
 
         public NetworkPlayerInfo GetPlayerInfo()
         {
-            return GetPlayerDataFromClientId(NetworkManager.Singleton.LocalClientId);
+            return GetPlayerInfoByClientId(NetworkManager.Singleton.LocalClientId);
         }
 
-        public NetworkPlayerInfo GetPlayerDataFromClientId(ulong clientId)
+        public NetworkPlayerInfo GetPlayerInfoByClientId(ulong clientId)
         {
             foreach (var playerInfo in _playerInfos)
             {

@@ -1,4 +1,5 @@
 using System;
+using Common.Utils;
 using Multiplay;
 using Unity.Netcode;
 using UnityEngine;
@@ -23,8 +24,7 @@ namespace Gameplay.UI.Multiplay
             {
                 startButton.onClick.AddListener(() =>
                 {
-                    // TODO: 게임 시작 로직 추가
-                    // SceneLoader.LoadNetwork(SceneLoader.SceneType.GameScene);
+                    SceneLoader.LoadNetwork(SceneLoader.SceneType.GameScene);
                     Debug.Log("게임 시작");
                 });
                 startButton.interactable = false;

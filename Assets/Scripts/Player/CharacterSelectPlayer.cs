@@ -42,7 +42,7 @@ namespace Player
             {
                 Show();
 
-                var playerInfo = ProjectSpellGameMultiplayer.Singleton.GetPlayerDataFromClientId((ulong)playerIndex);
+                var playerInfo = ProjectSpellGameMultiplayer.Singleton.GetPlayerInfoByClientId((ulong)playerIndex);
 
                 readyGameObject.SetActive(CharacterSelectReady.Singleton.IsPlayerReady(playerInfo.ClientId));
 

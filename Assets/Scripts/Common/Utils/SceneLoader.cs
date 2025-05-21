@@ -7,10 +7,9 @@ namespace Common.Utils
     {
         public enum SceneType
         {
-            MainScene,
-            LoadingScene,
             LobbyScene,
             CharacterSelectScene,
+            GameScene,
         }
 
         private static SceneType _targetSceneType;
