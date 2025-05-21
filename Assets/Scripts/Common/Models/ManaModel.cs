@@ -36,12 +36,15 @@ namespace Common.Models
             OnManaChanged?.Invoke(CurrentMana);
         }
 
-        public void UseMana(int level)
+        public bool UseMana(int level)
         {
-            if (level <= 0) return;
+            if (level <= 0) return false;
+            bool isValidLevel = CurrentMana - level * ManaPerLevel >= 0;
 
             CurrentMana = Math.Max(0, CurrentMana - level * ManaPerLevel);
             OnManaChanged?.Invoke(CurrentMana);
+
+            return isValidLevel;
         }
 
         public void RegenerateMana(float deltaTime)

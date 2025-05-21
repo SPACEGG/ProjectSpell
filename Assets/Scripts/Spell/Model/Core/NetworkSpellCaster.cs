@@ -32,6 +32,8 @@ namespace Spell.Model.Core
 
         public override void OnNetworkSpawn()
         {
+            if (!IsLocalPlayer) Destroy(this);
+
             _recordController = new();
             _spellDataController = SpellDataController.Singleton;
             _powerLevelManager = GetComponent<NetworkPowerLevelManager>();
@@ -45,8 +47,6 @@ namespace Spell.Model.Core
 
         private void Update()
         {
-            if (!IsLocalPlayer) return;
-
             DefaultAttackKeyInput();
             RecordKeyInput();
         }
@@ -117,14 +117,17 @@ namespace Spell.Model.Core
 
         private async UniTaskVoid CastSpellFromRecording()
         {
-            // FIXME: 마나 소모가 가능한 경우에만 사용하도록 수정 필요
-            _healthManaManager.ManaModel.UseMana(_powerLevelManager.PowerLevel);
+            // 소유 마나보다 더 큰 레벨 마법을 쓰면 레벨 -1으로 고정
+            int powerLevel;
+            bool isValidPowerLevel = _healthManaManager.ManaModel.UseMana(_powerLevelManager.PowerLevel);
+            if (isValidPowerLevel) powerLevel = _powerLevelManager.PowerLevel;
+            else powerLevel = -1;
 
             Vector3 cameraTargetPosition = GetCameraTargetPosition();
 
             SpellData spelldata = await _spellDataController.BuildSpellDataAsync(
                 _recordController.GetRecordingClip(),
-                _powerLevelManager.PowerLevel,
+                powerLevel,
                 cameraTargetPosition,
                 transform.position
             );
