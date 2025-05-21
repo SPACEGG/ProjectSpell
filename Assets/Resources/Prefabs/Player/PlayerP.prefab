@@ -1346,6 +1346,7 @@ GameObject:
   - component: {fileID: 5251846543230830030}
   - component: {fileID: 3341737085042079121}
   - component: {fileID: -8453940035982285506}
+  - component: {fileID: 7024685890963420412}
   m_Layer: 0
   m_Name: PlayerP
   m_TagString: Untagged
@@ -1423,6 +1424,22 @@ MonoBehaviour:
   ShowTopMostFoldoutHeaderGroup: 1
   healthData: {fileID: 11400000, guid: 8c8a45572bd365944ab6bfd6faab500f, type: 2}
   manaData: {fileID: 11400000, guid: 90dc09c05d45d6849bb458aac0a02e9c, type: 2}
+--- !u!114 &7024685890963420412
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4775111611733399288}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e4356eff5aaec0445950cba790e60b01, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  ShowTopMostFoldoutHeaderGroup: 1
+  level1SelectKey: 49
+  level2SelectKey: 50
+  level3SelectKey: 51
 --- !u!1 &4840187936126874192
 GameObject:
   m_ObjectHideFlags: 0
