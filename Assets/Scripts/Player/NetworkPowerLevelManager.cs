@@ -31,13 +31,9 @@ namespace Player
             }
         }
 
-        public override void OnNetworkSpawn()
-        {
-            if (!IsLocalPlayer) Destroy(this);
-        }
-
         private void Update()
         {
+            if (!IsLocalPlayer) return;
             PowerLevelSelectKeyInput();
         }
 
@@ -47,10 +43,12 @@ namespace Player
             {
                 PowerLevel = 1;
             }
+
             if (Input.GetKeyDown(level2SelectKey))
             {
                 PowerLevel = 2;
             }
+
             if (Input.GetKeyDown(level3SelectKey))
             {
                 PowerLevel = 3;

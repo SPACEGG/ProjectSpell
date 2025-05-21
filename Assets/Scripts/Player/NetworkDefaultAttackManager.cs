@@ -15,13 +15,16 @@ namespace Player
 
         public override void OnNetworkSpawn()
         {
-            if (!IsLocalPlayer) Destroy(this);
-
             spellCaster = GetComponent<SpellCaster>();
         }
 
         private void Update()
         {
+            if (!IsLocalPlayer)
+            {
+                return;
+            }
+
             DefaultAttackKeyInput();
         }
 
