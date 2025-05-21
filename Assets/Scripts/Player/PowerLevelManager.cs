@@ -3,7 +3,7 @@ using System;
 
 namespace Player
 {
-    [Obsolete("Use PowerLevelManager instead.")]
+    [Obsolete("This class is deprecated. Use NetworkPowerLevelManager instead.")]
     public class PowerLevelManager : MonoBehaviour
     {
         private int _currentPowerLevel = 1;

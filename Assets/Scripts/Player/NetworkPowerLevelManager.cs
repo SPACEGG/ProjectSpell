@@ -10,7 +10,26 @@ namespace Player
         [SerializeField] private KeyCode level2SelectKey = KeyCode.Alpha2;
         [SerializeField] private KeyCode level3SelectKey = KeyCode.Alpha3;
 
-        public int PowerLevel { get; private set; } = 1;
+        public event Action<OnPowerLevelChangedEventArgs> OnPowerLevelChanged;
+
+        private int _powerLevel = 1;
+
+        public int PowerLevel
+        {
+            get => _powerLevel;
+            private set
+            {
+                if (_powerLevel != value)
+                {
+                    _powerLevel = value;
+                    OnPowerLevelChanged?.Invoke(
+                        new OnPowerLevelChangedEventArgs
+                        {
+                            NewPowerLevel = _powerLevel
+                        });
+                }
+            }
+        }
 
         public override void OnNetworkSpawn()
         {
@@ -26,17 +45,14 @@ namespace Player
         {
             if (Input.GetKeyDown(level1SelectKey))
             {
-                // TODO: 레벨1 선택 ui
                 PowerLevel = 1;
             }
             if (Input.GetKeyDown(level2SelectKey))
             {
-                // TODO: 레벨2 선택 ui
                 PowerLevel = 2;
             }
             if (Input.GetKeyDown(level3SelectKey))
             {
-                // TODO: 레벨3 선택 ui
                 PowerLevel = 3;
             }
         }

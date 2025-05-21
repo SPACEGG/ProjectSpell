@@ -10,7 +10,7 @@ namespace Gameplay.UI.PlayerHud
         private readonly NetworkVariable<NetworkHealthModel> _healthModel;
         private readonly ManaModel _manaModel;
 
-        public NetworkPlayerHudPresenter(PlayerHudView view, NetworkVariable<NetworkHealthModel> healthModel, ManaModel manaModel, PowerLevelManager powerLevelManager)
+        public NetworkPlayerHudPresenter(PlayerHudView view, NetworkVariable<NetworkHealthModel> healthModel, ManaModel manaModel, NetworkPowerLevelManager powerLevelManager)
         {
             _view = view;
             _healthModel = healthModel;
