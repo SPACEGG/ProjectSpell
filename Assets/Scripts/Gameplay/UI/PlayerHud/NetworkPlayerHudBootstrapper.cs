@@ -7,6 +7,8 @@ namespace Gameplay.UI.PlayerHud
 {
     public class NetworkPlayerHudBootstrapper : MonoBehaviour
     {
+        public static NetworkPlayerHudBootstrapper Singleton { get; private set; }
+
         [SerializeField] private PlayerHudView view;
 
         private NetworkPlayerHudPresenter _presenter;
@@ -16,29 +18,29 @@ namespace Gameplay.UI.PlayerHud
 
         private NetworkManager NetworkManager => NetworkManager.Singleton;
 
+        private void Awake()
+        {
+            if (Singleton && Singleton != this)
+            {
+                Destroy(gameObject);
+                return;
+            }
+
+            Singleton = this;
+        }
+
         private void Start()
         {
             view.Hide();
-
-            ProjectSpellGameManager.Singleton.OnPlayerSpawn += ProjectSpellGameManager_OnPlayerSpawn;
         }
 
-        private void ProjectSpellGameManager_OnPlayerSpawn(object sender, ProjectSpellGameManager.OnPlayerSpawnEventArgs args)
+        public void Initialize(NetworkObject playerObject)
         {
-            if (args.ClientId != NetworkManager.LocalClientId) return;
-
-            var playerObject = NetworkManager.SpawnManager.GetPlayerNetworkObject(args.ClientId);
-
             _playerHealthManaManager = playerObject.GetComponentInChildren<NetworkHealthManaManager>();
             _playerPowerLevelManager = playerObject.GetComponentInChildren<NetworkPowerLevelManager>();
             _presenter = new NetworkPlayerHudPresenter(view, _playerHealthManaManager.HealthModel, _playerHealthManaManager.ManaModel,
                 _playerPowerLevelManager);
             view.Show();
-        }
-
-        private void OnDestroy()
-        {
-            _presenter?.Dispose();
         }
     }
 }

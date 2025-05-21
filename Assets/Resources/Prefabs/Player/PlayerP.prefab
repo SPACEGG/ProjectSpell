@@ -1361,6 +1361,7 @@ GameObject:
   - component: {fileID: 3341737085042079121}
   - component: {fileID: -8453940035982285506}
   - component: {fileID: 7024685890963420412}
+  - component: {fileID: 2396438464171641328}
   m_Layer: 0
   m_Name: PlayerP
   m_TagString: Untagged
@@ -1428,6 +1429,7 @@ MonoBehaviour:
   level2SelectKey: 50
   level3SelectKey: 51
   recordIgnoreDuration: 0.5
+  spellOrigin: {fileID: 0}
 --- !u!114 &-8453940035982285506
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1459,6 +1461,20 @@ MonoBehaviour:
   level1SelectKey: 49
   level2SelectKey: 50
   level3SelectKey: 51
+--- !u!114 &2396438464171641328
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4775111611733399288}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e5f85b83ff4488a4d98641d0458ceb32, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  ShowTopMostFoldoutHeaderGroup: 1
+  wizardBodyVisual: {fileID: 6408018536406794444}
 --- !u!1 &4840187936126874192
 GameObject:
   m_ObjectHideFlags: 0
