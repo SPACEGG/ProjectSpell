@@ -18,6 +18,7 @@ namespace Spell.Model.Core
         [SerializeField] private KeyCode level2SelectKey = KeyCode.Alpha2;
         [SerializeField] private KeyCode level3SelectKey = KeyCode.Alpha3;
         [SerializeField] private float recordIgnoreDuration = 0.5f;
+        [SerializeField] private Transform spellOrigin;
 
         private float _recordStartTime;
 
@@ -25,8 +26,7 @@ namespace Spell.Model.Core
         private SpellDataController _spellDataController;
         private NetworkHealthManaManager _healthManaManager;
         private NetworkPowerLevelManager _powerLevelManager;
-
-        public Transform CastOrigin => Camera.main.transform.GetChild(0);
+        public Transform CastOrigin => spellOrigin != null ? spellOrigin : transform;
 
         #region Unity Events
 
