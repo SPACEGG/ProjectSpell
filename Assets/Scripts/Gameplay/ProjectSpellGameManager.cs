@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using Entity.Prefabs;
 using Multiplay;
 using Unity.Netcode;
@@ -24,7 +25,6 @@ namespace Gameplay
         [SerializeField] private List<Transform> spawnPoints;
 
         public event EventHandler OnStateChanged;
-        public event EventHandler<OnPlayerSpawnEventArgs> OnPlayerSpawn;
 
         public class OnPlayerSpawnEventArgs : EventArgs
         {
@@ -63,27 +63,20 @@ namespace Gameplay
         private void SceneManager_OnLoadEventCompleted(string sceneName, LoadSceneMode loadSceneMode, List<ulong> clientsCompleted,
             List<ulong> clientsTimedOut)
         {
-            var multiplayer = ProjectSpellGameMultiplayer.Singleton;
             foreach (ulong clientId in NetworkManager.Singleton.ConnectedClientsIds)
             {
-                var playerInfo = multiplayer.GetPlayerInfoByClientId(clientId);
                 var playerTransform = Instantiate(playerPrefab);
 
-                playerTransform.GetComponent<NetworkObject>().SpawnAsPlayerObject(clientId, true);
-                playerTransform.GetComponentInChildren<WizardBodyVisual>()
-                    .SetPlayerColor(multiplayer.GetPlayerColorMaterial(playerInfo.ColorId));
-                playerTransform.position = GetNextSpawnPoint().position;
-
-                OnPlayerSpawn?.Invoke(this, new OnPlayerSpawnEventArgs { ClientId = clientId });
+                var networkObject = playerTransform.GetComponent<NetworkObject>();
+                networkObject.SpawnAsPlayerObject(clientId, true);
             }
         }
 
-        private Transform GetNextSpawnPoint()
+        public Vector3 GetPlayerSpawnPosition(ulong ownerClientId)
         {
-            var spawnPoint = spawnPoints[0];
-            spawnPoints.RemoveAt(0);
+            var playerIndex = NetworkManager.Singleton.ConnectedClientsIds.ToList().IndexOf(ownerClientId);
 
-            return spawnPoint;
+            return spawnPoints[playerIndex % spawnPoints.Count].position;
         }
     }
 }
