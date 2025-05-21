@@ -4,6 +4,9 @@ using Spell.Model.Behaviors;
 using Spell.Model.Data;
 using Unity.Netcode;
 using UnityEngine;
+using Common.Utils;
+using Record;
+using Player;
 
 namespace Spell.Model.Core
 {
@@ -11,15 +14,148 @@ namespace Spell.Model.Core
     {
         [SerializeField] private Transform castOrigin; // 지팡이 끝부분
 
-        private readonly SpellDataController _spellDataController = SpellDataController.Singleton;
+        [Header("Input Settings")]
+        [SerializeField] private KeyCode attackKey = KeyCode.Mouse0;
+        [SerializeField] private KeyCode recordKey = KeyCode.Mouse1;
+        [SerializeField] private KeyCode level1SelectKey = KeyCode.Alpha1;
+        [SerializeField] private KeyCode level2SelectKey = KeyCode.Alpha2;
+        [SerializeField] private KeyCode level3SelectKey = KeyCode.Alpha3;
+        [SerializeField] private float recordIgnoreDuration = 0.5f;
 
-        public Transform CastOrigin => castOrigin ? castOrigin : Camera.main?.transform; // 여기서 transform 사용
+        private float _recordStartTime;
+
+        private RecordController _recordController;
+        private SpellDataController _spellController;
+        private NetworkHealthManaManager _healthManaManager;
+        private PowerLevelManager _powerLevelManager;
+
+        public Transform CastOrigin => castOrigin ? castOrigin : Camera.main?.transform;
 
         private SpellData _defaultSpell;
 
         public override void OnNetworkSpawn()
         {
             _defaultSpell = SpellDataFactory.Create();
+            _recordController = new();
+            _spellController = SpellDataController.Singleton;
+            _powerLevelManager = GetComponent<NetworkPowerLevelManager>().PowerLevel
+            _healthManaManager = GetComponent<NetworkHealthManaManager>();
+
+            if (_powerLevelManager == null)
+            {
+                Debug.LogError("PowerLevelManager component not found on the same GameObject!");
+            }
+        }
+
+        private void Update()
+        {
+            if (!IsLocalPlayer) return;
+
+            DefaultAttackKeyInput();
+            RecordKeyInput();
+            PowerLevelSelectKeyInput();
+        }
+
+        private void DefaultAttackKeyInput()
+        {
+            if (Input.GetKeyDown(attackKey))
+            {
+                Debug.Log("Attack key pressed");
+                Vector3 cameraTargetPosition = GetCameraTargetPosition();
+                Vector3 direction = (cameraTargetPosition - transform.position).normalized;
+
+                var spell = SpellDataFactory.Create();
+                spell.Direction = direction;
+
+                // 주문 위치 계산 및 로컬 시전
+                CastSpellAsOriginator(spell);
+                // 서버에 동기화 요청
+                RequestCastSpellRpc(spell, NetworkManager.Singleton.LocalClientId);
+            }
+        }
+
+        private void PowerLevelSelectKeyInput()
+        {
+            if (_powerLevelManager == null) return;
+
+            if (Input.GetKeyDown(level1SelectKey))
+            {
+                _powerLevelManager.SetPowerLevel(1);
+            }
+            else if (Input.GetKeyDown(level2SelectKey))
+            {
+                _powerLevelManager.SetPowerLevel(2);
+            }
+            else if (Input.GetKeyDown(level3SelectKey))
+            {
+                _powerLevelManager.SetPowerLevel(3);
+            }
+        }
+
+        private void RecordKeyInput()
+        {
+            if (Input.GetKeyDown(recordKey))
+            {
+                Debug.Log("Record key pressed");
+                _recordController.StartRecording();
+                _recordStartTime = Time.time;
+            }
+
+            if (Input.GetKeyUp(recordKey))
+            {
+                Debug.Log("Record key released");
+                _recordController.StopRecording();
+
+                if (Time.time - _recordStartTime >= recordIgnoreDuration)
+                {
+                    _ = CastSpellFromRecording();
+                }
+            }
+        }
+
+        private Vector3 GetCameraTargetPosition()
+        {
+            if (Camera.main == null)
+            {
+                Debug.LogWarning("Camera.main is null!");
+                return Vector3.zero;
+            }
+
+            Ray ray = Camera.main.ScreenPointToRay(new Vector3(Screen.width / 2, Screen.height / 2));
+            int layerMask = ~LayerMask.GetMask("Player");
+
+            if (Physics.Raycast(ray, out var hit, Mathf.Infinity, layerMask))
+            {
+                return hit.point;
+            }
+
+            return ray.GetPoint(100f);
+        }
+
+        private async UniTaskVoid CastSpellFromRecording()
+        {
+            // FIXME: 마나 소모가 가능한 경우에만 사용하도록 수정 필요
+            _healthManaManager.ManaModel.UseMana(_powerLevelManager.CurrentPowerLevel);
+
+            Vector3 cameraTargetPosition = GetCameraTargetPosition();
+
+            SpellData spelldata = await _spellController.BuildSpellDataAsync(
+                _recordController.GetRecordingClip(),
+                _powerLevelManager.CurrentPowerLevel,
+                cameraTargetPosition,
+                transform.position
+            );
+
+            if (spelldata == null)
+            {
+                Debug.LogError("SpellData creation failed!");
+                return;
+            }
+
+            // 주문 위치 계산 및 로컬 시전
+            CastSpellAsOriginator(spelldata);
+            // 서버에 동기화 요청
+            RequestCastSpellRpc(spelldata, NetworkManager.Singleton.LocalClientId);
         }
 
         // 내가 시전한 주문 (로컬 입력 기반)
