@@ -1409,6 +1409,12 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   ShowTopMostFoldoutHeaderGroup: 1
   castOrigin: {fileID: 0}
+  attackKey: 323
+  recordKey: 324
+  level1SelectKey: 49
+  level2SelectKey: 50
+  level3SelectKey: 51
+  recordIgnoreDuration: 0.5
 --- !u!114 &-8453940035982285506
 MonoBehaviour:
   m_ObjectHideFlags: 0

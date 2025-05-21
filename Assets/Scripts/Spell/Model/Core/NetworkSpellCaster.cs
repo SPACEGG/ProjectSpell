@@ -11,8 +11,6 @@ namespace Spell.Model.Core
 {
     public class NetworkSpellCaster : NetworkBehaviour
     {
-        [SerializeField] private Transform castOrigin; // 지팡이 끝부분
-
         [Header("Input Settings")]
         [SerializeField] private KeyCode attackKey = KeyCode.Mouse0;
         [SerializeField] private KeyCode recordKey = KeyCode.Mouse1;
@@ -28,7 +26,7 @@ namespace Spell.Model.Core
         private NetworkHealthManaManager _healthManaManager;
         private NetworkPowerLevelManager _powerLevelManager;
 
-        public Transform CastOrigin => castOrigin ? castOrigin : Camera.main.transform;
+        public Transform CastOrigin => Camera.main.transform.GetChild(0);
 
         #region Unity Events
 
