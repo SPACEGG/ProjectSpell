@@ -72,7 +72,10 @@ namespace Player
                 var spell = SpellDataFactory.Create();
                 spell.Direction = direction;
 
-                _spellCaster.CastDefaultSpellRpc();
+                // 주문 위치 계산 및 로컬 시전
+                _spellCaster.CastSpellAsOriginator(spell);
+                // 서버에 동기화 요청
+                _spellCaster.RequestCastSpellRpc(spell, NetworkManager.Singleton.LocalClientId);
             }
         }
 
