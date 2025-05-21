@@ -22,10 +22,19 @@ namespace Spell.Model.Core
             _defaultSpell = SpellDataFactory.Create();
         }
 
-        // 더 이상 RPC 필요 없음. 각자 입력에서 직접 호출
-        public void CastSpellLocally(SpellData spellData)
+        // 내가 시전한 주문 (로컬 입력 기반)
+        public void CastSpellAsOriginator(SpellData spellData)
         {
-            CastSpell(spellData, gameObject);
+            // 시전자 기준으로 스폰 위치 계산
+            spellData.SpawnPosition = CastOrigin.position + spellData.PositionOffset;
+            CastSpell(spellData);
+        }
+
+        // 다른 플레이어가 시전한 주문 (서버를 통해 받은 SpellData 기반)
+        public void CastSpellAsReceiver(SpellData spellData)
+        {
+            // 이미 계산된 SpawnPosition 사용
+            CastSpell(spellData);
         }
 
         private async UniTask BuildAndCastSpell(Wav recording)
@@ -37,17 +46,14 @@ namespace Spell.Model.Core
                 transform.position
             );
 
-            CastSpellLocally(spellData);
+            CastSpellAsOriginator(spellData);
         }
 
         // 클라이언트에서 호출: SpellData를 서버로 전송, originClientId도 함께 전달
         [Rpc(SendTo.Server)]
         public void RequestCastSpellRpc(SpellData spellData, ulong originClientId)
         {
-            // 서버에서만 실행
             if (!IsServer) return;
-
-            // 모든 인스턴스(서버+클라)에 SpellData와 originClientId 브로드캐스트
             SyncSpellDataRpc(spellData, originClientId);
         }
 
@@ -58,11 +64,11 @@ namespace Spell.Model.Core
             if (NetworkManager.Singleton.LocalClientId == originClientId)
                 return; // 자기 자신이면 중복 시전 방지
 
-            CastSpell(spellData, gameObject);
+            CastSpellAsReceiver(spellData);
         }
 
-        // 실제 스펠 생성 및 적용 (서버에서만 실행)
-        private void CastSpell(SpellData data, GameObject caster)
+        // 실제 스펠 생성 및 적용 (위치 계산 없이 SpawnPosition 사용)
+        private void CastSpell(SpellData data)
         {
             if (data == null)
             {
@@ -70,16 +76,11 @@ namespace Spell.Model.Core
                 return;
             }
 
-            // SpellData에서 PositionOffset을 가져와서 사용 (null이면 2칸 앞)
-            var offset = data.PositionOffset;
-            var spawnPosition = CastOrigin.position + offset;
+            var spawnPosition = data.SpawnPosition;
 
-            // SpellData 정보를 바탕으로 실제 동작/외형이 적용된 스펠 오브젝트 씬에 생성
-            var spellObject = SpellFactory.CreateSpellGameObject(data, caster);
-
+            var spellObject = SpellFactory.CreateSpellGameObject(data, gameObject);
             spellObject.transform.position = spawnPosition;
 
-            // === 시전자와 주문 오브젝트가 충돌하지 않도록 처리 ===
             var casterColliders = GetComponentsInChildren<Collider>();
             var spellColliders = spellObject.GetComponentsInChildren<Collider>();
             foreach (var casterCol in casterColliders)

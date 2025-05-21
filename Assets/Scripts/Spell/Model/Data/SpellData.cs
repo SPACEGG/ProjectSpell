@@ -40,6 +40,7 @@ namespace Spell.Model.Data
         public float SpreadAngle { get; set; } // 퍼짐 각도 (CalculateDirection)
         public float SpreadRange { get; set; } // 생성 위치 범위 (Spawn 메서드에서 Random.insideUnitSphere)
         public bool ActivateOnCollision { get; set; } // 충돌 시 활성화 여부 (Spawn 메서드에서 조건문)
+        public Vector3 SpawnPosition { get; set; } // 네트워크 동기화용 실제 스폰 위치
 
         public SpellData() { }
 
@@ -141,6 +142,10 @@ namespace Spell.Model.Data
             var activateOnCollision = ActivateOnCollision;
             serializer.SerializeValue(ref activateOnCollision);
             if (!serializer.IsWriter) ActivateOnCollision = activateOnCollision;
+
+            var spawnPosition = SpawnPosition;
+            serializer.SerializeValue(ref spawnPosition);
+            if (!serializer.IsWriter) SpawnPosition = spawnPosition;
         }
     }
 }
