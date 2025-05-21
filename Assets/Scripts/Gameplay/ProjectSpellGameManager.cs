@@ -24,6 +24,13 @@ namespace Gameplay
         [SerializeField] private List<Transform> spawnPoints;
 
         public event EventHandler OnStateChanged;
+        public event EventHandler<OnPlayerSpawnEventArgs> OnPlayerSpawn;
+
+        public class OnPlayerSpawnEventArgs : EventArgs
+        {
+            public ulong ClientId { get; set; }
+        }
+
 
         private NetworkVariable<GameState> _state = new();
 
@@ -66,6 +73,8 @@ namespace Gameplay
                 playerTransform.GetComponentInChildren<WizardBodyVisual>()
                     .SetPlayerColor(multiplayer.GetPlayerColorMaterial(playerInfo.ColorId));
                 playerTransform.position = GetNextSpawnPoint().position;
+
+                OnPlayerSpawn?.Invoke(this, new OnPlayerSpawnEventArgs { ClientId = clientId });
             }
         }
 

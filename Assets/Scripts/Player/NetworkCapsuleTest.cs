@@ -9,13 +9,16 @@ public class NetworkCapsuleTest : NetworkBehaviour
 
     public override void OnNetworkSpawn()
     {
-        if (!IsLocalPlayer) Destroy(this);
-
         rb = GetComponent<Rigidbody>();
     }
 
     private void Update()
     {
+        if (!IsLocalPlayer)
+        {
+            return;
+        }
+
         if (Input.GetKeyDown(KeyCode.Space)) rb.AddForce(Vector3.up * 10f, ForceMode.Impulse);
     }
 }

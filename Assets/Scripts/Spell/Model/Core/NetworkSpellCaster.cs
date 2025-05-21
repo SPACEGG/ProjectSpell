@@ -32,8 +32,6 @@ namespace Spell.Model.Core
 
         public override void OnNetworkSpawn()
         {
-            if (!IsLocalPlayer) Destroy(this);
-
             _recordController = new();
             _spellDataController = SpellDataController.Singleton;
             _powerLevelManager = GetComponent<NetworkPowerLevelManager>();
@@ -47,6 +45,11 @@ namespace Spell.Model.Core
 
         private void Update()
         {
+            if (!IsLocalPlayer)
+            {
+                return;
+            }
+
             DefaultAttackKeyInput();
             RecordKeyInput();
         }

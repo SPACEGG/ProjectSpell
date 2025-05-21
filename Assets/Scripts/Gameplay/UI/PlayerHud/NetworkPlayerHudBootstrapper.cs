@@ -14,21 +14,20 @@ namespace Gameplay.UI.PlayerHud
         private NetworkHealthManaManager _playerHealthManaManager;
         private NetworkPowerLevelManager _playerPowerLevelManager;
 
-        private NetworkManager _networkManager;
+        private NetworkManager NetworkManager => NetworkManager.Singleton;
 
         private void Start()
         {
             view.Hide();
 
-            _networkManager ??= NetworkManager.Singleton;
-            _networkManager.OnClientConnectedCallback += NetworkManager_OnClientConnected;
+            ProjectSpellGameManager.Singleton.OnPlayerSpawn += ProjectSpellGameManager_OnPlayerSpawn;
         }
 
-        private void NetworkManager_OnClientConnected(ulong obj)
+        private void ProjectSpellGameManager_OnPlayerSpawn(object sender, ProjectSpellGameManager.OnPlayerSpawnEventArgs args)
         {
-            if (obj != _networkManager.LocalClientId) return;
+            if (args.ClientId != NetworkManager.LocalClientId) return;
 
-            var playerObject = _networkManager.SpawnManager.GetPlayerNetworkObject(obj);
+            var playerObject = NetworkManager.SpawnManager.GetPlayerNetworkObject(args.ClientId);
 
             _playerHealthManaManager = playerObject.GetComponentInChildren<NetworkHealthManaManager>();
             _playerPowerLevelManager = playerObject.GetComponentInChildren<NetworkPowerLevelManager>();
