@@ -4,7 +4,6 @@ using Spell.Model.Behaviors;
 using Spell.Model.Data;
 using Unity.Netcode;
 using UnityEngine;
-using Common.Utils;
 using Record;
 using Player;
 
@@ -25,20 +24,19 @@ namespace Spell.Model.Core
         private float _recordStartTime;
 
         private RecordController _recordController;
-        private SpellDataController _spellController;
+        private SpellDataController _spellDataController;
         private NetworkHealthManaManager _healthManaManager;
-        private PowerLevelManager _powerLevelManager;
+        private NetworkPowerLevelManager _powerLevelManager;
 
-        public Transform CastOrigin => castOrigin ? castOrigin : Camera.main?.transform;
+        public Transform CastOrigin => castOrigin ? castOrigin : Camera.main.transform;
 
-        private SpellData _defaultSpell;
+        #region Unity Events
 
         public override void OnNetworkSpawn()
         {
-            _defaultSpell = SpellDataFactory.Create();
             _recordController = new();
-            _spellController = SpellDataController.Singleton;
-            _powerLevelManager = GetComponent<NetworkPowerLevelManager>().PowerLevel
+            _spellDataController = SpellDataController.Singleton;
+            _powerLevelManager = GetComponent<NetworkPowerLevelManager>();
             _healthManaManager = GetComponent<NetworkHealthManaManager>();
 
             if (_powerLevelManager == null)
@@ -53,8 +51,11 @@ namespace Spell.Model.Core
 
             DefaultAttackKeyInput();
             RecordKeyInput();
-            PowerLevelSelectKeyInput();
         }
+
+        #endregion
+
+        #region Key Inputs
 
         private void DefaultAttackKeyInput()
         {
@@ -71,24 +72,6 @@ namespace Spell.Model.Core
                 CastSpellAsOriginator(spell);
                 // 서버에 동기화 요청
                 RequestCastSpellRpc(spell, NetworkManager.Singleton.LocalClientId);
-            }
-        }
-
-        private void PowerLevelSelectKeyInput()
-        {
-            if (_powerLevelManager == null) return;
-
-            if (Input.GetKeyDown(level1SelectKey))
-            {
-                _powerLevelManager.SetPowerLevel(1);
-            }
-            else if (Input.GetKeyDown(level2SelectKey))
-            {
-                _powerLevelManager.SetPowerLevel(2);
-            }
-            else if (Input.GetKeyDown(level3SelectKey))
-            {
-                _powerLevelManager.SetPowerLevel(3);
             }
         }
 
@@ -113,6 +96,8 @@ namespace Spell.Model.Core
             }
         }
 
+        #endregion
+
         private Vector3 GetCameraTargetPosition()
         {
             if (Camera.main == null)
@@ -135,13 +120,13 @@ namespace Spell.Model.Core
         private async UniTaskVoid CastSpellFromRecording()
         {
             // FIXME: 마나 소모가 가능한 경우에만 사용하도록 수정 필요
-            _healthManaManager.ManaModel.UseMana(_powerLevelManager.CurrentPowerLevel);
+            _healthManaManager.ManaModel.UseMana(_powerLevelManager.PowerLevel);
 
             Vector3 cameraTargetPosition = GetCameraTargetPosition();
 
-            SpellData spelldata = await _spellController.BuildSpellDataAsync(
+            SpellData spelldata = await _spellDataController.BuildSpellDataAsync(
                 _recordController.GetRecordingClip(),
-                _powerLevelManager.CurrentPowerLevel,
+                _powerLevelManager.PowerLevel,
                 cameraTargetPosition,
                 transform.position
             );
