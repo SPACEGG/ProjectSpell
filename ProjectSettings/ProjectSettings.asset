@@ -932,11 +932,11 @@ PlayerSettings:
   captureStartupLogs: {}
   activeInputHandler: 2
   windowsGamepadBackendHint: 0
-  cloudProjectId: ff4745b2-8063-4a88-8e68-f981a91f5850
+  cloudProjectId: f17f4009-27dd-4ba5-982c-8d00cd28343d
   framebufferDepthMemorylessMode: 0
   qualitySettingsNames: []
   projectName: Project-Spell
-  organizationId: burubop-gmail-com
+  organizationId: ruh0n
   cloudEnabled: 0
   legacyClampBlendShapeWeights: 0
   hmiLoadingImage: {fileID: 0}

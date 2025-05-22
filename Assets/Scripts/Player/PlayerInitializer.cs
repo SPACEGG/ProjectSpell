@@ -18,13 +18,11 @@ namespace Player
             if (IsOwner)
             {
                 LocalInstance = this;
+                transform.position = ProjectSpellGameManager.Singleton.GetPlayerSpawnPosition(OwnerClientId);
             }
 
             var playerInfo = ProjectSpellGameMultiplayer.Singleton.GetPlayerInfoByClientId(OwnerClientId);
-            transform.position = ProjectSpellGameManager.Singleton.GetPlayerSpawnPosition(OwnerClientId);
-            wizardBodyVisual.SetPlayerColor(
-                ProjectSpellGameMultiplayer.Singleton.GetPlayerColorMaterial(playerInfo.ColorId)
-                );
+            wizardBodyVisual.SetPlayerColor(ProjectSpellGameMultiplayer.Singleton.GetPlayerColorMaterial(playerInfo.ColorId));
 
             NetworkPlayerHudBootstrapper.Singleton.Initialize(NetworkObject);
         }
