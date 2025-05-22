@@ -1,5 +1,8 @@
 using System;
 using System.Collections.Generic;
+using Multiplay;
+using Player;
+using TMPro;
 using Unity.Services.Lobbies.Models;
 using UnityEngine;
 using UnityEngine.UI;
@@ -12,6 +15,11 @@ namespace Gameplay.UI.Main
         [SerializeField] private Button quickJoinButton;
         [SerializeField] private Transform lobbyContainer;
         [SerializeField] private Transform lobbyTemplate;
+
+        [Header("Player Name")]
+        [SerializeField] private Button randomNameButton;
+        [SerializeField] private RandomNameData randomNameData;
+        [SerializeField] private TMP_InputField playerNameInputField;
 
         private void Awake()
         {
@@ -26,10 +34,24 @@ namespace Gameplay.UI.Main
                 ProjectSpellGameLobby.Singleton.QuickJoinLobby().Forget();
                 Debug.Log("Quick Join button clicked");
             });
+
+            playerNameInputField.onValueChanged.AddListener(name =>
+            {
+                if (string.IsNullOrEmpty(name))
+                {
+                    playerNameInputField.text = randomNameData.GetRandomName();
+                }
+                else
+                {
+                    ProjectSpellGameMultiplayer.Singleton.PlayerName = name;
+                }
+            });
         }
 
         private void Start()
         {
+            playerNameInputField.text = randomNameData.GetRandomName();
+
             ProjectSpellGameLobby.Singleton.OnLobbyListChanged += ProjectSpellGameLobby_OnOnLobbyListChanged;
             UpdateLobbyList(new List<Lobby>());
 
