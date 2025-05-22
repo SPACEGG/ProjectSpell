@@ -17,10 +17,13 @@ namespace Spell.Model.Core
         [SerializeField] private KeyCode level1SelectKey = KeyCode.Alpha1;
         [SerializeField] private KeyCode level2SelectKey = KeyCode.Alpha2;
         [SerializeField] private KeyCode level3SelectKey = KeyCode.Alpha3;
+
+        [SerializeField] private float defaultAttackDuration = 2f;
         [SerializeField] private float recordIgnoreDuration = 0.5f;
         [SerializeField] private Transform spellOrigin;
 
         private float _recordStartTime;
+        private float _defaultAttackCooldown = 0f;
 
         private RecordController _recordController;
         private SpellDataController _spellDataController;
@@ -62,6 +65,10 @@ namespace Spell.Model.Core
         {
             if (Input.GetKeyDown(attackKey))
             {
+                // 쿨타임 체크
+                if (Time.time - _defaultAttackCooldown < defaultAttackDuration) return;
+                _defaultAttackCooldown = Time.time;
+
                 Debug.Log("Attack key pressed");
                 Vector3 cameraTargetPosition = GetCameraTargetPosition();
                 Vector3 direction = (cameraTargetPosition - transform.position).normalized;
