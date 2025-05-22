@@ -3,10 +3,15 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 using Cysharp.Threading.Tasks;
 using Multiplay;
+using Unity.Netcode;
+using Unity.Netcode.Transports.UTP;
+using Unity.Networking.Transport.Relay;
 using Unity.Services.Authentication;
 using Unity.Services.Core;
 using Unity.Services.Lobbies;
 using Unity.Services.Lobbies.Models;
+using Unity.Services.Relay;
+using Unity.Services.Relay.Models;
 using UnityEngine;
 using Random = UnityEngine.Random;
 
@@ -23,6 +28,8 @@ public class ProjectSpellGameLobby : MonoBehaviour
 
     private Lobby _joinedLobby;
     private const float MaxListLobbyTimer = 3f;
+    private const int MaxPlayerInLobby = 4;
+    private const string RelayJoinCode = "RelayJoinCode";
     private float _listLobbiesTimer = MaxListLobbyTimer;
 
     private void Awake()
@@ -59,6 +66,52 @@ public class ProjectSpellGameLobby : MonoBehaviour
         }
     }
 
+    private async UniTask<Allocation> AllocateRelay()
+    {
+        try
+        {
+            return await RelayService.Instance.CreateAllocationAsync(MaxPlayerInLobby - 1);
+        }
+        catch (RelayServiceException e)
+        {
+            Debug.LogException(e);
+
+            return null;
+        }
+    }
+
+    private async UniTask<string> GetRelayJoinCode(Allocation allocation)
+    {
+        try
+        {
+            var joinCode = await RelayService.Instance.GetJoinCodeAsync(allocation.AllocationId);
+
+            Debug.Log($"Relay Join Code: {joinCode}");
+
+            return joinCode;
+        }
+        catch (RelayServiceException e)
+        {
+            Debug.LogException(e);
+
+            return null;
+        }
+    }
+
+    private async UniTask<JoinAllocation> JoinRelay(string joinCode)
+    {
+        try
+        {
+            return await RelayService.Instance.JoinAllocationAsync(joinCode);
+        }
+        catch (RelayServiceException e)
+        {
+            Debug.LogException(e);
+
+            return null;
+        }
+    }
+
     private async UniTaskVoid InitializeUnityAuthentication()
     {
         if (UnityServices.State != ServicesInitializationState.Initialized)
@@ -76,7 +129,20 @@ public class ProjectSpellGameLobby : MonoBehaviour
     {
         try
         {
-            _joinedLobby = await LobbyService.Instance.CreateLobbyAsync(lobbyName, 4);
+            _joinedLobby = await LobbyService.Instance.CreateLobbyAsync(lobbyName, MaxPlayerInLobby);
+
+            var allocation = await AllocateRelay();
+
+            string relayJoinCode = await GetRelayJoinCode(allocation);
+
+            await LobbyService.Instance.UpdateLobbyAsync(_joinedLobby.Id, new UpdateLobbyOptions
+            {
+                Data = new Dictionary<string, DataObject>
+                {
+                    { RelayJoinCode, new DataObject(DataObject.VisibilityOptions.Member, relayJoinCode) }
+                }
+            });
+            NetworkManager.Singleton.GetComponent<UnityTransport>().SetRelayServerData(allocation.ToRelayServerData("dtls"));
 
             ProjectSpellGameMultiplayer.Singleton.StartHost();
         }
@@ -92,6 +158,10 @@ public class ProjectSpellGameLobby : MonoBehaviour
         {
             _joinedLobby = await LobbyService.Instance.QuickJoinLobbyAsync();
 
+            var joinAllocation = await JoinRelay(_joinedLobby.Data[RelayJoinCode].Value);
+
+            NetworkManager.Singleton.GetComponent<UnityTransport>().SetRelayServerData(joinAllocation.ToRelayServerData("dtls"));
+
             ProjectSpellGameMultiplayer.Singleton.StartClient();
         }
         catch (LobbyServiceException e)
@@ -105,6 +175,10 @@ public class ProjectSpellGameLobby : MonoBehaviour
         try
         {
             _joinedLobby = await LobbyService.Instance.JoinLobbyByIdAsync(lobbyId);
+
+            var joinAllocation = await JoinRelay(_joinedLobby.Data[RelayJoinCode].Value);
+
+            NetworkManager.Singleton.GetComponent<UnityTransport>().SetRelayServerData(joinAllocation.ToRelayServerData("dtls"));
 
             ProjectSpellGameMultiplayer.Singleton.StartClient();
         }
