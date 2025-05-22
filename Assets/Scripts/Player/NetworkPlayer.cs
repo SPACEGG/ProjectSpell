@@ -20,7 +20,7 @@ namespace Player
             if (IsOwner)
             {
                 LocalInstance = this;
-                transform.position = ProjectSpellGameManager.Singleton.GetPlayerSpawnPosition(OwnerClientId);
+                GetComponent<NetworkObject>().transform.position = ProjectSpellGameManager.Singleton.GetPlayerSpawnPosition(OwnerClientId);
             }
 
             var playerInfo = ProjectSpellGameMultiplayer.Singleton.GetPlayerInfoByClientId(OwnerClientId);

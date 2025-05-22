@@ -20,7 +20,6 @@ namespace Gameplay.UI.Multiplay
             }
 
             Singleton = this;
-            DontDestroyOnLoad(this);
         }
 
         public void Initialize(NetworkHealthManaManager healthManaManager)
