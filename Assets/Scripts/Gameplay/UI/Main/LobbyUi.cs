@@ -11,6 +11,8 @@ namespace Gameplay.UI.Main
 {
     public class LobbyUi : MonoBehaviour
     {
+        [SerializeField] private CreateLobbyUi createLobbyUi;
+
         [SerializeField] private Button createLobbyButton;
         [SerializeField] private Button quickJoinButton;
         [SerializeField] private Transform lobbyContainer;
@@ -25,8 +27,7 @@ namespace Gameplay.UI.Main
         {
             createLobbyButton.onClick.AddListener(() =>
             {
-                ProjectSpellGameLobby.Singleton.CreateLobby("Test Lobby").Forget();
-                Debug.Log("Create Lobby button clicked");
+                createLobbyUi.Show();
             });
 
             quickJoinButton.onClick.AddListener(() =>
