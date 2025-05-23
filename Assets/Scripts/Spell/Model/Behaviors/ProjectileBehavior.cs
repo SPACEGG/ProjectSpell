@@ -11,18 +11,18 @@ namespace Spell.Model.Behaviors
     public class ProjectileBehavior : SpellBehaviorBase, IHealthProvider, IElementProvider
     {
         public ElementType Element { get; init; }
-
         public HealthModel HealthModel { get; init; }
 
-        private List<SpellActionData> actionList;
-        private bool activateOnCollision;
+        // public
+        public List<SpellActionData> ActionList { get; set; }
+        public bool ActivateOnCollision { get; set; }
 
         public override void Behave(SpellData spellData)
         {
             Random.InitState(RandomSeed);
 
-            actionList = spellData.Actions;
-            activateOnCollision = spellData.ActivateOnCollision;
+            ActionList = spellData.Actions;
+            ActivateOnCollision = spellData.ActivateOnCollision;
 
             // 팩토리에서 이미 위치를 결정하므로, transform.position만 사용
             Vector3 spawnPosition = transform.position;
@@ -40,9 +40,9 @@ namespace Spell.Model.Behaviors
 
         private void OnCollisionEnter(Collision collision)
         {
-            if (activateOnCollision)
+            if (ActivateOnCollision)
             {
-                MultiplayManager.Singleton.ApplyActions(actionList, collision.gameObject, gameObject);
+                MultiplayManager.Singleton.ApplyActions(ActionList, collision.gameObject, gameObject);
                 StartCoroutine(DestroyAfterSeconds(gameObject, 0.1f));
             }
         }
@@ -54,6 +54,9 @@ namespace Spell.Model.Behaviors
             // GameObject projectile = Instantiate(gameObject, spawnPosition + randomOffset, Quaternion.identity);
             GameObject projectile = Instantiate(gameObject, spawnPosition, Quaternion.identity);
             projectile.SetActive(true);
+            var projectileB = projectile.GetComponent<ProjectileBehavior>();
+            projectileB.ActionList = spellData.Actions;
+            projectileB.ActivateOnCollision = spellData.ActivateOnCollision;
 
             Rigidbody rb = projectile.GetComponent<Rigidbody>();
 
