@@ -163,6 +163,11 @@ namespace StarterAssets
             _fallTimeoutDelta = FallTimeout;
 
             var healthManager = GetComponent<Player.NetworkHealthManaManager>();
+            if (healthManager == null && transform.parent != null)
+            {
+                healthManager = transform.parent.GetComponent<Player.NetworkHealthManaManager>();
+            }
+
             if (healthManager != null)
             {
                 healthManager.OnLocalPlayerDied += HandleDeathAnimation;
@@ -220,19 +225,13 @@ namespace StarterAssets
 
         private void HandleDeathAnimation()
         {
-            PlayDeathAnimation();
-
-            this.enabled = false;
-        }
-
-        public void PlayDeathAnimation()
-        {
             if (_animator != null)
             {
                 _animator.SetTrigger(_animIDLose);
                 isDie = true;
             }
 
+            this.enabled = false;
         }
 
         //공격, 스펠
