@@ -41,7 +41,10 @@ namespace Gameplay.UI.Main
                 {
                     playerNameInputField.text = randomNameData.GetRandomName();
                 }
-                else
+            });
+            playerNameInputField.onValueChanged.AddListener(name =>
+            {
+                if (!string.IsNullOrEmpty(name))
                 {
                     ProjectSpellGameMultiplayer.Singleton.PlayerName = name;
                 }
