@@ -1,9 +1,11 @@
+using System;
 using System.Collections.Generic;
 using Common.Models;
 using UnityEngine;
 
 namespace Gameplay.UI.Damage
 {
+    [Obsolete("This class is obsolete. Use NetworkDamagePopupManager instead.")]
     public class DamagePopupManager : MonoBehaviour
     {
         [Header("Health Provider")]
@@ -77,7 +79,7 @@ namespace Gameplay.UI.Damage
             }
 
             _activePopups[healthModel].Add(popup);
-            StartCoroutine(popup.Animate());
+            // StartCoroutine(popup.Animate());
         }
 
         private void Update()
