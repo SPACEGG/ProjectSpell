@@ -21,7 +21,7 @@ namespace Spell.Model.Actions
                     }
                 }
 
-                healthProvider.HealthModel.Value.Heal(context.Value);
+                healthProvider.Heal(context.Value);
             }
         }
     }

@@ -16,8 +16,6 @@ namespace Gameplay.UI.PlayerHud
         private NetworkHealthManaManager _playerHealthManaManager;
         private NetworkPowerLevelManager _playerPowerLevelManager;
 
-        private NetworkManager NetworkManager => NetworkManager.Singleton;
-
         private void Awake()
         {
             if (Singleton && Singleton != this)
@@ -38,8 +36,7 @@ namespace Gameplay.UI.PlayerHud
         {
             _playerHealthManaManager = playerObject.GetComponentInChildren<NetworkHealthManaManager>();
             _playerPowerLevelManager = playerObject.GetComponentInChildren<NetworkPowerLevelManager>();
-            _presenter = new NetworkPlayerHudPresenter(view, _playerHealthManaManager.HealthModel, _playerHealthManaManager.ManaModel,
-                _playerPowerLevelManager);
+            _presenter = new NetworkPlayerHudPresenter(view, _playerHealthManaManager, _playerPowerLevelManager);
             view.Show();
         }
     }

@@ -1,30 +1,38 @@
 ﻿using Common.Models;
 using Player;
-using Unity.Netcode;
 
 namespace Gameplay.UI.PlayerHud
 {
     public class NetworkPlayerHudPresenter
     {
         private readonly PlayerHudView _view;
-        private readonly NetworkVariable<NetworkHealthModel> _healthModel;
+        private readonly NetworkHealthManaManager _healthManaManager;
         private readonly ManaModel _manaModel;
 
-        public NetworkPlayerHudPresenter(PlayerHudView view, NetworkVariable<NetworkHealthModel> healthModel, ManaModel manaModel, NetworkPowerLevelManager powerLevelManager)
+        public NetworkPlayerHudPresenter(
+            PlayerHudView view,
+            NetworkHealthManaManager healthManaManager,
+            NetworkPowerLevelManager powerLevelManager
+        )
         {
             _view = view;
-            _healthModel = healthModel;
-            _manaModel = manaModel;
+            _healthManaManager = healthManaManager;
+            _manaModel = healthManaManager.ManaModel;
 
-            healthModel.OnValueChanged += UpdateHp;
-            manaModel.OnManaChanged += UpdateMp;
+            _healthManaManager.OnHealthChanged += HealthManaManager_OnOnHealthChanged;
+            _healthManaManager.ManaModel.OnManaChanged += UpdateMp;
             powerLevelManager.OnPowerLevelChanged += UpdatePowerLevel;
 
-            UpdateHp(healthModel.Value, healthModel.Value);
-            UpdateMp(manaModel.CurrentMana);
+            UpdateHp(_healthManaManager.HealthModel.Value);
+            UpdateMp(_healthManaManager.ManaModel.CurrentMana);
         }
 
-        private void UpdateHp(NetworkHealthModel _, NetworkHealthModel newValue)
+        private void HealthManaManager_OnOnHealthChanged(object sender, NetworkHealthManaManager.OnHealthChangedEventArgs e)
+        {
+            _view.SetHp(e.CurrentHealth, e.MaxHealth);
+        }
+
+        private void UpdateHp(NewNetworkHealthModel newValue)
         {
             _view.SetHp(newValue.CurrentHealth, newValue.MaxHealth);
         }
@@ -41,7 +49,7 @@ namespace Gameplay.UI.PlayerHud
 
         public void Dispose()
         {
-            _healthModel.OnValueChanged -= UpdateHp;
+            _healthManaManager.OnHealthChanged += HealthManaManager_OnOnHealthChanged;
             _manaModel.OnManaChanged -= UpdateMp;
         }
     }

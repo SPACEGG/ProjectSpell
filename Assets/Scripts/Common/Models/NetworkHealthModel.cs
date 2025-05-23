@@ -5,6 +5,7 @@ using UnityEngine;
 
 namespace Common.Models
 {
+    [Obsolete("This class is deprecated. Use NewNetworkHealthModel instead.")]
     public class NetworkHealthModel : INetworkSerializable, System.IEquatable<NetworkHealthModel>
     {
         public event Action<float> OnHealthChanged;

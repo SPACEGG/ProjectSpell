@@ -14,41 +14,38 @@ namespace Player
         [SerializeField]
         private ManaData manaData;
 
+        public event EventHandler<OnHealthChangedEventArgs> OnHealthChanged;
         public event EventHandler OnPlayerDied;
 
         public event Action OnLocalPlayerDied;
 
-        public NetworkVariable<NetworkHealthModel> HealthModel { get; private set; }
+        public class OnHealthChangedEventArgs : EventArgs
+        {
+            public float CurrentHealth;
+            public float MaxHealth;
+        }
+
+        public NetworkVariable<NewNetworkHealthModel> HealthModel { get; private set; }
         public ManaModel ManaModel { get; private set; }
 
         private void Awake()
         {
-            HealthModel = new NetworkVariable<NetworkHealthModel>(new NetworkHealthModel(healthData));
+            HealthModel = new NetworkVariable<NewNetworkHealthModel>(new NewNetworkHealthModel(healthData));
             ManaModel = new ManaModel(manaData);
 
             HealthModel.OnValueChanged += (_, current) =>
             {
+                OnHealthChanged?.Invoke(this, new OnHealthChangedEventArgs
+                {
+                    CurrentHealth = current.CurrentHealth,
+                    MaxHealth = current.MaxHealth
+                });
                 if (current.CurrentHealth <= 0)
                 {
+                    HandleDeath();
                     OnPlayerDied?.Invoke(this, EventArgs.Empty);
                 }
             };
-        }
-
-        public override void OnNetworkSpawn()
-        {
-            if (IsLocalPlayer)
-            {
-                HealthModel.Value.OnDeath += HandleDeath;
-            }
-        }
-
-        public override void OnNetworkDespawn()
-        {
-            if (IsLocalPlayer)
-            {
-                HealthModel.Value.OnDeath -= HandleDeath;
-            }
         }
 
         private void HandleDeath()
@@ -63,6 +60,30 @@ namespace Player
         private void FixedUpdate()
         {
             ManaModel.RegenerateMana(Time.deltaTime);
+        }
+
+        public void TakeDamage(float damage)
+        {
+            if (IsServer)
+            {
+                HealthModel.Value = new NewNetworkHealthModel()
+                {
+                    MaxHealth = HealthModel.Value.MaxHealth,
+                    CurrentHealth = Mathf.Clamp(HealthModel.Value.CurrentHealth - damage, 0, HealthModel.Value.MaxHealth)
+                };
+            }
+        }
+
+        public void Heal(float contextValue)
+        {
+            if (IsServer)
+            {
+                HealthModel.Value = new NewNetworkHealthModel()
+                {
+                    MaxHealth = HealthModel.Value.MaxHealth,
+                    CurrentHealth = Mathf.Clamp(HealthModel.Value.CurrentHealth + contextValue, 0, HealthModel.Value.MaxHealth)
+                };
+            }
         }
     }
 }

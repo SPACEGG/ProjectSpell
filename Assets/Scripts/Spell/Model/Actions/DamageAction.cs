@@ -29,7 +29,7 @@ namespace Spell.Model.Actions
                 if (targetElementProvider != null)
                     targetElement = targetElementProvider.Element;
 
-                healthProvider.HealthModel.Value.TakeDamage(context.Value * GetAffinityMultiplier(context.OriginElement, targetElement));
+                healthProvider.TakeDamage(context.Value * GetAffinityMultiplier(context.OriginElement, targetElement));
 
             }
         }
