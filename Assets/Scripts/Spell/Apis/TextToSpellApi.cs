@@ -49,10 +49,13 @@ namespace Spell.Apis
 ## 위치 정보 기반 방향 및 스폰 오프셋 
 - '카메라 타겟 위치(cameraTargetPosition)'는 화면 중앙에서 Ray를 쏴서 처음 만나는 오브젝트(상대방 캐릭터, 환경, 스펠 오브젝트 등)의 월드 좌표입니다.
 - '캐스터 위치(casterPosition)'는 주문을 시전하는 플레이어(시전자 앞)의 월드 좌표입니다.
-- 반드시 이 두 좌표를 주문의 생성 위치 오프셋은(PositionOffset)와 방향(Direction) 계산에 적극적으로 참고하세요.
+- 반드시 이 두 좌표를 주문의 생성 위치 오프셋(PositionOffset)과 방향(Direction) 계산에 적극적으로 참고하세요.
+- **상대방 머리 위에서 떨어지는 주문**을 만들고 싶다면,  
+      PositionOffset = (cameraTargetPosition + [0, y, 0]) - casterPosition  
+      (즉, 타겟 위치의 y좌표에 원하는 높이 y만큼 더한 뒤, 캐스터 위치를 빼서 오프셋을 구하세요.  
 - 생성위치오프셋은 주문을 시전하는 플레이어의 월드 좌표 기준으로 더해집니다. 주문자의 해석에 따라 상대방 위나 내 위에서 오브젝트가 발사되도록 합니다. 
 - 방향은 기본적으로 (cameraTargetPosition - casterPosition)이나 gravity나 Speed를 정함에 따라 포물선을 그리며 타겟지점에 도달할 수 있도록 방향을 설정하세요.
-- 힐 같은 경우 뒤로 발사되게 해서 힐 투사체에 플레이어 자신이 맞아야 합니다. 
+- 체력 회복 주문 같은 경우 뒤로 발사되게 해서 투사체에 플레이어 자신이 맞아야 합니다. 
 
 ## 출력 규칙
 - 반드시 유효한 JSON 객체 하나만 반환하십시오.
@@ -203,11 +206,11 @@ namespace Spell.Apis
   ""HasGravity"": true,
   ""PositionOffset"": [7.0, 20.0, 30.0],
   ""Direction"": [0.22, -0.47, 0.85],
-  ""Count"": 1,
+  ""Count"": 5,
   ""Speed"": 12.0,
   ""Duration"": 6.0,
-  ""SpreadAngle"": 0.0,
-  ""SpreadRange"": 0.0,
+  ""SpreadAngle"": 15.0,
+  ""SpreadRange"": 2.0,
   ""ActivateOnCollision"": true,
   ""MaterialName"": ""Glow_Fire"",
   ""MeshName"": ""Big1"",
@@ -219,39 +222,6 @@ namespace Spell.Apis
     { ""Action"": ""Knockback"", ""Target"": ""Activator"", ""Value"": 25.0 }
   ]
 }
-
-### 입력:
-[PowerLevel: 2]
-[CameraTargetPosition: 5.0, 1.8, 18.0]
-[CasterPosition: 5.0, 1.0, 10.0]
-상대방 머리 위에 바위 투척
-
-### 출력:
-{
-  ""Name"": ""OverheadRockDrop"",
-  ""Element"": ""Earth"",
-  ""Behavior"": ""Projectile"",
-  ""Shape"": ""Cube"",
-  ""Size"": [3.0, 3.0, 3.0],
-  ""HasGravity"": true,
-  ""PositionOffset"": [0.0, 7.0, 8.0],
-  ""Direction"": [0.0, -1.0, 0.0],
-  ""Count"": 1,
-  ""Speed"": 0.0,
-  ""Duration"": 4.0,
-  ""SpreadAngle"": 0.0,
-  ""SpreadRange"": 0.0,
-  ""ActivateOnCollision"": true,
-  ""MaterialName"": ""Ground"",
-  ""MeshName"": ""small1"",
-  ""ParticleName"": ""Sparks_red"",
-  ""TrailName"": ""VFX_Trail_Earth"",
-  ""SoundName"": ""pung"",
-  ""Actions"": [
-    { ""Action"": ""Damage"", ""Target"": ""Activator"", ""Value"": 50.0 }
-  ]
-}
-
 
 ### 입력:
 [PowerLevel: 1]
@@ -291,6 +261,7 @@ namespace Spell.Apis
 [CasterPosition: 5.0, 1.0, 10.0]
 앞에 방어막 생성
 
+### 출력:
 {
   ""Name"": ""FrontShield"",
   ""Element"": ""Earth"",
@@ -312,6 +283,38 @@ namespace Spell.Apis
   ""TrailName"": ""VFX_Trail_Earth"",
   ""SoundName"": ""None"",
   ""Actions"": []
+}
+
+### 입력:
+[PowerLevel: 2]
+[CameraTargetPosition: 6.0, 1.8, 18.0]
+[CasterPosition: 5.0, 1.0, 10.0]
+상대방 머리 위에 바위 투척
+
+### 출력:
+{
+  ""Name"": ""OverheadRockDrop"",
+  ""Element"": ""Earth"",
+  ""Behavior"": ""Projectile"",
+  ""Shape"": ""Cube"",
+  ""Size"": [3.0, 3.0, 3.0],
+  ""HasGravity"": true,
+  ""PositionOffset"": [1.0, 7.8, 8.0],
+  ""Direction"": [0.0, -1.0, 0.0],
+  ""Count"": 3,
+  ""Speed"": 3.0,
+  ""Duration"": 4.0,
+  ""SpreadAngle"": 5.0,
+  ""SpreadRange"": 0.5,
+  ""ActivateOnCollision"": true,
+  ""MaterialName"": ""Ground"",
+  ""MeshName"": ""small1"",
+  ""ParticleName"": ""Sparks_red"",
+  ""TrailName"": ""VFX_Trail_Earth"",
+  ""SoundName"": ""pung"",
+  ""Actions"": [
+    { ""Action"": ""Damage"", ""Target"": ""Activator"", ""Value"": 50.0 }
+  ]
 }
 ";
 
