@@ -28,8 +28,9 @@ namespace Spell.Model.Behaviors
             Vector3 spawnPosition = transform.position;
 
             int count = spellData.Count > 0 ? spellData.Count : 1;
-            // 원본 오브젝트 비활성화 (복제체만 활성)
+            // 원본 오브젝트 비활성화 후 삭제 (복제체만 활성)
             gameObject.SetActive(false);
+            Invoke(nameof(DestroyThis), spellData.Duration);
 
             for (int i = 0; i < count; i++)
             {
@@ -79,6 +80,11 @@ namespace Spell.Model.Behaviors
                 baseDirection = Quaternion.Euler(0, angle, 0) * baseDirection;
             }
             return baseDirection;
+        }
+
+        private void DestroyThis()
+        {
+            Destroy(gameObject);
         }
 
         private IEnumerator DestroyAfterSeconds(GameObject obj, float duration)

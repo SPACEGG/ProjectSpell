@@ -13,13 +13,13 @@ namespace Spell.Model.Core
         // 시스템 오류 방지용 최소값만 채움. 실제 주문 실패 시에는 FailureBehavior로 분기할 것!
         public static SpellData Create()
         {
-            // VFX 후보 배열 정의
-            string[] materialNames = { "M_Stones", "Glow_Fire", "Glow_Ice", "Gold", "Ground", "IceMaterial", "M_StonesV1", "PT_Ground_Grass_Green_01" };
-            string[] meshNames = { "ST_Stone1", "ST_Stone2", "ST_Stone3", "ST_Stone4", "ST_Stone5", "Crystal_1", "Crystal_2", "Crystal_3", "Crystal_4", "Crystal_5" };
-            // string[] particleNames = { "prefV_vfx_fire_red", "prefV_vfx_fire_blue", "Ef_IceMagicGlowFree01", "Sparks_green", "Sparks_pink", "Sparks_red", "Sparks_white", "Sparks_yellow" };
-            // string[] trailNames = { "VFX_Trail_Fire", "VFX_Trail_Earth", "VFX_Trail_Ice", "VFX_Trail_Nature", "VFX_Trail_Cosmos", "VFX_Trail_Water" };
+            Array materialNames = Enum.GetValues(typeof(MaterialNameType));
+            Array meshNames = Enum.GetValues(typeof(MeshNameType));
+            int randomIndex = UnityEngine.Random.Range(0, materialNames.Length);
+            string materialName = ((MaterialNameType)materialNames.GetValue(randomIndex)).ToString();
+            randomIndex = UnityEngine.Random.Range(0, meshNames.Length);
+            string meshName = ((MeshNameType)meshNames.GetValue(randomIndex)).ToString();
 
-            System.Random rnd = new System.Random(Guid.NewGuid().GetHashCode());
 
             return new SpellData
             {
@@ -43,8 +43,8 @@ namespace Spell.Model.Core
                 SpreadRange = 0f,
                 ActivateOnCollision = true,
                 // ---- VFX 속성 랜덤 세팅 ----
-                MaterialName = materialNames[rnd.Next(materialNames.Length)],
-                MeshName = meshNames[rnd.Next(meshNames.Length)],
+                MaterialName = materialName,
+                MeshName = meshName,
                 ParticleName = "None",
                 TrailName = "None",
                 SoundName = "None"
