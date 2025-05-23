@@ -16,24 +16,28 @@ namespace Spell.Model.Core
             // VFX 후보 배열 정의
             string[] materialNames = { "M_Stones", "Glow_Fire", "Glow_Ice", "Gold", "Ground", "IceMaterial", "M_StonesV1", "PT_Ground_Grass_Green_01" };
             string[] meshNames = { "ST_Stone1", "ST_Stone2", "ST_Stone3", "ST_Stone4", "ST_Stone5", "Crystal_1", "Crystal_2", "Crystal_3", "Crystal_4", "Crystal_5" };
-            string[] particleNames = { "prefV_vfx_fire_red", "prefV_vfx_fire_blue", "Ef_IceMagicGlowFree01", "Sparks_green", "Sparks_pink", "Sparks_red", "Sparks_white", "Sparks_yellow" };
-            string[] trailNames = { "VFX_Trail_Fire", "VFX_Trail_Earth", "VFX_Trail_Ice", "VFX_Trail_Nature", "VFX_Trail_Cosmos", "VFX_Trail_Water" };
+            // string[] particleNames = { "prefV_vfx_fire_red", "prefV_vfx_fire_blue", "Ef_IceMagicGlowFree01", "Sparks_green", "Sparks_pink", "Sparks_red", "Sparks_white", "Sparks_yellow" };
+            // string[] trailNames = { "VFX_Trail_Fire", "VFX_Trail_Earth", "VFX_Trail_Ice", "VFX_Trail_Nature", "VFX_Trail_Cosmos", "VFX_Trail_Water" };
 
             System.Random rnd = new System.Random(Guid.NewGuid().GetHashCode());
 
             return new SpellData
             {
                 Name = "DefaultSpell",
-                Element = ElementType.Earth,
+                Element = ElementType.Common,
                 Behavior = BehaviorType.Projectile,
-                Actions = new List<SpellActionData>(),
+                Actions = new List<SpellActionData>()
+                {
+                    new(ActionType.Damage, TargetType.Activator, 50f),
+                    new(ActionType.ManaRegen, TargetType.Caster, 20f)
+                },
                 PositionOffset = Vector3.zero,
                 Direction = Vector3.forward,
                 Count = 1,
-                Shape = ShapeType.Sphere, 
-                Size = Vector3.one,     
+                Shape = ShapeType.Sphere,
+                Size = Vector3.one * 0.5f,
                 HasGravity = true,
-                Speed = 30f, 
+                Speed = 30f,
                 Duration = 5f,
                 SpreadAngle = 0f,
                 SpreadRange = 0f,
@@ -41,8 +45,8 @@ namespace Spell.Model.Core
                 // ---- VFX 속성 랜덤 세팅 ----
                 MaterialName = materialNames[rnd.Next(materialNames.Length)],
                 MeshName = meshNames[rnd.Next(meshNames.Length)],
-                ParticleName = particleNames[rnd.Next(particleNames.Length)],
-                TrailName = trailNames[rnd.Next(trailNames.Length)]
+                ParticleName = "None",
+                TrailName = "None"
             };
         }
 
@@ -56,9 +60,9 @@ namespace Spell.Model.Core
             Vector3? direction,
             int? count,
             ShapeType? shape,
-            Vector3? size, 
+            Vector3? size,
             bool? hasGravity,
-            float? speed,        
+            float? speed,
             float? duration,
             float? spreadAngle,
             float? spreadRange,
@@ -117,9 +121,9 @@ namespace Spell.Model.Core
                 Direction = direction.Value,           // 명시적 .Value 사용
                 Count = count.Value,
                 Shape = shape.Value,
-                Size = size.Value, 
+                Size = size.Value,
                 HasGravity = hasGravity.Value,
-                Speed = speed.Value,       
+                Speed = speed.Value,
                 Duration = duration.Value,
                 SpreadAngle = spreadAngle.Value,
                 SpreadRange = spreadRange.Value,
