@@ -27,6 +27,7 @@ namespace Spell.Model.Data
         public string MeshName { get; set; }     // Meshes 폴더용
         public string ParticleName { get; set; } // Particles 폴더용
         public string TrailName { get; set; }    // TrailEffects 폴더용
+        public string SoundName { get; set; }    // Sounds 폴더용
 
         // Spell 동작(Behavior)에서 참조하는 속성
         [JsonConverter(typeof(Vector3Converter))]
@@ -107,6 +108,10 @@ namespace Spell.Model.Data
             var trailName = TrailName;
             serializer.SerializeValue(ref trailName);
             if (!serializer.IsWriter) TrailName = trailName;
+
+            var soundName = SoundName;
+            serializer.SerializeValue(ref soundName);
+            if (!serializer.IsWriter) SoundName = soundName;
 
             var positionOffset = PositionOffset;
             serializer.SerializeValue(ref positionOffset);

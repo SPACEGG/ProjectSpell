@@ -103,7 +103,8 @@ namespace Spell.Model.Core
             // === Mesh 적용 ===
             if (!string.IsNullOrEmpty(data.MeshName))
             {
-                string meshPath = $"VFX/Meshes/{data.MeshName}";
+                // 실제 사용 가능한 MeshName: Big1, small1, small2, tall1, tall2
+                string meshPath = $"VFX/Meshes/Rock/{data.MeshName}";
                 var vfxMesh = Resources.Load<Mesh>(meshPath);
                 if (vfxMesh != null)
                 {
@@ -119,6 +120,7 @@ namespace Spell.Model.Core
             // === Particle 적용 ===
             if (!string.IsNullOrEmpty(data.ParticleName))
             {
+                // 실제 사용 가능한 ParticleName: Sparks_red
                 string particlePath = $"VFX/Particles/{data.ParticleName}";
                 var particlePrefab = Resources.Load<GameObject>(particlePath);
                 if (particlePrefab != null)
@@ -145,6 +147,26 @@ namespace Spell.Model.Core
                 else
                 {
                     Debug.LogWarning($"VFX 트레일을 찾을 수 없음: {trailPath}");
+                }
+            }
+
+            // === Sound 적용 ===
+            if (!string.IsNullOrEmpty(data.SoundName))
+            {
+                string soundPath = $"VFX/Sound/{data.SoundName}";
+                var audioClip = Resources.Load<AudioClip>(soundPath);
+                if (audioClip != null)
+                {
+                    var audioSource = gameObject.AddComponent<AudioSource>();
+                    audioSource.clip = audioClip;
+                    audioSource.playOnAwake = true;
+                    audioSource.spatialBlend = 1.0f; // 3D 사운드
+                    audioSource.Play();
+                    Debug.Log($"VFX 사운드 적용: {soundPath}");
+                }
+                else
+                {
+                    Debug.LogWarning($"VFX 사운드를 찾을 수 없음: {soundPath}");
                 }
             }
 
