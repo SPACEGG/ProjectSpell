@@ -28,14 +28,14 @@ namespace Spell.Model.Core
                 Behavior = BehaviorType.Projectile,
                 Actions = new List<SpellActionData>()
                 {
-                    new(ActionType.Damage, TargetType.Activator, 50f),
+                    new(ActionType.Damage, TargetType.Activator, 20f),
                     new(ActionType.ManaRegen, TargetType.Caster, 20f)
                 },
                 PositionOffset = Vector3.zero,
                 Direction = Vector3.forward,
                 Count = 1,
                 Shape = ShapeType.Sphere,
-                Size = Vector3.one * 0.5f,
+                Size = Vector3.one * 0.8f,
                 HasGravity = true,
                 Speed = 30f,
                 Duration = 5f,
@@ -46,7 +46,8 @@ namespace Spell.Model.Core
                 MaterialName = materialNames[rnd.Next(materialNames.Length)],
                 MeshName = meshNames[rnd.Next(meshNames.Length)],
                 ParticleName = "None",
-                TrailName = "None"
+                TrailName = "None",
+                SoundName = "None"
             };
         }
 
