@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using Common.Models;
+using Multiplay;
 using Spell.Model.Behaviors;
 using Spell.Model.Data;
 using Spell.Model.Enums;
@@ -27,8 +28,7 @@ namespace Spell.Model.Actions
             {
                 TargetType.Activator => new List<GameObject>() { activator },
                 TargetType.Caster => new List<GameObject>() { caster },
-                TargetType.Global => new List<GameObject>() { activator, caster },
-                // TargetType.Global => TODO: BattleManager.GetAllPlayers() 같은거 필요함,
+                TargetType.Global => MultiplayManager.Singleton.GetAllPlayers(),
                 _ => null
             };
             Origin = origin;
