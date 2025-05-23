@@ -50,11 +50,11 @@ namespace Spell.Apis
 - '카메라 타겟 위치(cameraTargetPosition)'는 화면 중앙에서 Ray를 쏴서 처음 만나는 오브젝트(상대방 캐릭터, 환경, 스펠 오브젝트 등)의 월드 좌표입니다.
 - '캐스터 위치(casterPosition)'는 주문을 시전하는 플레이어(시전자 앞)의 월드 좌표입니다.
 - 반드시 이 두 좌표를 주문의 생성 위치 오프셋(PositionOffset)과 방향(Direction) 계산에 적극적으로 참고하세요.
-- **상대방 머리 위에서 떨어지는 주문**을 만들고 싶다면,  
-      PositionOffset = (cameraTargetPosition + [0, y, 0]) - casterPosition  
-      (즉, 타겟 위치의 y좌표에 원하는 높이 y만큼 더한 뒤, 캐스터 위치를 빼서 오프셋을 구하세요.  
-- 생성위치오프셋은 주문을 시전하는 플레이어의 월드 좌표 기준으로 더해집니다. 주문자의 해석에 따라 상대방 위나 내 위에서 오브젝트가 발사되도록 합니다. 
-- 방향은 기본적으로 (cameraTargetPosition - casterPosition)이나 gravity나 Speed를 정함에 따라 포물선을 그리며 타겟지점에 도달할 수 있도록 방향을 설정하세요.
+PositionOffset = [0, 0, 0] 이면 시전자의 바로 앞입니다. 이는 일반적으로 발사체를 던지는 경우에 해당합니다.
+PositionOffset = (cameraTargetPosition + [0, 적당한 y값, 0]) 이면 상대방의 머리 위쪽 위치입니다. 운석같은 발사체를 떨어트리는 경우에 해당합니다.
+Direction = (cameraTargetPosition - casterPosition) 이면 시전자로부터 상대방으로의 방향입니다. 이는 일반적으로 발사체를 던지는 경우에 해당합니다.
+Direction = [0, -1, 0] 이면 위에서 아래 방향으로, 이는 운석같은 발사체를 떨어트리는 경우에 해당합니다.
+
 - 체력 회복 주문 같은 경우 뒤로 발사되게 해서 투사체에 플레이어 자신이 맞아야 합니다. 
 
 ## 출력 규칙
