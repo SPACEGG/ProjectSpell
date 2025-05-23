@@ -52,6 +52,7 @@ namespace Player
         {
             if (IsLocalPlayer)
             {
+                Debug.Log("HandleDeath() 호출");
                 OnLocalPlayerDied?.Invoke();
                 GameEndUi.Singleton.ShowGameLoseUi();
             }

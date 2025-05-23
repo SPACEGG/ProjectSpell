@@ -222,16 +222,17 @@ namespace StarterAssets
         {
             PlayDeathAnimation();
 
-            // 이동/입력 차단, 마우스 해제 등도 여기서 같이 처리 가능
-            _input.enabled = false;
-            Cursor.lockState = CursorLockMode.None;
-            Cursor.visible = true;
+            this.enabled = false;
         }
 
         public void PlayDeathAnimation()
         {
             if (_animator != null)
+            {
                 _animator.SetTrigger(_animIDLose);
+                isDie = true;
+            }
+
         }
 
         //공격, 스펠
