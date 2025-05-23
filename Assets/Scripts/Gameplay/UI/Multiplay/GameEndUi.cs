@@ -55,5 +55,14 @@ namespace Gameplay.UI.Multiplay
         {
             gameObject.SetActive(false);
         }
+
+        public void EndGame()
+        {
+            Application.Quit();
+
+#if UNITY_EDITOR
+            UnityEditor.EditorApplication.isPlaying = false;
+#endif
+        }
     }
 }

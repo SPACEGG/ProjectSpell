@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using Common.Data;
 using Common.Models;
 using Gameplay.UI.Multiplay;
@@ -15,6 +15,8 @@ namespace Player
         private ManaData manaData;
 
         public event EventHandler OnPlayerDied;
+
+        public event Action OnLocalPlayerDied;
 
         public NetworkVariable<NetworkHealthModel> HealthModel { get; private set; }
         public ManaModel ManaModel { get; private set; }
@@ -53,6 +55,7 @@ namespace Player
         {
             if (IsLocalPlayer)
             {
+                OnLocalPlayerDied?.Invoke();
                 GameEndUi.Singleton.ShowGameLoseUi();
             }
         }
