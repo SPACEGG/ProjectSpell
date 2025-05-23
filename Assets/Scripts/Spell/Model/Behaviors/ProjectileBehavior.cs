@@ -1,10 +1,8 @@
 ﻿using System.Collections;
 using UnityEngine;
 using Spell.Model.Data;
-using Spell.Model.Core;
 using Common.Models;
 using Spell.Model.Enums;
-using Spell.Model.Actions;
 using System.Collections.Generic;
 using Multiplay;
 
@@ -21,6 +19,8 @@ namespace Spell.Model.Behaviors
 
         public override void Behave(SpellData spellData)
         {
+            Random.InitState(RandomSeed);
+
             actionList = spellData.Actions;
             activateOnCollision = spellData.ActivateOnCollision;
 

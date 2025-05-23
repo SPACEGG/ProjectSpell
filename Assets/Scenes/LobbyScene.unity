@@ -2660,6 +2660,7 @@ MonoBehaviour:
   cancelButton: {fileID: 2095043821}
   confirmButton: {fileID: 582695124}
   lobbyNameInputField: {fileID: 36625570}
+  playerNameInputField: {fileID: 80995497}
 --- !u!1 &1227637856
 GameObject:
   m_ObjectHideFlags: 0

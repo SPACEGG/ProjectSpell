@@ -17,10 +17,13 @@ namespace Spell.Model.Core
         [SerializeField] private KeyCode level1SelectKey = KeyCode.Alpha1;
         [SerializeField] private KeyCode level2SelectKey = KeyCode.Alpha2;
         [SerializeField] private KeyCode level3SelectKey = KeyCode.Alpha3;
+
+        [SerializeField] private float defaultAttackDuration = 2f;
         [SerializeField] private float recordIgnoreDuration = 0.5f;
         [SerializeField] private Transform spellOrigin;
 
         private float _recordStartTime;
+        private float _defaultAttackCooldown = 0f;
 
         private RecordController _recordController;
         private SpellDataController _spellDataController;
@@ -62,6 +65,10 @@ namespace Spell.Model.Core
         {
             if (Input.GetKeyDown(attackKey))
             {
+                // 쿨타임 체크
+                if (Time.time - _defaultAttackCooldown < defaultAttackDuration) return;
+                _defaultAttackCooldown = Time.time;
+
                 Debug.Log("Attack key pressed");
                 Vector3 cameraTargetPosition = GetCameraTargetPosition();
                 Vector3 direction = (cameraTargetPosition - transform.position).normalized;
@@ -141,59 +148,49 @@ namespace Spell.Model.Core
                 return;
             }
 
+            int randomSeed = Random.Range(int.MinValue, int.MaxValue);
+
             // 주문 위치 계산 및 로컬 시전
-            CastSpellAsOriginator(spelldata);
+            CastSpellAsOriginator(spelldata, randomSeed);
             // 서버에 동기화 요청
-            RequestCastSpellRpc(spelldata, NetworkManager.Singleton.LocalClientId);
+            RequestCastSpellRpc(spelldata, NetworkManager.Singleton.LocalClientId, randomSeed);
         }
 
         // 내가 시전한 주문 (로컬 입력 기반)
-        public void CastSpellAsOriginator(SpellData spellData)
+        public void CastSpellAsOriginator(SpellData spellData, int seed = 0)
         {
             // 시전자 기준으로 스폰 위치 계산
             spellData.SpawnPosition = CastOrigin.position + spellData.PositionOffset;
-            CastSpell(spellData);
+            CastSpell(spellData, seed);
         }
 
         // 다른 플레이어가 시전한 주문 (서버를 통해 받은 SpellData 기반)
-        public void CastSpellAsReceiver(SpellData spellData)
+        public void CastSpellAsReceiver(SpellData spellData, int seed)
         {
             // 이미 계산된 SpawnPosition 사용
-            CastSpell(spellData);
-        }
-
-        private async UniTask BuildAndCastSpell(Wav recording)
-        {
-            var spellData = await _spellDataController.BuildSpellDataAsyncByWav(
-                recording,
-                1,
-                Camera.main ? Camera.main.transform.position : Vector3.zero,
-                transform.position
-            );
-
-            CastSpellAsOriginator(spellData);
+            CastSpell(spellData, seed);
         }
 
         // 클라이언트에서 호출: SpellData를 서버로 전송, originClientId도 함께 전달
         [Rpc(SendTo.Server)]
-        public void RequestCastSpellRpc(SpellData spellData, ulong originClientId)
+        public void RequestCastSpellRpc(SpellData spellData, ulong originClientId, int seed = 0)
         {
             if (!IsServer) return;
-            SyncSpellDataRpc(spellData, originClientId);
+            SyncSpellDataRpc(spellData, originClientId, seed);
         }
 
         // 서버에서 호출: 모든 인스턴스에서 SpellData로 주문 생성, 단 originClientId는 제외
         [Rpc(SendTo.Everyone)]
-        public void SyncSpellDataRpc(SpellData spellData, ulong originClientId)
+        public void SyncSpellDataRpc(SpellData spellData, ulong originClientId, int seed)
         {
             if (NetworkManager.Singleton.LocalClientId == originClientId)
                 return; // 자기 자신이면 중복 시전 방지
 
-            CastSpellAsReceiver(spellData);
+            CastSpellAsReceiver(spellData, seed);
         }
 
         // 실제 스펠 생성 및 적용 (위치 계산 없이 SpawnPosition 사용)
-        private void CastSpell(SpellData data)
+        private void CastSpell(SpellData data, int seed)
         {
             if (data == null)
             {
@@ -217,7 +214,9 @@ namespace Spell.Model.Core
             }
 
             var behavedSpellObject = spellObject.GetComponent<SpellBehaviorBase>();
-            behavedSpellObject?.Behave(data);
+
+            behavedSpellObject.RandomSeed = seed;
+            behavedSpellObject.Behave(data);
         }
     }
 }

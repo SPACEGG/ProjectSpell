@@ -13,5 +13,5 @@ MonoBehaviour:
   m_Name: PlayerManaData
   m_EditorClassIdentifier: 
   manaPerLevel: 100
-  manaRegenPerSec: 50
+  manaRegenPerSec: 10
   manaRegenDelay: 0.2

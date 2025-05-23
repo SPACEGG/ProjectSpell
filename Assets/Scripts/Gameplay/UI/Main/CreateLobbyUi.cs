@@ -9,6 +9,7 @@ namespace Gameplay.UI.Main
         [SerializeField] private Button cancelButton;
         [SerializeField] private Button confirmButton;
         [SerializeField] private TMP_InputField lobbyNameInputField;
+        [SerializeField] private TMP_InputField playerNameInputField;
 
         private void Awake()
         {
@@ -31,6 +32,7 @@ namespace Gameplay.UI.Main
 
         public void Show()
         {
+            lobbyNameInputField.text = $"{playerNameInputField.text}'s Lobby";
             gameObject.SetActive(true);
         }
 
