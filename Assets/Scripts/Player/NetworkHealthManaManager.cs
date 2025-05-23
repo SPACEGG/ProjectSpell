@@ -72,7 +72,17 @@ namespace Player
                     MaxHealth = HealthModel.Value.MaxHealth,
                     CurrentHealth = Mathf.Clamp(HealthModel.Value.CurrentHealth - damage, 0, HealthModel.Value.MaxHealth)
                 };
+                DamagedClientRpc();
             }
+        }
+
+        [ClientRpc]
+        private void DamagedClientRpc()
+        {
+            if (!IsOwner) return; // 내 클라이언트에서만 실행
+
+            var controller = GetComponentInChildren<StarterAssets.ThirdPersonController>();
+            controller?.Damaged();
         }
 
         public void Heal(float contextValue)

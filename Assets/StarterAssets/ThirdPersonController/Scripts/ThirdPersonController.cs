@@ -102,6 +102,7 @@ namespace StarterAssets
         private int _animIDAttack;
         private int _animIDSpell;
         private int _animIDLose;
+        private int _animIDDamaged;
 
 #if ENABLE_INPUT_SYSTEM
         private PlayerInput _playerInput;
@@ -131,8 +132,6 @@ namespace StarterAssets
 
         private bool isAttack = false;
         private bool isSpell = false;
-        private bool isJump = false;
-        private bool isDie = false;
 
         private void Awake()
         {
@@ -222,6 +221,7 @@ namespace StarterAssets
             _animIDAttack = Animator.StringToHash("Attack");
             _animIDSpell = Animator.StringToHash("Spell");
             _animIDLose = Animator.StringToHash("Die");
+            _animIDDamaged = Animator.StringToHash("Damaged");
         }
 
         private void HandleDeathAnimation()
@@ -229,9 +229,18 @@ namespace StarterAssets
             if (_animator != null)
             {
                 _animator.SetTrigger(_animIDLose);
-                isDie = true;
             }
             this.enabled = false;
+        }
+
+        public void Damaged()
+        {
+            Debug.Log($"💥 플레이어가 피해를 입었습니다.");
+
+            if (_hasAnimator)
+            {
+                _animator?.SetTrigger("Damaged");
+            }
         }
 
         //공격, 스펠
