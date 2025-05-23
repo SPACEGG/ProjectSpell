@@ -11,7 +11,7 @@ namespace Spell.Apis
     public class TextToSpellApi
     {
         private const string ApiUrl = "https://api.openai.com/v1/chat/completions";
-        private const string Model = "gpt-4o";
+        private const string Model = "gpt-3.5-turbo";
 
         private const string SystemPrompt = @"
 당신은 Unity 기반 마법 대결 게임의 마법 연출 감독입니다.
