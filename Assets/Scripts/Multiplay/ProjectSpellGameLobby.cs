@@ -116,10 +116,10 @@ public class ProjectSpellGameLobby : MonoBehaviour
     {
         if (UnityServices.State != ServicesInitializationState.Initialized)
         {
-            InitializationOptions options = new InitializationOptions();
-            options.SetProfile(Random.Range(10000, 99999).ToString());
+            var options = new InitializationOptions();
+            options.SetProfile(Random.Range(1000000, 9999999).ToString());
 
-            await UnityServices.InitializeAsync();
+            await UnityServices.InitializeAsync(options);
 
             await AuthenticationService.Instance.SignInAnonymouslyAsync();
         }
