@@ -43,6 +43,18 @@ namespace Spell.Model.Behaviors
         {
             if (ActivateOnCollision && collision.gameObject.tag == "Player")
             {
+                var effectPrefab = Resources.Load<GameObject>("VFX/ActionEffects/Sparks explode pink");
+                if (effectPrefab != null)
+                {
+                    Object.Instantiate(effectPrefab, transform);
+                }
+
+                var audioClip = Resources.Load<AudioClip>("VFX/Sound/_Quazic");
+                if (audioClip != null)
+                {
+                    AudioSource.PlayClipAtPoint(audioClip, transform.position, 1.0f);
+                }
+
                 MultiplayManager.Singleton.ApplyActions(ActionList, collision.gameObject, gameObject);
                 StartCoroutine(DestroyAfterSeconds(gameObject, 0.1f));
             }
