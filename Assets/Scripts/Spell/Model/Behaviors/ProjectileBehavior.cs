@@ -41,7 +41,7 @@ namespace Spell.Model.Behaviors
 
         private void OnCollisionEnter(Collision collision)
         {
-            if (ActivateOnCollision)
+            if (ActivateOnCollision && collision.gameObject.tag == "Player")
             {
                 MultiplayManager.Singleton.ApplyActions(ActionList, collision.gameObject, gameObject);
                 StartCoroutine(DestroyAfterSeconds(gameObject, 0.1f));

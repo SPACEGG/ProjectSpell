@@ -18,6 +18,7 @@ namespace Spell.Model.Core
             };
 
             gameObject.GetComponent<SpellBehaviorBase>().Caster = caster;
+            gameObject.tag = "Player";
 
             ApplyVFX(gameObject, data);
             return gameObject;
