@@ -25,10 +25,7 @@ namespace Gameplay.UI.Main
 
         private void Awake()
         {
-            createLobbyButton.onClick.AddListener(() =>
-            {
-                createLobbyUi.Show();
-            });
+            createLobbyButton.onClick.AddListener(() => { createLobbyUi.Show(); });
 
             quickJoinButton.onClick.AddListener(() =>
             {
@@ -36,7 +33,9 @@ namespace Gameplay.UI.Main
                 Debug.Log("Quick Join button clicked");
             });
 
-            playerNameInputField.onValueChanged.AddListener(name =>
+            randomNameButton.onClick.AddListener(() => { playerNameInputField.text = randomNameData.GetRandomName(); });
+
+            playerNameInputField.onEndEdit.AddListener(name =>
             {
                 if (string.IsNullOrEmpty(name))
                 {
