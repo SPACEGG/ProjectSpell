@@ -101,6 +101,7 @@ namespace StarterAssets
         private int _animIDMotionSpeed;
         private int _animIDAttack;
         private int _animIDSpell;
+        private int _animIDLose;
 
 #if ENABLE_INPUT_SYSTEM
         private PlayerInput _playerInput;
@@ -131,6 +132,7 @@ namespace StarterAssets
         private bool isAttack = false;
         private bool isSpell = false;
         private bool isJump = false;
+        private bool isDie = false;
 
         private void Awake()
         {
@@ -159,6 +161,12 @@ namespace StarterAssets
             // reset our timeouts on start
             _jumpTimeoutDelta = JumpTimeout;
             _fallTimeoutDelta = FallTimeout;
+
+            var healthManager = GetComponent<Player.NetworkHealthManaManager>();
+            if (healthManager != null)
+            {
+                healthManager.OnLocalPlayerDied += HandleDeathAnimation;
+            }
         }
 
         public override void OnNetworkSpawn()
@@ -207,6 +215,23 @@ namespace StarterAssets
             _animIDMotionSpeed = Animator.StringToHash("MotionSpeed");
             _animIDAttack = Animator.StringToHash("Attack");
             _animIDSpell = Animator.StringToHash("Spell");
+            _animIDLose = Animator.StringToHash("Die");
+        }
+
+        private void HandleDeathAnimation()
+        {
+            PlayDeathAnimation();
+
+            // 이동/입력 차단, 마우스 해제 등도 여기서 같이 처리 가능
+            _input.enabled = false;
+            Cursor.lockState = CursorLockMode.None;
+            Cursor.visible = true;
+        }
+
+        public void PlayDeathAnimation()
+        {
+            if (_animator != null)
+                _animator.SetTrigger(_animIDLose);
         }
 
         //공격, 스펠
