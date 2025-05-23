@@ -19,6 +19,7 @@ namespace Spell.Model.Core
 
             gameObject.GetComponent<SpellBehaviorBase>().Caster = caster;
             gameObject.tag = "Player";
+            gameObject.layer = LayerMask.NameToLayer("TemporaryProjectile");
 
             ApplyVFX(gameObject, data);
             return gameObject;

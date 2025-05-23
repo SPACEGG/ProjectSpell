@@ -65,7 +65,8 @@ namespace Spell.Model.Behaviors
             rb.linearVelocity = direction.normalized * spellData.Speed;
 
             // Destroy 코루틴은 복제체에서만 실행
-            projectile.GetComponent<ProjectileBehavior>().StartCoroutine(DestroyAfterSeconds(projectile, spellData.Duration));
+            projectileB.StartCoroutine(DestroyAfterSeconds(projectile, spellData.Duration));
+            projectileB.StartCoroutine(SetToDefaultLayer(projectile, 1f));
         }
 
         private Vector3 CalculateDirection(int index, int totalCount, SpellData spellData)
@@ -92,6 +93,13 @@ namespace Spell.Model.Behaviors
             yield return new WaitForSeconds(duration);
 
             if (obj) Destroy(obj);
+        }
+
+        private IEnumerator SetToDefaultLayer(GameObject obj, float duration)
+        {
+            yield return new WaitForSeconds(duration);
+
+            obj.layer = LayerMask.NameToLayer("Default");
         }
     }
 }
