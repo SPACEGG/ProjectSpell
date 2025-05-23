@@ -20,7 +20,7 @@ namespace Spell.Model.Core
 
         [SerializeField] private float defaultAttackDuration = 2f;
         [SerializeField] private float recordIgnoreDuration = 0.5f;
-        [SerializeField] private Transform spellOrigin;
+        [SerializeField] private Transform castOrigin;
 
         private float _recordStartTime;
         private float _defaultAttackCooldown = 0f;
@@ -29,7 +29,7 @@ namespace Spell.Model.Core
         private SpellDataController _spellDataController;
         private NetworkHealthManaManager _healthManaManager;
         private NetworkPowerLevelManager _powerLevelManager;
-        public Transform CastOrigin => spellOrigin != null ? spellOrigin : transform;
+        public Transform CastOrigin => castOrigin != null ? castOrigin : transform;
 
         #region Unity Events
 
@@ -71,7 +71,14 @@ namespace Spell.Model.Core
 
                 Debug.Log("Attack key pressed");
                 Vector3 cameraTargetPosition = GetCameraTargetPosition();
-                Vector3 direction = (cameraTargetPosition - transform.position).normalized;
+                Vector3 direction = (cameraTargetPosition - CastOrigin.position).normalized;
+
+                // 위로 살짝 올려 포물선 효과
+                direction.y += 0.2f;
+                direction = direction.normalized;
+
+                // 디버그 로그 추가
+                Debug.Log($"[DefaultAttack] cameraTargetPosition: {cameraTargetPosition}, CastOrigin.position: {CastOrigin.position}, direction: {direction}");
 
                 var spell = SpellDataFactory.Create();
                 spell.Direction = direction;
@@ -139,7 +146,7 @@ namespace Spell.Model.Core
                 _recordController.GetRecordingClip(),
                 powerLevel,
                 cameraTargetPosition,
-                transform.position
+                CastOrigin.position
             );
 
             if (spelldata == null)
@@ -159,6 +166,8 @@ namespace Spell.Model.Core
         // 내가 시전한 주문 (로컬 입력 기반)
         public void CastSpellAsOriginator(SpellData spellData, int seed = 0)
         {
+            // 캐릭터 앞쪽(예: 1.0f만큼)으로 오프셋
+            spellData.PositionOffset = CastOrigin.forward * 1.0f; // 1.0f는 원하는 거리로 조절
             // 시전자 기준으로 스폰 위치 계산
             spellData.SpawnPosition = CastOrigin.position + spellData.PositionOffset;
             CastSpell(spellData, seed);
@@ -167,6 +176,8 @@ namespace Spell.Model.Core
         // 다른 플레이어가 시전한 주문 (서버를 통해 받은 SpellData 기반)
         public void CastSpellAsReceiver(SpellData spellData, int seed)
         {
+            // 캐릭터 앞쪽(예: 1.0f만큼)으로 오프셋
+            spellData.PositionOffset = CastOrigin.forward * 1.0f; // 1.0f는 원하는 거리로 조절
             // 이미 계산된 SpawnPosition 사용
             CastSpell(spellData, seed);
         }

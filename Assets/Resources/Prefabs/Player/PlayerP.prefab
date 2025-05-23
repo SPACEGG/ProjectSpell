@@ -1430,7 +1430,7 @@ MonoBehaviour:
   level3SelectKey: 51
   defaultAttackDuration: 2
   recordIgnoreDuration: 0.5
-  spellOrigin: {fileID: 0}
+  castOrigin: {fileID: 8490075579171499050}
 --- !u!114 &-8453940035982285506
 MonoBehaviour:
   m_ObjectHideFlags: 0
