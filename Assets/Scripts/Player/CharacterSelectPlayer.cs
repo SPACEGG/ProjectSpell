@@ -3,6 +3,7 @@ using Entity.Prefabs;
 using Multiplay;
 using TMPro;
 using UnityEngine;
+using Random = UnityEngine.Random;
 
 namespace Player
 {
@@ -12,10 +13,12 @@ namespace Player
         [SerializeField] private GameObject readyGameObject;
         [SerializeField] private TextMeshPro playerNameText;
         [SerializeField] private WizardBodyVisual playerVisual;
+        [SerializeField] private Animator animator;
 
         private void Awake()
         {
             readyGameObject.SetActive(false);
+            animator.Play($"Idle{Random.Range(1, 4)}");
         }
 
         private void Start()
