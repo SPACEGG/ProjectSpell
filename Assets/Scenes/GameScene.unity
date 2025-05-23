@@ -306,7 +306,7 @@ MonoBehaviour:
           m_FloatArgument: 0
           m_StringArgument: 
           m_BoolArgument: 0
-        m_CallState: 2
+        m_CallState: 1
 --- !u!114 &208990506
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -3136,7 +3136,7 @@ MonoBehaviour:
           m_FloatArgument: 0
           m_StringArgument: 
           m_BoolArgument: 0
-        m_CallState: 2
+        m_CallState: 1
 --- !u!114 &1747972423
 MonoBehaviour:
   m_ObjectHideFlags: 0

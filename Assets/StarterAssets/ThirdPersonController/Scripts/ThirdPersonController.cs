@@ -163,6 +163,7 @@ namespace StarterAssets
             _fallTimeoutDelta = FallTimeout;
 
             var healthManager = GetComponent<Player.NetworkHealthManaManager>();
+
             if (healthManager == null && transform.parent != null)
             {
                 healthManager = transform.parent.GetComponent<Player.NetworkHealthManaManager>();
@@ -230,7 +231,6 @@ namespace StarterAssets
                 _animator.SetTrigger(_animIDLose);
                 isDie = true;
             }
-
             this.enabled = false;
         }
 
