@@ -142,11 +142,12 @@ namespace Spell.Model.Core
 
             Vector3 cameraTargetPosition = GetCameraTargetPosition();
 
+            // 여기서 CastOrigin.position을 캐스터 위치(casterPosition)로 넘김
             SpellData spelldata = await _spellDataController.BuildSpellDataAsync(
                 _recordController.GetRecordingClip(),
                 powerLevel,
                 cameraTargetPosition,
-                CastOrigin.position
+                CastOrigin.position // <--- 이 값이 "캐스터 위치"로 GPT 프롬프트에 전달됨
             );
 
             if (spelldata == null)
@@ -166,9 +167,6 @@ namespace Spell.Model.Core
         // 내가 시전한 주문 (로컬 입력 기반)
         public void CastSpellAsOriginator(SpellData spellData, int seed = 0)
         {
-            // 캐릭터 앞쪽(예: 1.0f만큼)으로 오프셋
-            spellData.PositionOffset = CastOrigin.forward * 1.0f; // 1.0f는 원하는 거리로 조절
-            // 시전자 기준으로 스폰 위치 계산
             spellData.SpawnPosition = CastOrigin.position + spellData.PositionOffset;
             CastSpell(spellData, seed);
         }
@@ -176,9 +174,7 @@ namespace Spell.Model.Core
         // 다른 플레이어가 시전한 주문 (서버를 통해 받은 SpellData 기반)
         public void CastSpellAsReceiver(SpellData spellData, int seed)
         {
-            // 캐릭터 앞쪽(예: 1.0f만큼)으로 오프셋
-            spellData.PositionOffset = CastOrigin.forward * 1.0f; // 1.0f는 원하는 거리로 조절
-            // 이미 계산된 SpawnPosition 사용
+            spellData.SpawnPosition = CastOrigin.position + spellData.PositionOffset;
             CastSpell(spellData, seed);
         }
 
