@@ -23,7 +23,7 @@ namespace Spell.Model.Core
             var spawnPosition = CastOrigin.position + offset;
 
             // SpellData 정보를 바탕으로 실제 동작/외형이 적용된 스펠 오브젝트 씬에 생성
-            var spellObject = SpellFactory.CreateSpellGameObject(data, caster);
+            var spellObject = SpellFactory.CreateSpellGameObject(data);
 
             spellObject.transform.position = spawnPosition;
 

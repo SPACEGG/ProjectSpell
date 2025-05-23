@@ -26,7 +26,6 @@ namespace Spell.Model.Actions
                         return;
                     }
                 }
-
                 manaProvider.ManaModel.GetMana(context.Value);
             }
 

@@ -207,7 +207,7 @@ namespace Spell.Model.Core
 
             var spawnPosition = data.SpawnPosition;
 
-            var spellObject = SpellFactory.CreateSpellGameObject(data, gameObject);
+            var spellObject = SpellFactory.CreateSpellGameObject(data);
             spellObject.transform.position = spawnPosition;
 
             var casterColliders = GetComponentsInChildren<Collider>();
@@ -223,6 +223,7 @@ namespace Spell.Model.Core
             var behavedSpellObject = spellObject.GetComponent<SpellBehaviorBase>();
 
             behavedSpellObject.RandomSeed = seed;
+            behavedSpellObject.Caster = gameObject;
             behavedSpellObject.Behave(data);
         }
     }

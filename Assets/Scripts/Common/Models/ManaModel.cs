@@ -31,7 +31,6 @@ namespace Common.Models
         public void GetMana(float amount)
         {
             if (amount <= 0) return;
-
             CurrentMana = Math.Min(MaxMana, CurrentMana + amount);
             OnManaChanged?.Invoke(CurrentMana);
         }

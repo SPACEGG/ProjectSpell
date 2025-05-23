@@ -46,7 +46,7 @@ namespace Spell.Model.Behaviors
                 var effectPrefab = Resources.Load<GameObject>("VFX/ActionEffects/Sparks explode pink");
                 if (effectPrefab != null)
                 {
-                    Object.Instantiate(effectPrefab, transform);
+                    Instantiate(effectPrefab, transform);
                 }
 
                 var audioClip = Resources.Load<AudioClip>("VFX/Sound/_Quazic");
@@ -54,7 +54,6 @@ namespace Spell.Model.Behaviors
                 {
                     AudioSource.PlayClipAtPoint(audioClip, transform.position, 1.0f);
                 }
-
                 MultiplayManager.Singleton.ApplyActions(ActionList, collision.gameObject, gameObject);
                 StartCoroutine(DestroyAfterSeconds(gameObject, 0.1f));
             }
@@ -70,6 +69,7 @@ namespace Spell.Model.Behaviors
             var projectileB = projectile.GetComponent<ProjectileBehavior>();
             projectileB.ActionList = spellData.Actions;
             projectileB.ActivateOnCollision = spellData.ActivateOnCollision;
+            projectileB.Caster = Caster;
 
             Rigidbody rb = projectile.GetComponent<Rigidbody>();
 
