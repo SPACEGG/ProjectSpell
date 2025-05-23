@@ -1362,6 +1362,7 @@ GameObject:
   - component: {fileID: -8453940035982285506}
   - component: {fileID: 7024685890963420412}
   - component: {fileID: 2396438464171641328}
+  - component: {fileID: -554264033379368752}
   m_Layer: 7
   m_Name: PlayerP
   m_TagString: Player
@@ -1477,6 +1478,27 @@ MonoBehaviour:
   ShowTopMostFoldoutHeaderGroup: 1
   wizardBodyVisual: {fileID: 6408018536406794444}
   playerArmature: {fileID: 8490075579171499050}
+--- !u!114 &-554264033379368752
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4775111611733399288}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 80fe35861e1e4189abd408e50cc82fda, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  networkHealthManaManager: {fileID: -8453940035982285506}
+  damagePopupPrefab: {fileID: 1501800706159081942, guid: a95f53cd289964945a5d05dfc15ca3b7, type: 3}
+  playerArmature: {fileID: 8490075579171499050}
+  popupDuration: 1
+  popupMoveSpeed: 1
+  popupFadeSpeed: 1
+  popupOffset: {x: 0, y: 1, z: 0}
+  damageColor: {r: 1, g: 0, b: 0, a: 1}
+  healColor: {r: 0, g: 1, b: 0, a: 1}
 --- !u!1 &4840187936126874192
 GameObject:
   m_ObjectHideFlags: 0

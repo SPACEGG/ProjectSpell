@@ -1,6 +1,6 @@
-using System.Collections;
 using TMPro;
 using UnityEngine;
+using DG.Tweening;
 
 namespace Gameplay.UI.Damage
 {
@@ -19,23 +19,31 @@ namespace Gameplay.UI.Damage
             _canvas = GetComponent<Canvas>();
             _mainCamera = Camera.main;
 
-            if (_textMesh is null)
+            if (_textMesh is null || _canvas is null)
             {
-                Debug.LogError("TextMeshProUGUI component not found in children!");
                 enabled = false;
                 return;
             }
 
-            if (_canvas is null)
-            {
-                Debug.LogError("Canvas component not found!");
-                enabled = false;
-                return;
-            }
-
-            // Set up the canvas
             _canvas.renderMode = RenderMode.WorldSpace;
             _canvas.worldCamera = _mainCamera;
+            _canvas.sortingOrder = 32767;
+            _canvas.transform.localScale = Vector3.one * 0.01f;
+
+            var rectTransform = GetComponent<RectTransform>();
+            if (rectTransform != null)
+            {
+                rectTransform.sizeDelta = new Vector2(25, 12);
+            }
+
+            _textMesh.fontSize = 36;
+            _textMesh.alignment = TextAlignmentOptions.Center;
+            _textMesh.enableWordWrapping = false;
+            _textMesh.overflowMode = TextOverflowModes.Overflow;
+            _textMesh.raycastTarget = false;
+            _textMesh.fontStyle = FontStyles.Bold;
+            _textMesh.outlineWidth = 0.2f;
+            _textMesh.outlineColor = new Color(0, 0, 0, 1);
         }
 
         public void Initialize(string text, Color color, float duration, float moveSpeed, float fadeSpeed)
@@ -46,40 +54,46 @@ namespace Gameplay.UI.Damage
 
             _textMesh.text = text;
             _textMesh.color = color;
+
+            if (_mainCamera != null)
+            {
+                transform.forward = _mainCamera.transform.forward;
+            }
         }
 
         private void LateUpdate()
         {
-            if (_mainCamera is null) return;
+            if (_mainCamera is null)
+            {
+                _mainCamera = Camera.main;
+                if (_mainCamera is null) return;
+            }
 
             transform.forward = _mainCamera.transform.forward;
 
             float distance = Vector3.Distance(transform.position, _mainCamera.transform.position);
-
-            float scale = distance * 0.01f;
+            float scale = Mathf.Clamp(distance * 0.005f, 0.002f, 0.02f);
             transform.localScale = new Vector3(scale, scale, scale);
         }
 
-        public IEnumerator Animate()
+        public void Animate()
         {
-            float elapsedTime = 0f;
             var startPosition = transform.position;
-            var targetPosition = startPosition + Vector3.up * 2f;
+            var targetPosition = startPosition + Vector3.up * 3f;
 
-            while (elapsedTime < _duration)
-            {
-                elapsedTime += Time.deltaTime;
-                float progress = elapsedTime / _duration;
+            var sequence = DOTween.Sequence();
 
-                transform.position = Vector3.Lerp(startPosition, targetPosition, progress);
+            sequence.Append(transform.DOMove(targetPosition, _duration)
+                .SetEase(Ease.OutQuad));
 
-                _textColor.a = Mathf.Lerp(1f, 0f, progress * _fadeSpeed);
-                _textMesh.color = _textColor;
+            sequence.Join(_textMesh.DOFade(0f, _duration * _fadeSpeed)
+                .SetEase(Ease.InQuad));
 
-                yield return null;
-            }
+            sequence.Join(transform.DOScale(transform.localScale * 1.2f, _duration * 0.2f)
+                .SetEase(Ease.OutQuad)
+                .SetLoops(2, LoopType.Yoyo));
 
-            Destroy(gameObject);
+            sequence.OnComplete(() => Destroy(gameObject));
         }
     }
 }
