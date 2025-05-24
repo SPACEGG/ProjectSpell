@@ -207,16 +207,16 @@ namespace Spell.Model.Core
                 rb.useGravity = data.HasGravity;
                 rb.isKinematic = false;
                 rb.mass = 1000f;
-                rb.drag = 10f;
-                rb.angularDrag = 10f;
+                rb.linearDamping = 10f;
+                rb.angularDamping = 10f;
             }
             else
             {
                 rb.useGravity = data.HasGravity;
                 rb.isKinematic = false;
                 rb.mass = mass;
-                rb.drag = 0f;
-                rb.angularDrag = 0.05f;
+                rb.linearDamping = 0f;
+                rb.angularDamping = 0.05f;
             }
             rb.collisionDetectionMode = CollisionDetectionMode.Continuous;
         }
