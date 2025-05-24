@@ -17,6 +17,9 @@ namespace Spell.Model.Behaviors
         public List<SpellActionData> ActionList { get; set; }
         public bool ActivateOnCollision { get; set; }
 
+        private Rigidbody _rb;
+        private bool _alignForward = true;
+
         public override void Behave(SpellData spellData)
         {
             Random.InitState(RandomSeed);
@@ -39,8 +42,29 @@ namespace Spell.Model.Behaviors
             // 원본 오브젝트는 파괴하지 않고 비활성화만 함
         }
 
+        private void Start()
+        {
+            _rb = GetComponent<Rigidbody>();
+        }
+
+        private void FixedUpdate()
+        {
+            if (_alignForward)
+                AlignForwardToVelocity();
+        }
+
+        // 발사체의 각도를 날아가는 방향으로 향하게 하기
+        private void AlignForwardToVelocity()
+        {
+            // Y축이 길쭉한(세로) 프리팹을 날아가는 방향으로 맞추려면
+            // transform.up을 velocity 방향으로 맞춰야 함
+            if (_rb != null && _rb.linearVelocity.sqrMagnitude > 0.01f)
+                transform.up = _rb.linearVelocity.normalized;
+        }
+
         private void OnCollisionEnter(Collision collision)
         {
+            _alignForward = false;
             if (ActivateOnCollision && collision.gameObject.tag == "Player")
             {
                 var effectPrefab = Resources.Load<GameObject>("VFX/Particle/Hit1");
