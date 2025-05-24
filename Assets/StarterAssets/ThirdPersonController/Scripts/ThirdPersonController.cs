@@ -3,6 +3,7 @@ using Unity.Netcode;
 using Cinemachine;
 #if ENABLE_INPUT_SYSTEM
 using UnityEngine.InputSystem;
+using Gameplay;
 #endif
 
 /* Note: animations are called via the controller for both the character and capsule using animator null checks
@@ -102,6 +103,7 @@ namespace StarterAssets
         private int _animIDAttack;
         private int _animIDSpell;
         private int _animIDLose;
+        private int _animIDWin;
         private int _animIDDamaged;
 
 #if ENABLE_INPUT_SYSTEM
@@ -172,6 +174,18 @@ namespace StarterAssets
             {
                 healthManager.OnLocalPlayerDied += HandleDeathAnimation;
             }
+
+            if (ProjectSpellGameManager.Singleton != null)
+            {
+                ProjectSpellGameManager.Singleton.OnLocalPlayerWin += WinAnimation;
+            }
+            else
+            {
+                Debug.LogWarning("❌ ProjectSpellGameManager.Singleton is null. WinAnimation won't be subscribed.");
+            }
+            var gameManager = GetComponent<ProjectSpellGameManager>();
+
+
         }
 
         public override void OnNetworkSpawn()
@@ -221,6 +235,7 @@ namespace StarterAssets
             _animIDAttack = Animator.StringToHash("Attack");
             _animIDSpell = Animator.StringToHash("Spell");
             _animIDLose = Animator.StringToHash("Die");
+            _animIDWin = Animator.StringToHash("Win");
             _animIDDamaged = Animator.StringToHash("Damaged");
         }
 
@@ -233,13 +248,22 @@ namespace StarterAssets
             this.enabled = false;
         }
 
+        private void WinAnimation()
+        {
+            if (_animator != null)
+            {
+                _animator.SetTrigger(_animIDWin);
+            }
+            this.enabled = false;
+        }
+
         public void Damaged()
         {
             Debug.Log($"💥 플레이어가 피해를 입었습니다.");
 
             if (_hasAnimator)
             {
-                _animator?.SetTrigger("Damaged");
+                _animator?.SetTrigger(_animIDDamaged);
             }
         }
 

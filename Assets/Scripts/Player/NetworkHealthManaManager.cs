@@ -56,6 +56,12 @@ namespace Player
                 OnLocalPlayerDied?.Invoke();
                 GameEndUi.Singleton.ShowGameLoseUi();
             }
+
+            if (IsServer)
+            {
+                Gameplay.ProjectSpellGameManager.Singleton?.CheckPlayerWin(OwnerClientId);
+            }
+
         }
 
         private void FixedUpdate()
@@ -79,7 +85,7 @@ namespace Player
         [ClientRpc]
         private void DamagedClientRpc()
         {
-            if (!IsOwner) return; // 내 클라이언트에서만 실행
+            if (!IsOwner) return;
 
             var controller = GetComponentInChildren<StarterAssets.ThirdPersonController>();
             controller?.Damaged();

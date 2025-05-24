@@ -27,9 +27,19 @@ namespace Gameplay.UI.Multiplay
             healthManaManager.OnPlayerDied += HealthManaManager_OnOnPlayerDied;
         }
 
+        public void Initialize(ProjectSpellGameManager PlayerWin)
+        {
+            PlayerWin.OnPlayerWin += ProjectSpellGameManager_OnPlayerWin;
+        }
+
         private void HealthManaManager_OnOnPlayerDied(object sender, EventArgs e)
         {
             ShowGameLoseUi();
+        }
+
+        private void ProjectSpellGameManager_OnPlayerWin(object sender, EventArgs e)
+        {
+            ShowGameWinUi();
         }
 
         private void Start()
