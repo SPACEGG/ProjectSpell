@@ -21,9 +21,13 @@ namespace Spell.Apis
 
 ## 파워레벨(PowerLevel) 안내
 - PowerLevel은 플레이어가 주문을 시전할 때 선택한 마법의 강도(1~3 등급)입니다.
-- PowerLevel이 높을수록 주문의 크기(Size), 속도(Speed), 지속시간(Duration), 피해량, 효과 범위 등 마법의 전반적인 성능이 강해져야 합니다.
-- PowerLevel이 1이면 약한 주문, 2면 중간, 3이면 강력한 주문이 되도록 모든 수치와 연출을 조정하세요.
-- 예시: PowerLevel이 높을수록 더 큰 불덩이, 더 많은 투사체, 더 빠른 투사체, 더 넓은 범위, 더 긴 지속시간, 더 화려한 이펙트 등을 적용합니다.
+- **파워레벨(PowerLevel)에 따라 아래 상한을 반드시 지키세요:**
+    - PowerLevel 1: Count(생성 개수) 최대 1, Size(각 축) 최대 5, Speed 최대 10
+    - PowerLevel 2: Count 최대 5, Size 최대 10, Speed 최대 13
+    - PowerLevel 3: Count 최대 10, Size 최대 20, Speed 최대 18
+- **파워레벨이 높을수록 여러 개, 더 크게, 더 빠르게 생성할 수 있지만, 각 상한을 넘지 않도록 하세요.**
+- **방패(Shield, Capsule 등)는 Size를 최대치까지 쓰지 말고, 적당히 넓고 두껍게(예: 15x20x5) 설정하세요.**
+- **크기를 크게하는 주문이 직접적으로 들어오지 않으면 굳이 최대값을 쓰지 마세요.**
 
 ## Actions(주문 효과) 필드 안내
 - Actions는 주문이 발동될 때 적용되는 효과(데미지, 힐, 넉백, 마나 회복 등)를 배열로 명시합니다.
@@ -31,7 +35,16 @@ namespace Spell.Apis
     - Action: 효과 타입 (Damage, Heal, Knockback, ManaRegen 중 하나, 반드시 PascalCase)
     - Target: 효과의 대상 (Caster, Activator, Global 중 하나, 반드시 PascalCase)
     - Value: 효과의 수치(예: 데미지량, 힐량, 넉백 세기 등, float, 0보다 커야 함)
-- 최대 체력이 500이므로 파워레벨에 따른 적절한 수치를 정해주세요.
+- 최대 체력이 500이므로 데미지나 체력회복은 10~100 사이로 설정하세요.
+- ** 파워 레벨에 따라 Actions의 Value 값은 다음과 같이 제한됩니다:**
+    - PowerLevel 1: 최대 30
+    - PowerLevel 2: 최대 50
+    - PowerLevel 3: 최대 100
+- 마나 최대치가 300이므로 마나 회복 효과는 20~50 사이로 설정하세요.
+- **파워 레벨에 따라 ManaRegen의 Value 값은 다음과 같이 제한됩니다:**
+    - PowerLevel 1: 최대 20
+    - PowerLevel 2: 최대 30
+    - PowerLevel 3: 최대 50
 - 예시:
   Actions: [
     { ""Action"": ""Damage"", ""Target"": ""Activator"", ""Value"": 30.0 },
@@ -50,12 +63,11 @@ namespace Spell.Apis
 - '카메라 타겟 위치(cameraTargetPosition)'는 화면 중앙에서 Ray를 쏴서 처음 만나는 오브젝트(상대방 캐릭터, 환경, 스펠 오브젝트 등)의 월드 좌표입니다.
 - '캐스터 위치(casterPosition)'는 주문을 시전하는 플레이어(시전자 앞)의 월드 좌표입니다.
 - 반드시 이 두 좌표를 주문의 생성 위치 오프셋(PositionOffset)과 방향(Direction) 계산에 적극적으로 참고하세요.
-PositionOffset = [0, 0, 0] 이면 시전자의 바로 앞입니다. 이는 일반적으로 발사체를 던지는 경우에 해당합니다.
-PositionOffset = (cameraTargetPosition + [0, 적당한 y값, 0]) 이면 상대방의 머리 위쪽 위치입니다. 운석같은 발사체를 떨어트리는 경우에 해당합니다.
+PositionOffset = [0, 0, 0] 이면 시전자의 바로 앞입니다. 이는 일반적인 발사체를 던지는 경우에 해당합니다.
+PositionOffset = (cameraTargetPosition + [0, 적당한 y값, 0]- casterPosition) 이면 상대방의 머리 위쪽 위치입니다. 운석같은 발사체를 떨어트리는 경우에 해당합니다.
 Direction = (cameraTargetPosition - casterPosition) 이면 시전자로부터 상대방으로의 방향입니다. 이는 일반적으로 발사체를 던지는 경우에 해당합니다.
 Direction = [0, -1, 0] 이면 위에서 아래 방향으로, 이는 운석같은 발사체를 떨어트리는 경우에 해당합니다.
-
-- 체력 회복 주문 같은 경우 뒤로 발사되게 해서 투사체에 플레이어 자신이 맞아야 합니다. 
+Direction = [0, 0, -1] 이면 시전자의 뒤쪽 방향입니다. 체력 회복 같은 주문을 시전할 때 사용합니다.
 
 ## 출력 규칙
 - 반드시 유효한 JSON 객체 하나만 반환하십시오.
@@ -66,19 +78,12 @@ Direction = [0, -1, 0] 이면 위에서 아래 방향으로, 이는 운석같은
 ## 값 선택 규칙
 - ""Element""와 ""Shape""는 정말로 해당하는 값이 없을 때만 ""None""을 사용하세요. 웬만하면 아래 목록 중에서 가장 적합한 값을 선택하세요.
 - ""Size""는 [x, y, z] 세 값 모두 0보다 커야 하며, 0이나 0.0은 절대 허용되지 않습니다.
-- **파워레벨(PowerLevel)에 따라 아래 상한을 반드시 지키세요:**
-    - PowerLevel 1: Count(생성 개수) 최대 1, Size(각 축) 최대 10, Speed 최대 10
-    - PowerLevel 2: Count 최대 5, Size 최대 20, Speed 최대 13
-    - PowerLevel 3: Count 최대 20, Size 최대 40, Speed 최대 18
-- **파워레벨이 높을수록 여러 개, 더 크게, 더 빠르게 생성할 수 있지만, 각 상한을 넘지 않도록 하세요.**
-- **방패(Shield, Capsule 등)는 Size를 최대치까지 쓰지 말고, 적당히 넓고 두껍게(예: [15, 20, 5]~[30, 40, 8]) 설정하세요.**
-- **""거대한"", ""거대하게"" 주문이 직접적으로 들어오지 않으면 굳이 최대값을 쓰지 마세요.**
 
 ## SpellData(JOSN) 속성 선택지 
 - 주문을 해석하고 주문자의 의도를 추론해서 속성값을 선택하세요
 
 ### Element (string)
-- ""None"" : 해당 없음 (최대한 사용 자제)
+- ""None"" : 해당 없음 (사용 금지)
 - ""Fire"" : 불과 관련된 주문
 - ""Ice"" : 얼음과 관련된 주문
 - ""Earth"" : 바위, 땅과 관련된 주문
@@ -89,7 +94,7 @@ Direction = [0, -1, 0] 이면 위에서 아래 방향으로, 이는 운석같은
 
 ### Shape (string)
 - ""Sphere"", ""Cube"", ""Capsule"", ""Cylinder""
-- ""None""은 형태가 없을 때만 사용 (가급적 피하세요)
+- None : 해당 없음 (사용 금지)
 
 ### MaterialName (string)
 // 주문에 사용할 수 있는 머티리얼 이름입니다.
@@ -165,20 +170,20 @@ Direction = [0, -1, 0] 이면 위에서 아래 방향으로, 이는 운석같은
 // ""Size"" (Vector3)
 // - 주문 오브젝트의 크기입니다. [x, y, z] 형태의 실수 벡터여야 하며, 세 값 모두 0보다 커야 합니다.
 // **파워레벨(PowerLevel)에 따라 Size의 각 축 최대값이 다릅니다:**
-// PowerLevel 1: 최대 10, PowerLevel 2: 최대 20, PowerLevel 3: 최대 40
+// PowerLevel 1: 최대 5, PowerLevel 2: 최대 10, PowerLevel 3: 최대 20
 // 반드시 해당 파워레벨의 상한을 넘지 않게 하세요.
-// **캐릭터 크기가 10이므로, 기본적으로 Size는 [20, 20, 20]처럼 캐릭터보다 훨씬 크게 설정하세요.**
-// **방패(Shield, Capsule 등)는 [30, 40, 8]처럼 넓고 두껍게, 파이어볼(불덩이, Sphere 등)은 [20, 20, 20] 이상으로 크게 하세요.**
 // **""거대한"", ""거대하게"" 등 주문에 등장하면 Size를 [60, 60, 60] 이상으로 매우 크게 설정하고, PositionOffset.y도 더 높게(예: 40~80) 올리세요.**
-// **Size가 커질수록 PositionOffset.y(생성 위치의 높이)도 비례해서 더 높게 설정하세요.**
+// **Size가 커질수록 PositionOffset.y(생성 위치의 높이)도 비례해서 높이를를 설정하세요.**
 
 // ""HasGravity"" (bool)
 // - true일 경우, 중력 영향을 받아 아래로 떨어집니다.
+// - 왠만한 투사체 주문의 경우우 항상 true로 설정하세요.
+// - 방패(Shield) 같은 주문은 false로 설정하세요.
 
 // ""PositionOffset"" (Vector3)
-// - 주문 오브젝트가 생성되는 위치 오프셋입니다. [x, y, z] 형태의 실수 벡터여야 하며, 시전자의 앞쪽 위치를 기준으로 합니다.
-// - 예: [0.0, 1.0, -1.5]는 시전자의 앞쪽 아래 위치입니다.
+// - 주문 오브젝트가 생성되는 위치 오프셋입니다. [x, y, z] 형태의 실수 벡터여야 하며, 시전자의 앞쪽 위치에서 오프셋이 더해진 위치가 스폰위치입니다.
 // - 상대방의 머리 위에 주문을 생성하려면 카메라 타겟 위치를 기준으로 적절한 y값을 설정하세요.
+// - 예: [0.0, 0.0, 1.5]는 시전자의 바로 앞에 생성합니다.
 
 // ""Direction"" (Vector3)
 // - 주문 오브젝트가 날아가는 방향입니다. [x, y, z] 형태의 실수 벡터여야 하며, 반드시 정규화된 벡터여야 합니다.
@@ -186,7 +191,7 @@ Direction = [0, -1, 0] 이면 위에서 아래 방향으로, 이는 운석같은
 
 // ""Count"" (int)
 // - 생성할 주문 오브젝트의 개수입니다. 파워레벨에 따라 최대값이 다릅니다:
-// PowerLevel 1: 최대 1, PowerLevel 2: 최대 5, PowerLevel 3: 최대 20
+// PowerLevel 1: 최대 1, PowerLevel 2: 최대 5, PowerLevel 3: 최대 10
 
 // ""Actions"" (SpellActionData[])
 // - 주문이 발동될 때 적용되는 효과들의 배열입니다.
@@ -203,10 +208,17 @@ Direction = [0, -1, 0] 이면 위에서 아래 방향으로, 이는 운석같은
 // - 5보다 큰 실수여야 하며, 고정형 주문은 충분히 긴 시간(예: 30.0)으로 설정하세요.
 
 // ""SpreadAngle"" (float)
-// - 발사체가 퍼지는 각도입니다.
+// - 여러 개의 발사체가 생성될 때, 각 발사체가 퍼지는 각도(도 단위)입니다.
+// - SpreadAngle이 0이면 모두 같은 방향, 값이 크면 부채꼴로 넓게 퍼집니다.
+// - 일반적으로 0~30 사이의 값을 사용하세요.
 
 // ""SpreadRange"" (float)
-// - 발사체가 생성되는 범위입니다.
+// - 여러 개의 발사체가 생성될 때, 생성 위치가 원형으로 퍼지는 반지름(거리, 단위: 미터)입니다.
+// - Count가 1이면 0, Count가 2 이상이면 1~5 사이의 값(보통 2~3)을 사용하세요.
+// - SpreadRange가 0이면 모두 같은 위치에 생성되고, 값이 크면 더 넓게 원형으로 분산되어 생성됩니다.
+// - 실제로는 각 발사체가 시전자 기준 원형으로 배치됩니다.
+// - 스펠의 크기가 크고 Count가 많을수록 SpreadRange를 크게 설정하세요.
+// - 예: Count가 5이고 SpreadRange가 3이면, 시전자 주변에 반지름 3m 원형으로 5개의 발사체가 퍼져서 생성됩니다.
 
 // ""ActivateOnCollision"" (bool)
 // - 충돌 시 활성화 여부를 나타냅니다.
@@ -230,7 +242,7 @@ Direction = [0, -1, 0] 이면 위에서 아래 방향으로, 이는 운석같은
   ""Shape"": ""Sphere"",
   ""Size"": [3.0, 3.0, 3.0],
   ""HasGravity"": false,
-  ""PositionOffset"": [0.0, 3.0, -1.5],
+  ""PositionOffset"": [0.0, 0.0, -0.0],
   ""Direction"": [0.0, 0.0, -1.0],
   ""Count"": 1,
   ""Speed"": 6.0,
@@ -240,7 +252,7 @@ Direction = [0, -1, 0] 이면 위에서 아래 방향으로, 이는 운석같은
   ""ActivateOnCollision"": true,
   ""MaterialName"": ""Ice"",
   ""MeshName"": ""smallRock2"",
-  ""ParticleName"": ""Sparks_red"",
+  ""ParticleName"": ""Spark1"",
   ""TrailName"": ""FireEffect"",
   ""SoundName"": ""syung"",
   ""Actions"": [
@@ -262,17 +274,17 @@ Direction = [0, -1, 0] 이면 위에서 아래 방향으로, 이는 운석같은
   ""Shape"": ""Capsule"",
   ""Size"": [15.0, 20.0, 5.0],
   ""HasGravity"": false,
-  ""PositionOffset"": [0.0, 10.0, 3.5],
+  ""PositionOffset"": [0.0, 0.0, 3.5],
   ""Direction"": [0.0, 0.0, 0.0],
   ""Count"": 1,
-  ""Speed"": 0.0, 
+  ""Speed"": 0.0,
   ""Duration"": 30.0,
   ""SpreadAngle"": 0.0,
   ""SpreadRange"": 0.0,
   ""ActivateOnCollision"": false,
   ""MaterialName"": ""Earth"",
   ""MeshName"": ""Shield1"",
-  ""ParticleName"": ""Sparks_red"",
+  ""ParticleName"": ""Hit"",
   ""TrailName"": ""FireEffect"",
   ""SoundName"": ""None"",
   ""Actions"": []
@@ -290,19 +302,19 @@ Direction = [0, -1, 0] 이면 위에서 아래 방향으로, 이는 운석같은
   ""Element"": ""Fire"",
   ""Behavior"": ""Projectile"",
   ""Shape"": ""Sphere"",
-  ""Size"": [40.0, 40.0, 40.0],
+  ""Size"": [20.0, 20.0, 20.0],
   ""HasGravity"": true,
-  ""PositionOffset"": [7.0, 60.0, 30.0],
+  ""PositionOffset"": [7.0, 20.0, 30.0],
   ""Direction"": [0.22, -0.47, 0.85],
-  ""Count"": 20,
+  ""Count"": 10,
   ""Speed"": 18.0,
   ""Duration"": 10,
   ""SpreadAngle"": 15.0,
-  ""SpreadRange"": 2.0,
+  ""SpreadRange"": 3.0,
   ""ActivateOnCollision"": true,
   ""MaterialName"": ""Fire"",
   ""MeshName"": ""BigRock1"",
-  ""ParticleName"": ""Sparks_red"",
+  ""ParticleName"": ""Fire"",
   ""TrailName"": ""FireEffect"",
   ""SoundName"": ""Quang"",
   ""Actions"": [
@@ -323,30 +335,30 @@ Direction = [0, -1, 0] 이면 위에서 아래 방향으로, 이는 운석같은
   ""Element"": ""Fire"",
   ""Behavior"": ""Projectile"",
   ""Shape"": ""Sphere"",
-  ""Size"": [20.0, 20.0, 20.0],
+  ""Size"": [10.0, 10.0, 10.0],
   ""HasGravity"": true,
-  ""PositionOffset"": [1.0, 20.0, 8.0],
+  ""PositionOffset"": [1.0, 10.0, 8.0],
   ""Direction"": [0.0, -1.0, 0.0],
   ""Count"": 5,
   ""Speed"": 13.0,
   ""Duration"": 10.0,
   ""SpreadAngle"": 0.0,
-  ""SpreadRange"": 0.0,
+  ""SpreadRange"": 2.0,
   ""ActivateOnCollision"": true,
   ""MaterialName"": ""Fire"",
   ""MeshName"": ""BigRock1"",
-  ""ParticleName"": ""Sparks_red"",
+  ""ParticleName"": ""Fire"",
   ""TrailName"": ""FireEffect"",
   ""SoundName"": ""Quang"",
   ""Actions"": [
-    { ""Action"": ""Damage"", ""Target"": ""Activator"", ""Value"": 120.0 }
+    { ""Action"": ""Damage"", ""Target"": ""Activator"", ""Value"": 50.0 }
   ]
 }
 
 [출력 규칙 요약]
 - 반드시 단일 JSON 객체만 출력
 - 모든 필드 포함, 누락 금지
-- null, undefined, "" 사용 금지
+- null, undefined, "",none 사용 금지
 - PascalCase만 사용 (Action, Target, Key들 모두)
 - Enum 값 외 값 사용 금지
 - 값 없는 경우라도 가장 가까운 대체 값 지정
