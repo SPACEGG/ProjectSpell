@@ -6,9 +6,7 @@ namespace Spell.Model.Enums
     /// </summary>
     public enum TrailNameType
     {
-        None,               // 트레일 없음 또는 기본값
-        VFX_Trail_Earth,    // 흙/돌/진동 이펙트
-        VFX_Trail_Fire,     // 불 속성
-        VFX_Trail_Ice       // 얼음 속성
+        None,         // 트레일 없음 또는 기본값
+        FireEffect    // 불/마법 궤적 이펙트 (Resources/VFX/TrailEffects/FireEffect.prefab)
     }
 }

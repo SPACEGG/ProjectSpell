@@ -6,7 +6,9 @@ namespace Spell.Model.Enums
     /// </summary>
     public enum ParticleNameType
     {
-        None,       // 파티클 없음 또는 기본값
-        Sparks_red  // 빨간 스파크, 작은 폭발 or 불씨 연출
+        None,    // 파티클 없음 또는 기본값
+        Fire,    // 불꽃 이펙트 (Fire.prefab)
+        Hit,     // 타격 이펙트 (Hit.prefab)
+        Spark1   // 스파크 이펙트 (Spark1.prefab)
     }
 }

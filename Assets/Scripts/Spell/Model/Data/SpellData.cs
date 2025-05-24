@@ -26,7 +26,7 @@ namespace Spell.Model.Data
         public string MaterialName { get; set; } // Materials 폴더용
         public string MeshName { get; set; }     // Meshes 폴더용
         public string ParticleName { get; set; } // Particles 폴더용
-        public string TrailName { get; set; }    // TrailEffects 폴더용
+        public string TrailName { get; set; }    // TrailEffects 폴더용 (예: "FireEffect")
         public string SoundName { get; set; }    // Sounds 폴더용
 
         // Spell 동작(Behavior)에서 참조하는 속성

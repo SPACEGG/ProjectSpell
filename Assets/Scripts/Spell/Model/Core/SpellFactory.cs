@@ -104,8 +104,8 @@ namespace Spell.Model.Core
             // === Mesh 적용 ===
             if (!string.IsNullOrEmpty(data.MeshName))
             {
-                // 실제 사용 가능한 MeshName: Big1, small1, small2, tall1, tall2
-                string meshPath = $"VFX/Meshes/Rock/{data.MeshName}";
+                // 실제 사용 가능한 MeshName: Axe1, Axe2, BigRock1, Hammer1, Mace1, Shield1, smallRock1, smallRock2, Spear1, Spear2, tallRock1, tallRock2
+                string meshPath = $"VFX/Meshes/{data.MeshName}";
                 var vfxMesh = Resources.Load<Mesh>(meshPath);
                 if (vfxMesh != null)
                 {

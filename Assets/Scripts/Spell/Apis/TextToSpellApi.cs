@@ -85,42 +85,46 @@ Direction = [0, -1, 0] 이면 위에서 아래 방향으로, 이는 운석같은
 - ""None""은 형태가 없을 때만 사용 (가급적 피하세요)
 
 ### MaterialName (string)
-- 주문에 사용할 수 있는 머티리얼 이름입니다.
-- 반드시 아래 Enum(MaterialNameType) 값 중 하나를 사용해야 합니다:
-  ""CrystalFree1"" : 푸른빛의 수정(크리스탈) 머티리얼
-  ""Glow_Fire""    : 밝은 주황색 빛나는 머티리얼
-  ""Glow_Ice""     : 밝은 푸른빛 빛나는 머티리얼
-  ""Gold""         : 금속성 골드 머티리얼
-  ""Ground""       : 어두운 회색/검정 땅 머티리얼
-  ""IceMaterial""  : 밝은 회청색 얼음 표면 머티리얼
-- 실제로는 Resources/VFX/Materials 폴더 내 파일명(확장자 .mat 제외)과 일치해야 합니다.
-- 반드시 빈 문자열("")이 아닌 Enum 값 중 하나를 사용해야 합니다.
+// 주문에 사용할 수 있는 머티리얼 이름입니다.
+// 반드시 아래 Enum(MaterialNameType) 값 중 하나를 사용해야 합니다:
+// ""Earth"" : 회색/흙/바위 머티리얼
+// ""Fire""  : 불/용암/붉은 머티리얼
+// ""Ice""   : 얼음/푸른 머티리얼
+// 실제로는 Resources/VFX/Materials 폴더 내 파일명(확장자 .mat 제외)과 일치해야 합니다.
+// 반드시 빈 문자열("")이 아닌 Enum 값 중 하나를 사용해야 합니다.
 
 ### MeshName (string)
-- 주문에 사용할 수 있는 메쉬 이름입니다.
-- 반드시 아래 Enum(MeshNameType) 값 중 하나를 사용해야 합니다:
-  ""Big1""   : 큼직한 바위
-  ""small1"" : 작은 바위1
-  ""small2"" : 작은 바위2
-  ""tall1""  : 길쭉한 바위1
-  ""tall2""  : 길쭉한 바위2
-- 실제로는 Resources/VFX/Meshes/Rock 폴더 내 파일명(확장자 .fbx 제외)과 일치해야 합니다.
-- 1또는 2는 반드시 붙여야 하며 랜덤하게 선택됩니다. 
-- 반드시 빈 문자열("")이 아닌 Enum 값 중 하나를 사용해야 합니다.
+// 주문에 사용할 수 있는 메쉬 이름입니다.
+// 주문과 관련된 메쉬를 지정하면서 2까지 붙은 번호는 1또는 2중 랜덤으로 선택하세요.
+// 반드시 아래 Enum(MeshNameType) 값 중 하나를 사용해야 합니다:
+// ""Axe1"" : 도끼 모양 메쉬
+// ""Axe2"" : 도끼 모양 메쉬
+// ""BigRock1"" : 큰 바위 모양 메쉬
+// ""Hammer1"" : 망치 모양 메쉬
+// ""Mace1"" : 철퇴 모양 메쉬
+// ""Shield1"" : 방패 모양 메쉬
+// ""smallRock1"" : 작은 바위 모양 메쉬
+// ""smallRock2"" : 작은 바위 모양 메쉬
+// ""Spear1"" : 창 모양 메쉬
+// ""Spear2"" : 창 모양 메쉬
+// ""tallRock1"" : 기둥 바위 모양 메쉬
+// ""tallRock2"" : 기둥 바위 모양 메쉬
+// 실제로는 Resources/VFX/Meshes 폴더 내 파일명(확장자 .fbx 제외)과 일치해야 합니다.
+// 반드시 빈 문자열("")이 아닌 Enum 값 중 하나를 사용해야 합니다.
 
 ### ParticleName (string)
-- 주문에 사용할 수 있는 파티클 프리팹 이름입니다.
-- 반드시 아래 Enum(ParticleNameType) 값 중 하나를 사용해야 합니다:
-  ""Sparks_red"" : 빨간 스파크, 작은 폭발 or 불씨 연출
-- 실제로는 Resources/VFX/Particles 폴더 내 프리팹 파일명(확장자 .prefab 제외)과 일치해야 합니다.
-- 반드시 빈 문자열("")이 아닌 Enum 값 중 하나를 사용해야 합니다.
+// 주문에 사용할 수 있는 파티클 프리팹 이름입니다.
+// 반드시 아래 Enum(ParticleNameType) 값 중 하나를 사용해야 합니다:
+// ""Fire"" : 불꽃 이펙트 (Fire.prefab)
+// ""Hit"" : 타격 이펙트 (Hit.prefab)
+// ""Spark1"" : 스파크 이펙트 (Spark1.prefab)
+// 실제로는 Resources/VFX/Particles 폴더 내 프리팹 파일명(확장자 .prefab 제외)과 일치해야 합니다.
+// 반드시 빈 문자열("")이 아닌 Enum 값 중 하나를 사용해야 합니다.
 
 ### TrailName (string)
 - 주문에 사용할 수 있는 트레일 이펙트 프리팹 이름입니다.
 - 반드시 아래 Enum(TrailNameType) 값 중 하나를 사용해야 합니다:
-  ""VFX_Trail_Earth"" : 흙/돌/진동 이펙트. 갈색 또는 돌 부스러기처럼 무거운 궤적 연출 예상
-  ""VFX_Trail_Fire""  : 불 속성. 주황색/붉은 불꽃이 따라붙는 열기 강한 궤적
-  ""VFX_Trail_Ice""   : 얼음 속성. 파란색 결정 파편, 서리 입자처럼 차가운 자취
+  ""FireEffect"" : 불/마법 궤적 이펙트 (Resources/VFX/TrailEffects/FireEffect.prefab)
 - 실제로는 Resources/VFX/TrailEffects 폴더 내 프리팹 파일명(확장자 .prefab 제외)과 일치해야 합니다.
 - 반드시 빈 문자열("")이 아닌 Enum 값 중 하나를 사용해야 합니다.
 
@@ -186,8 +190,8 @@ Direction = [0, -1, 0] 이면 위에서 아래 방향으로, 이는 운석같은
 // - 충돌 시 활성화 여부를 나타냅니다.
 
 // ""MaterialName"", ""MeshName"", ""ParticleName"", ""TrailName"", ""SoundName"" (string)
-// - 각각 Resources/VFX/Materials, Meshes, Particles, TrailEffects, Sounds 폴더 내 실제 파일명(확장자 제외)과 일치해야 합니다.
-// - MaterialName, MeshName, ParticleName, TrailName, SoundName은 반드시 빈 문자열("")이 아닌 실제 Enum 값 중 하나를 사용해야 합니다.
+// 각각 Resources/VFX/Materials, Meshes, Particles, TrailEffects, Sounds 폴더 내 실제 파일명(확장자 제외)과 일치해야 합니다.
+// MaterialName, MeshName, ParticleName, TrailName, SoundName은 반드시 빈 문자열("")이 아닌 실제 Enum 값 중 하나를 사용해야 합니다.
 
 ## Few-shot 예제
 ### 입력:
@@ -212,10 +216,10 @@ Direction = [0, -1, 0] 이면 위에서 아래 방향으로, 이는 운석같은
   ""SpreadAngle"": 15.0,
   ""SpreadRange"": 2.0,
   ""ActivateOnCollision"": true,
-  ""MaterialName"": ""Glow_Fire"",
-  ""MeshName"": ""Big1"",
+  ""MaterialName"": ""Fire"",
+  ""MeshName"": ""BigRock1"",
   ""ParticleName"": ""Sparks_red"",
-  ""TrailName"": ""VFX_Trail_Fire"",
+  ""TrailName"": ""FireEffect"",
   ""SoundName"": ""Quang"",
   ""Actions"": [
     { ""Action"": ""Damage"", ""Target"": ""Activator"", ""Value"": 80.0 },
@@ -245,10 +249,10 @@ Direction = [0, -1, 0] 이면 위에서 아래 방향으로, 이는 운석같은
   ""SpreadAngle"": 0.0,
   ""SpreadRange"": 0.0,
   ""ActivateOnCollision"": true,
-  ""MaterialName"": ""CrystalFree1"",
-  ""MeshName"": ""small2"",
+  ""MaterialName"": ""Ice"",
+  ""MeshName"": ""smallRock2"",
   ""ParticleName"": ""Sparks_red"",
-  ""TrailName"": ""VFX_Trail_Ice"",
+  ""TrailName"": ""FireEffect"",
   ""SoundName"": ""syung"",
   ""Actions"": [
     { ""Action"": ""Heal"", ""Target"": ""Caster"", ""Value"": 20.0 }
@@ -277,10 +281,10 @@ Direction = [0, -1, 0] 이면 위에서 아래 방향으로, 이는 운석같은
   ""SpreadAngle"": 0.0,
   ""SpreadRange"": 0.0,
   ""ActivateOnCollision"": false,
-  ""MaterialName"": ""Gold"",
-  ""MeshName"": ""tall1"",
+  ""MaterialName"": ""Earth"",
+  ""MeshName"": ""Shield1"",
   ""ParticleName"": ""Sparks_red"",
-  ""TrailName"": ""VFX_Trail_Earth"",
+  ""TrailName"": ""FireEffect"",
   ""SoundName"": ""None"",
   ""Actions"": []
 }
@@ -307,10 +311,10 @@ Direction = [0, -1, 0] 이면 위에서 아래 방향으로, 이는 운석같은
   ""SpreadAngle"": 5.0,
   ""SpreadRange"": 0.5,
   ""ActivateOnCollision"": true,
-  ""MaterialName"": ""Ground"",
-  ""MeshName"": ""small1"",
+  ""MaterialName"": ""Earth"",
+  ""MeshName"": ""BigRock1"",
   ""ParticleName"": ""Sparks_red"",
-  ""TrailName"": ""VFX_Trail_Earth"",
+  ""TrailName"": ""FireEffect"",
   ""SoundName"": ""pung"",
   ""Actions"": [
     { ""Action"": ""Damage"", ""Target"": ""Activator"", ""Value"": 50.0 }

@@ -43,7 +43,7 @@ namespace Spell.Model.Behaviors
         {
             if (ActivateOnCollision && collision.gameObject.tag == "Player")
             {
-                var effectPrefab = Resources.Load<GameObject>("VFX/ActionEffects/Dust puff");
+                var effectPrefab = Resources.Load<GameObject>("VFX/Particle/Hit1");
                 if (effectPrefab != null)
                 {
                     Instantiate(effectPrefab, transform);
