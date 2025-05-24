@@ -197,8 +197,27 @@ namespace Spell.Model.Core
             var rb = gameObject.GetComponent<Rigidbody>();
             if (rb == null)
                 rb = gameObject.AddComponent<Rigidbody>();
-            rb.useGravity = data.HasGravity;
-            rb.isKinematic = false;
+
+            // 크기에 따라 질량 자동 설정 (x*y*z 비례, 최소값 1)
+            float mass = Mathf.Max(1f, data.Size.x * data.Size.y * data.Size.z);
+
+            // ActiveOnCollision이 false면 매우 무겁게(밀리지 않게)
+            if (data.ActivateOnCollision == false)
+            {
+                rb.useGravity = data.HasGravity;
+                rb.isKinematic = false;
+                rb.mass = 1000f;
+                rb.drag = 10f;
+                rb.angularDrag = 10f;
+            }
+            else
+            {
+                rb.useGravity = data.HasGravity;
+                rb.isKinematic = false;
+                rb.mass = mass;
+                rb.drag = 0f;
+                rb.angularDrag = 0.05f;
+            }
             rb.collisionDetectionMode = CollisionDetectionMode.Continuous;
         }
     }
