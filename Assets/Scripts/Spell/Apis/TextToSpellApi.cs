@@ -66,10 +66,13 @@ Direction = [0, -1, 0] 이면 위에서 아래 방향으로, 이는 운석같은
 ## 값 선택 규칙
 - ""Element""와 ""Shape""는 정말로 해당하는 값이 없을 때만 ""None""을 사용하세요. 웬만하면 아래 목록 중에서 가장 적합한 값을 선택하세요.
 - ""Size""는 [x, y, z] 세 값 모두 0보다 커야 하며, 0이나 0.0은 절대 허용되지 않습니다.
-- **캐릭터 크기가 10이므로, 기본적으로 Size는 [20, 20, 20]처럼 캐릭터보다 훨씬 크게 설정하세요.**
-- **방패(Shield, Capsule 등)는 [30, 40, 8]처럼 넓고 두껍게, 파이어볼(불덩이, Sphere 등)은 [20, 20, 20] 이상으로 크게 하세요.**
-- **""거대한"", ""거대하게"" 등 주문에 등장하면 Size를 [60, 60, 60] 이상으로 매우 크게 설정하고, PositionOffset.y도 더 높게(예: 40~80) 올리세요.**
-- **Size가 커질수록 PositionOffset.y(생성 위치의 높이)도 비례해서 더 높게 설정하세요.**
+- **파워레벨(PowerLevel)에 따라 아래 상한을 반드시 지키세요:**
+    - PowerLevel 1: Count(생성 개수) 최대 1, Size(각 축) 최대 10, Speed 최대 10
+    - PowerLevel 2: Count 최대 5, Size 최대 20, Speed 최대 13
+    - PowerLevel 3: Count 최대 20, Size 최대 40, Speed 최대 18
+- **파워레벨이 높을수록 여러 개, 더 크게, 더 빠르게 생성할 수 있지만, 각 상한을 넘지 않도록 하세요.**
+- **방패(Shield, Capsule 등)는 Size를 최대치까지 쓰지 말고, 적당히 넓고 두껍게(예: [15, 20, 5]~[30, 40, 8]) 설정하세요.**
+- **""거대한"", ""거대하게"" 주문이 직접적으로 들어오지 않으면 굳이 최대값을 쓰지 마세요.**
 
 ## SpellData(JOSN) 속성 선택지 
 - 주문을 해석하고 주문자의 의도를 추론해서 속성값을 선택하세요
@@ -161,6 +164,9 @@ Direction = [0, -1, 0] 이면 위에서 아래 방향으로, 이는 운석같은
 
 // ""Size"" (Vector3)
 // - 주문 오브젝트의 크기입니다. [x, y, z] 형태의 실수 벡터여야 하며, 세 값 모두 0보다 커야 합니다.
+// **파워레벨(PowerLevel)에 따라 Size의 각 축 최대값이 다릅니다:**
+// PowerLevel 1: 최대 10, PowerLevel 2: 최대 20, PowerLevel 3: 최대 40
+// 반드시 해당 파워레벨의 상한을 넘지 않게 하세요.
 // **캐릭터 크기가 10이므로, 기본적으로 Size는 [20, 20, 20]처럼 캐릭터보다 훨씬 크게 설정하세요.**
 // **방패(Shield, Capsule 등)는 [30, 40, 8]처럼 넓고 두껍게, 파이어볼(불덩이, Sphere 등)은 [20, 20, 20] 이상으로 크게 하세요.**
 // **""거대한"", ""거대하게"" 등 주문에 등장하면 Size를 [60, 60, 60] 이상으로 매우 크게 설정하고, PositionOffset.y도 더 높게(예: 40~80) 올리세요.**
@@ -179,7 +185,8 @@ Direction = [0, -1, 0] 이면 위에서 아래 방향으로, 이는 운석같은
 // - 상대방의 머리 위로 떨어뜨리는 주문은 [0.0, -1.0, 0.0]과 같이 위에서 아래 방향으로 설정하세요.
 
 // ""Count"" (int)
-// - 생성할 주문 오브젝트의 개수입니다. 1 이상의 정수여야 합니다.
+// - 생성할 주문 오브젝트의 개수입니다. 파워레벨에 따라 최대값이 다릅니다:
+// PowerLevel 1: 최대 1, PowerLevel 2: 최대 5, PowerLevel 3: 최대 20
 
 // ""Actions"" (SpellActionData[])
 // - 주문이 발동될 때 적용되는 효과들의 배열입니다.
@@ -188,7 +195,8 @@ Direction = [0, -1, 0] 이면 위에서 아래 방향으로, 이는 운석같은
 // - 효과가 없으면 빈 배열([])로 반환하세요.
 
 // ""Speed"" (float)
-// - 투사체의 속도입니다. 0보다 커야 하며, 고정형 주문(예: 방패)은 0.0으로 설정 가능합니다.
+// - 투사체의 속도입니다. 파워레벨에 따라 최대값이 다릅니다:
+// PowerLevel 1: 최대 10, PowerLevel 2: 최대 13, PowerLevel 3: 최대 18
 
 // ""Duration"" (float)
 // - 주문 오브젝트가 존재하는 시간(초 단위)입니다.
@@ -209,39 +217,6 @@ Direction = [0, -1, 0] 이면 위에서 아래 방향으로, 이는 운석같은
 
 ## Few-shot 예제
 ### 입력:
-[PowerLevel: 3]
-[CameraTargetPosition: 12.0, 0.0, 40.0]
-[CasterPosition: 5.0, 1.0, 10.0]
-메테오!
-
-### 출력:
-{
-  ""Name"": ""MeteorStrike"",
-  ""Element"": ""Fire"",
-  ""Behavior"": ""Projectile"",
-  ""Shape"": ""Sphere"",
-  ""Size"": [20.0, 20.0, 20.0],
-  ""HasGravity"": true,
-  ""PositionOffset"": [7.0, 40.0, 30.0],
-  ""Direction"": [0.22, -0.47, 0.85],
-  ""Count"": 5,
-  ""Speed"": 12.0,
-  ""Duration"": 10,
-  ""SpreadAngle"": 15.0,
-  ""SpreadRange"": 2.0,
-  ""ActivateOnCollision"": true,
-  ""MaterialName"": ""Fire"",
-  ""MeshName"": ""BigRock1"",
-  ""ParticleName"": ""Sparks_red"",
-  ""TrailName"": ""FireEffect"",
-  ""SoundName"": ""Quang"",
-  ""Actions"": [
-    { ""Action"": ""Damage"", ""Target"": ""Activator"", ""Value"": 80.0 },
-    { ""Action"": ""Knockback"", ""Target"": ""Activator"", ""Value"": 25.0 }
-  ]
-}
-
-### 입력:
 [PowerLevel: 1]
 [CameraTargetPosition: 5.0, 1.0, 9.0]
 [CasterPosition: 5.0, 1.0, 10.0]
@@ -253,12 +228,12 @@ Direction = [0, -1, 0] 이면 위에서 아래 방향으로, 이는 운석같은
   ""Element"": ""Common"",
   ""Behavior"": ""Projectile"",
   ""Shape"": ""Sphere"",
-  ""Size"": [20.0, 20.0, 20.0],
+  ""Size"": [3.0, 3.0, 3.0],
   ""HasGravity"": false,
-  ""PositionOffset"": [0.0, 10.0, -1.5],
+  ""PositionOffset"": [0.0, 3.0, -1.5],
   ""Direction"": [0.0, 0.0, -1.0],
   ""Count"": 1,
-  ""Speed"": 2.5,
+  ""Speed"": 6.0,
   ""Duration"": 3.0,
   ""SpreadAngle"": 0.0,
   ""SpreadRange"": 0.0,
@@ -285,9 +260,9 @@ Direction = [0, -1, 0] 이면 위에서 아래 방향으로, 이는 운석같은
   ""Element"": ""Earth"",
   ""Behavior"": ""Projectile"",
   ""Shape"": ""Capsule"",
-  ""Size"": [30.0, 40.0, 8.0],
+  ""Size"": [15.0, 20.0, 5.0],
   ""HasGravity"": false,
-  ""PositionOffset"": [0.0, 20.0, 3.5],
+  ""PositionOffset"": [0.0, 10.0, 3.5],
   ""Direction"": [0.0, 0.0, 0.0],
   ""Count"": 1,
   ""Speed"": 0.0, 
@@ -304,6 +279,39 @@ Direction = [0, -1, 0] 이면 위에서 아래 방향으로, 이는 운석같은
 }
 
 ### 입력:
+[PowerLevel: 3]
+[CameraTargetPosition: 12.0, 0.0, 40.0]
+[CasterPosition: 5.0, 1.0, 10.0]
+메테오!
+
+### 출력:
+{
+  ""Name"": ""MeteorStrike"",
+  ""Element"": ""Fire"",
+  ""Behavior"": ""Projectile"",
+  ""Shape"": ""Sphere"",
+  ""Size"": [40.0, 40.0, 40.0],
+  ""HasGravity"": true,
+  ""PositionOffset"": [7.0, 60.0, 30.0],
+  ""Direction"": [0.22, -0.47, 0.85],
+  ""Count"": 20,
+  ""Speed"": 18.0,
+  ""Duration"": 10,
+  ""SpreadAngle"": 15.0,
+  ""SpreadRange"": 2.0,
+  ""ActivateOnCollision"": true,
+  ""MaterialName"": ""Fire"",
+  ""MeshName"": ""BigRock1"",
+  ""ParticleName"": ""Sparks_red"",
+  ""TrailName"": ""FireEffect"",
+  ""SoundName"": ""Quang"",
+  ""Actions"": [
+    { ""Action"": ""Damage"", ""Target"": ""Activator"", ""Value"": 80.0 },
+    { ""Action"": ""Knockback"", ""Target"": ""Activator"", ""Value"": 25.0 }
+  ]
+}
+
+### 입력:
 [PowerLevel: 2]
 [CameraTargetPosition: 6.0, 1.8, 18.0]
 [CasterPosition: 5.0, 1.0, 10.0]
@@ -315,12 +323,12 @@ Direction = [0, -1, 0] 이면 위에서 아래 방향으로, 이는 운석같은
   ""Element"": ""Fire"",
   ""Behavior"": ""Projectile"",
   ""Shape"": ""Sphere"",
-  ""Size"": [80.0, 80.0, 80.0],
+  ""Size"": [20.0, 20.0, 20.0],
   ""HasGravity"": true,
-  ""PositionOffset"": [1.0, 80.0, 8.0],
+  ""PositionOffset"": [1.0, 20.0, 8.0],
   ""Direction"": [0.0, -1.0, 0.0],
-  ""Count"": 1,
-  ""Speed"": 6.0,
+  ""Count"": 5,
+  ""Speed"": 13.0,
   ""Duration"": 10.0,
   ""SpreadAngle"": 0.0,
   ""SpreadRange"": 0.0,
@@ -331,7 +339,7 @@ Direction = [0, -1, 0] 이면 위에서 아래 방향으로, 이는 운석같은
   ""TrailName"": ""FireEffect"",
   ""SoundName"": ""Quang"",
   ""Actions"": [
-    { ""Action"": ""Damage"", ""Target"": ""Activator"", ""Value"": 200.0 }
+    { ""Action"": ""Damage"", ""Target"": ""Activator"", ""Value"": 120.0 }
   ]
 }
 

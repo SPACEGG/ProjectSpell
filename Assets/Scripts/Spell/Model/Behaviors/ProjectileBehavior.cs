@@ -85,10 +85,17 @@ namespace Spell.Model.Behaviors
 
         private void SpawnProjectile(Vector3 spawnPosition, int index, int totalCount, SpellData spellData)
         {
-            // 랜덤 오프셋 제거: 항상 동일한 위치에 생성
-            // Vector3 randomOffset = Random.insideUnitSphere * spellData.SpreadRange;
-            // GameObject projectile = Instantiate(gameObject, spawnPosition + randomOffset, Quaternion.identity);
-            GameObject projectile = Instantiate(gameObject, spawnPosition, Quaternion.identity);
+            // 여러 개 생성 시 항상 퍼져서 생성 (원형 분산)
+            Vector3 offset = Vector3.zero;
+            if (totalCount > 1)
+            {
+                float radius = Mathf.Max(spellData.Size.x, spellData.Size.z) * 0.6f + 1.0f;
+                float angle = 360f * index / Mathf.Max(1, totalCount);
+                float rad = angle * Mathf.Deg2Rad;
+                offset = new Vector3(Mathf.Cos(rad), 0, Mathf.Sin(rad)) * radius;
+            }
+
+            GameObject projectile = Instantiate(gameObject, spawnPosition + offset, Quaternion.identity);
             projectile.SetActive(true);
             var projectileB = projectile.GetComponent<ProjectileBehavior>();
             projectileB.ActionList = spellData.Actions;

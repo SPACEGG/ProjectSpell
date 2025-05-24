@@ -35,7 +35,7 @@ namespace Spell.Model.Core
                 Direction = Vector3.forward,
                 Count = 1,
                 Shape = ShapeType.Sphere,
-                Size = Vector3.one * 0.8f,
+                Size = Vector3.one * 2.0f,
                 HasGravity = true,
                 Speed = 30f,
                 Duration = 5f,
