@@ -1,4 +1,5 @@
-﻿using Spell.Model.Data;
+﻿using JetBrains.Annotations;
+using Spell.Model.Data;
 using UnityEngine;
 
 namespace Spell.Model.Behaviors
@@ -8,10 +9,9 @@ namespace Spell.Model.Behaviors
     /// </summary>
     public class FailureBehavior : SpellBehaviorBase
     {
-        public override void Behave(SpellData spellData)
+        public override void Behave([CanBeNull] SpellData spellData)
         {
-            Debug.LogWarning("FailureBehavior: 스펠 동작 실패! (정의되지 않은 BehaviorType)");
-            // 필요시 실패 이펙트 등 추가
+            Destroy(this, 1f);
         }
     }
 }

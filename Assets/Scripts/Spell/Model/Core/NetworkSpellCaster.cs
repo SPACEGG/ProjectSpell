@@ -1,5 +1,6 @@
 ﻿using Common.Models;
 using Cysharp.Threading.Tasks;
+using JetBrains.Annotations;
 using Spell.Model.Behaviors;
 using Spell.Model.Data;
 using Unity.Netcode;
@@ -78,7 +79,8 @@ namespace Spell.Model.Core
                 direction = direction.normalized;
 
                 // 디버그 로그 추가
-                Debug.Log($"[DefaultAttack] cameraTargetPosition: {cameraTargetPosition}, CastOrigin.position: {CastOrigin.position}, direction: {direction}");
+                Debug.Log(
+                    $"[DefaultAttack] cameraTargetPosition: {cameraTargetPosition}, CastOrigin.position: {CastOrigin.position}, direction: {direction}");
 
                 var spell = SpellDataFactory.Create();
                 spell.Direction = direction;
@@ -153,7 +155,6 @@ namespace Spell.Model.Core
             if (spelldata == null)
             {
                 Debug.LogError("SpellData creation failed!");
-                return;
             }
 
             int randomSeed = Random.Range(int.MinValue, int.MaxValue);
@@ -197,17 +198,18 @@ namespace Spell.Model.Core
         }
 
         // 실제 스펠 생성 및 적용 (위치 계산 없이 SpawnPosition 사용)
-        private void CastSpell(SpellData data, int seed)
+        private void CastSpell([CanBeNull] SpellData data, int seed)
         {
             if (data == null)
             {
-                Debug.LogWarning("Tried to cast null spell.");
+                Debug.LogError("SpellData is null!");
+                CastFailureSpell();
                 return;
             }
 
-            var spawnPosition = data.SpawnPosition;
-
             var spellObject = SpellFactory.CreateSpellGameObject(data);
+
+            var spawnPosition = data.SpawnPosition;
             spellObject.transform.position = spawnPosition;
 
             var casterColliders = GetComponentsInChildren<Collider>();
@@ -225,6 +227,16 @@ namespace Spell.Model.Core
             behavedSpellObject.RandomSeed = seed;
             behavedSpellObject.Caster = gameObject;
             behavedSpellObject.Behave(data);
+        }
+
+        private void CastFailureSpell()
+        {
+            var failureSpell = FailureSpellFactory.CreateSpellGameObject(castOrigin.position);
+
+            if (failureSpell.TryGetComponent(out FailureBehavior failureBehavior))
+            {
+                failureBehavior.Behave(null);
+            }
         }
     }
 }

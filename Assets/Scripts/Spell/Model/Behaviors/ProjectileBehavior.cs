@@ -109,7 +109,7 @@ namespace Spell.Model.Behaviors
 
             // Destroy 코루틴은 복제체에서만 실행
             projectileB.StartCoroutine(DestroyAfterSeconds(projectile, spellData.Duration));
-            projectileB.StartCoroutine(SetToDefaultLayer(projectile, 1f));
+            projectileB.StartCoroutine(SetToDefaultLayer(projectile, 0.2f));
         }
 
         private Vector3 CalculateDirection(int index, int totalCount, SpellData spellData)
