@@ -66,6 +66,10 @@ Direction = [0, -1, 0] 이면 위에서 아래 방향으로, 이는 운석같은
 ## 값 선택 규칙
 - ""Element""와 ""Shape""는 정말로 해당하는 값이 없을 때만 ""None""을 사용하세요. 웬만하면 아래 목록 중에서 가장 적합한 값을 선택하세요.
 - ""Size""는 [x, y, z] 세 값 모두 0보다 커야 하며, 0이나 0.0은 절대 허용되지 않습니다.
+- **캐릭터 크기가 10이므로, 기본적으로 Size는 [20, 20, 20]처럼 캐릭터보다 훨씬 크게 설정하세요.**
+- **방패(Shield, Capsule 등)는 [30, 40, 8]처럼 넓고 두껍게, 파이어볼(불덩이, Sphere 등)은 [20, 20, 20] 이상으로 크게 하세요.**
+- **""거대한"", ""거대하게"" 등 주문에 등장하면 Size를 [60, 60, 60] 이상으로 매우 크게 설정하고, PositionOffset.y도 더 높게(예: 40~80) 올리세요.**
+- **Size가 커질수록 PositionOffset.y(생성 위치의 높이)도 비례해서 더 높게 설정하세요.**
 
 ## SpellData(JOSN) 속성 선택지 
 - 주문을 해석하고 주문자의 의도를 추론해서 속성값을 선택하세요
@@ -157,13 +161,22 @@ Direction = [0, -1, 0] 이면 위에서 아래 방향으로, 이는 운석같은
 
 // ""Size"" (Vector3)
 // - 주문 오브젝트의 크기입니다. [x, y, z] 형태의 실수 벡터여야 하며, 세 값 모두 0보다 커야 합니다.
+// **캐릭터 크기가 10이므로, 기본적으로 Size는 [20, 20, 20]처럼 캐릭터보다 훨씬 크게 설정하세요.**
+// **방패(Shield, Capsule 등)는 [30, 40, 8]처럼 넓고 두껍게, 파이어볼(불덩이, Sphere 등)은 [20, 20, 20] 이상으로 크게 하세요.**
+// **""거대한"", ""거대하게"" 등 주문에 등장하면 Size를 [60, 60, 60] 이상으로 매우 크게 설정하고, PositionOffset.y도 더 높게(예: 40~80) 올리세요.**
+// **Size가 커질수록 PositionOffset.y(생성 위치의 높이)도 비례해서 더 높게 설정하세요.**
 
 // ""HasGravity"" (bool)
 // - true일 경우, 중력 영향을 받아 아래로 떨어집니다.
 
 // ""PositionOffset"" (Vector3)
+// - 주문 오브젝트가 생성되는 위치 오프셋입니다. [x, y, z] 형태의 실수 벡터여야 하며, 시전자의 앞쪽 위치를 기준으로 합니다.
+// - 예: [0.0, 1.0, -1.5]는 시전자의 앞쪽 아래 위치입니다.
+// - 상대방의 머리 위에 주문을 생성하려면 카메라 타겟 위치를 기준으로 적절한 y값을 설정하세요.
 
 // ""Direction"" (Vector3)
+// - 주문 오브젝트가 날아가는 방향입니다. [x, y, z] 형태의 실수 벡터여야 하며, 반드시 정규화된 벡터여야 합니다.
+// - 상대방의 머리 위로 떨어뜨리는 주문은 [0.0, -1.0, 0.0]과 같이 위에서 아래 방향으로 설정하세요.
 
 // ""Count"" (int)
 // - 생성할 주문 오브젝트의 개수입니다. 1 이상의 정수여야 합니다.
@@ -179,6 +192,7 @@ Direction = [0, -1, 0] 이면 위에서 아래 방향으로, 이는 운석같은
 
 // ""Duration"" (float)
 // - 주문 오브젝트가 존재하는 시간(초 단위)입니다.
+// - 5보다 큰 실수여야 하며, 고정형 주문은 충분히 긴 시간(예: 30.0)으로 설정하세요.
 
 // ""SpreadAngle"" (float)
 // - 발사체가 퍼지는 각도입니다.
@@ -206,13 +220,13 @@ Direction = [0, -1, 0] 이면 위에서 아래 방향으로, 이는 운석같은
   ""Element"": ""Fire"",
   ""Behavior"": ""Projectile"",
   ""Shape"": ""Sphere"",
-  ""Size"": [5.0, 5.0, 5.0],
+  ""Size"": [20.0, 20.0, 20.0],
   ""HasGravity"": true,
-  ""PositionOffset"": [7.0, 20.0, 30.0],
+  ""PositionOffset"": [7.0, 40.0, 30.0],
   ""Direction"": [0.22, -0.47, 0.85],
   ""Count"": 5,
   ""Speed"": 12.0,
-  ""Duration"": 6.0,
+  ""Duration"": 10,
   ""SpreadAngle"": 15.0,
   ""SpreadRange"": 2.0,
   ""ActivateOnCollision"": true,
@@ -239,9 +253,9 @@ Direction = [0, -1, 0] 이면 위에서 아래 방향으로, 이는 운석같은
   ""Element"": ""Common"",
   ""Behavior"": ""Projectile"",
   ""Shape"": ""Sphere"",
-  ""Size"": [1.0, 1.0, 1.0],
+  ""Size"": [20.0, 20.0, 20.0],
   ""HasGravity"": false,
-  ""PositionOffset"": [0.0, 1.0, -1.5],
+  ""PositionOffset"": [0.0, 10.0, -1.5],
   ""Direction"": [0.0, 0.0, -1.0],
   ""Count"": 1,
   ""Speed"": 2.5,
@@ -271,13 +285,13 @@ Direction = [0, -1, 0] 이면 위에서 아래 방향으로, 이는 운석같은
   ""Element"": ""Earth"",
   ""Behavior"": ""Projectile"",
   ""Shape"": ""Capsule"",
-  ""Size"": [3.0, 4.0, 0.5],
+  ""Size"": [30.0, 40.0, 8.0],
   ""HasGravity"": false,
-  ""PositionOffset"": [0.0, 0.5, 3.5],
+  ""PositionOffset"": [0.0, 20.0, 3.5],
   ""Direction"": [0.0, 0.0, 0.0],
   ""Count"": 1,
-  ""Speed"": 0.0,
-  ""Duration"": 8.0,
+  ""Speed"": 0.0, 
+  ""Duration"": 30.0,
   ""SpreadAngle"": 0.0,
   ""SpreadRange"": 0.0,
   ""ActivateOnCollision"": false,
@@ -293,33 +307,41 @@ Direction = [0, -1, 0] 이면 위에서 아래 방향으로, 이는 운석같은
 [PowerLevel: 2]
 [CameraTargetPosition: 6.0, 1.8, 18.0]
 [CasterPosition: 5.0, 1.0, 10.0]
-상대방 머리 위에 바위 투척
+거대한 파이어볼!
 
 ### 출력:
 {
-  ""Name"": ""OverheadRockDrop"",
-  ""Element"": ""Earth"",
+  ""Name"": ""GiantFireball"",
+  ""Element"": ""Fire"",
   ""Behavior"": ""Projectile"",
-  ""Shape"": ""Cube"",
-  ""Size"": [3.0, 3.0, 3.0],
+  ""Shape"": ""Sphere"",
+  ""Size"": [80.0, 80.0, 80.0],
   ""HasGravity"": true,
-  ""PositionOffset"": [1.0, 7.8, 8.0],
+  ""PositionOffset"": [1.0, 80.0, 8.0],
   ""Direction"": [0.0, -1.0, 0.0],
-  ""Count"": 3,
-  ""Speed"": 3.0,
-  ""Duration"": 4.0,
-  ""SpreadAngle"": 5.0,
-  ""SpreadRange"": 0.5,
+  ""Count"": 1,
+  ""Speed"": 6.0,
+  ""Duration"": 10.0,
+  ""SpreadAngle"": 0.0,
+  ""SpreadRange"": 0.0,
   ""ActivateOnCollision"": true,
-  ""MaterialName"": ""Earth"",
+  ""MaterialName"": ""Fire"",
   ""MeshName"": ""BigRock1"",
   ""ParticleName"": ""Sparks_red"",
   ""TrailName"": ""FireEffect"",
-  ""SoundName"": ""pung"",
+  ""SoundName"": ""Quang"",
   ""Actions"": [
-    { ""Action"": ""Damage"", ""Target"": ""Activator"", ""Value"": 50.0 }
+    { ""Action"": ""Damage"", ""Target"": ""Activator"", ""Value"": 200.0 }
   ]
 }
+
+[출력 규칙 요약]
+- 반드시 단일 JSON 객체만 출력
+- 모든 필드 포함, 누락 금지
+- null, undefined, "" 사용 금지
+- PascalCase만 사용 (Action, Target, Key들 모두)
+- Enum 값 외 값 사용 금지
+- 값 없는 경우라도 가장 가까운 대체 값 지정
 ";
 
         private readonly string _apiKey;
